@@ -130,7 +130,7 @@ export default function PremiumModal({ isOpen, onClose, triggerSource = 'modal',
 
           {success && (
             <div className="mb-4 p-3 bg-green-900/50 border border-green-500/50 rounded-lg text-green-300">
-              You're now Premium! ✨
+              You&apos;re now Premium! ✨
             </div>
           )}
 

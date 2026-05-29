@@ -101,7 +101,7 @@ export default function PremiumUpgradeModal({ isOpen, onClose }: PremiumUpgradeM
                 Your Daily Guidance Is Complete ✨
               </h3>
               <p className="text-[#A1A1AA]">
-                 Ginni has revealed today's message for you.
+                 Ginni has revealed today&apos;s message for you.
               </p>
             </div>
 
