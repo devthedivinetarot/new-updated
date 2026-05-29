@@ -12,10 +12,8 @@ export default function ReadingPage() {
   const { user, isLoading: userLoading } = useUser();
   const {
     plan,
-    isActive: premiumActive,
-    setPaymentStatus,
-    refresh: refreshSubscription,
-    userId,
+    isPremium,
+    refetch: refetchSubscription,
   } = useSubscription();
   const {
     remaining,
@@ -25,12 +23,13 @@ export default function ReadingPage() {
     getTimeUntilReset,
   } = useDailyMessageLimit();
 
+  const userId = user?.id || null;
+
   const [loaded, setLoaded] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [iframeBlocked, setIframeBlocked] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  const isPremium = premiumActive;
   const isLoading = userLoading;
 
   // ── postMessage helpers ───────────────────────────────────────────────
@@ -118,12 +117,11 @@ export default function ReadingPage() {
   const handlePaymentSuccess = useCallback(() => {
     setIframeBlocked(false);
     setShowUpgradeModal(false);
-    setPaymentStatus('success');
-    refreshSubscription();
+    refetchSubscription();
     refreshLimit();
     sendUnlockToIframe();
     logEvent('premium_activated_reading_page', { userId, previousPlan: 'free', newPlan: 'premium' });
-  }, [refreshSubscription, refreshLimit, sendUnlockToIframe, setPaymentStatus, userId]);
+  }, [refetchSubscription, refreshLimit, sendUnlockToIframe, userId]);
 
   // ── useEffect: unblock iframe when premium upgrades ────────────────────
 
@@ -133,6 +131,20 @@ export default function ReadingPage() {
       sendUnlockToIframe();
     }
   }, [isPremium, iframeBlocked, sendUnlockToIframe]);
+
+  // ── useEffect: handle openPremiumModal event ─────────────────────────────
+
+  useEffect(() => {
+    const handleOpenPremiumModal = () => {
+      setShowUpgradeModal(true);
+      logEvent('premium_modal_opened_via_event', { userId });
+    };
+
+    window.addEventListener('openPremiumModal', handleOpenPremiumModal);
+    return () => {
+      window.removeEventListener('openPremiumModal', handleOpenPremiumModal);
+    };
+  }, [userId]);
 
   // ── useEffect: handle URL params after payment redirect ─────────────────
 
@@ -144,9 +156,8 @@ export default function ReadingPage() {
       url.searchParams.delete('payment');
       window.history.replaceState({}, '', url.toString());
       setIframeBlocked(false);
-      setPaymentStatus('success');
     }
-  }, [setPaymentStatus]);
+  }, []);
 
   // ── Render ────────────────────────────────────────────────────────────
 

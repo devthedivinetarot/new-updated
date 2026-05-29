@@ -3,20 +3,21 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Crown, X } from 'lucide-react';
-import { useUser } from '@/lib/auth/useUser';
 import { useSubscription } from '@/hooks/useSubscription';
+import { logEvent } from '@/lib/utils/tracking';
 
 interface PremiumUpgradeModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+const SUBSCRIPTION_ID = 'sub_Spfpl7cYrf7xr5';
+
 export default function PremiumUpgradeModal({ isOpen, onClose }: PremiumUpgradeModalProps) {
   const [timeUntilReset, setTimeUntilReset] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { isLoading: userLoading } = useUser();
-  const { refresh } = useSubscription();
+  const { isPremium, refetch } = useSubscription();
 
   useEffect(() => {
     if (!isOpen) return;
@@ -48,11 +49,10 @@ export default function PremiumUpgradeModal({ isOpen, onClose }: PremiumUpgradeM
     try {
       const { handlePremiumCheckout } = await import('@/lib/payments/handlePremiumCheckout');
 
-      // Updated: handlePremiumCheckout now gets userId from authenticated session
       const result = await handlePremiumCheckout('premium-modal');
 
       if (result.success) {
-        await refresh();
+        await refetch();
         onClose();
       } else if (result.error !== 'Payment cancelled') {
         setError(result.error || 'Payment failed');
@@ -65,7 +65,7 @@ export default function PremiumUpgradeModal({ isOpen, onClose }: PremiumUpgradeM
       setError(err.message || 'Something went wrong. Please try again.');
       setIsProcessing(false);
     }
-  }, [isProcessing, refresh, onClose]);
+  }, [isProcessing, refetch, onClose]);
 
   return (
     <AnimatePresence>
@@ -101,7 +101,7 @@ export default function PremiumUpgradeModal({ isOpen, onClose }: PremiumUpgradeM
                 Your Daily Guidance Is Complete ✨
               </h3>
               <p className="text-[#A1A1AA]">
-                 Ginni has revealed today&apos;s message for you.
+                 Ginni has revealed today's message for you.
               </p>
             </div>
 
@@ -142,7 +142,7 @@ export default function PremiumUpgradeModal({ isOpen, onClose }: PremiumUpgradeM
 
             <button
               onClick={handleUpgradeClick}
-              disabled={isProcessing || userLoading}
+              disabled={isProcessing || isPremium}
               className={`
                 w-full py-4 rounded-xl 
                 bg-gradient-to-r from-[#FFD700] to-[#FF4D4D] 

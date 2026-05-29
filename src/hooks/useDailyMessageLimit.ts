@@ -20,7 +20,7 @@ export interface DailyLimitState {
 
 export function useDailyMessageLimit() {
   const { user, isLoading: userLoading } = useUser();
-  const { plan, isActive: premiumActive } = useSubscription();
+  const { plan, isPremium: premiumActive } = useSubscription();
   const [state, setState] = useState<DailyLimitState>({
     remaining: 1,
     totalAllowed: 1,

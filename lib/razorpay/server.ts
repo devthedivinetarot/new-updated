@@ -69,4 +69,21 @@ export function verifyPaymentSignature(
   return expectedSignature === signature;
 }
 
+export function verifySubscriptionSignature(
+  paymentId: string,
+  subscriptionId: string,
+  signature: string
+): boolean {
+  if (!razorpayKeySecret) {
+    return false;
+  }
+  
+  const expectedSignature = crypto
+    .createHmac('sha256', razorpayKeySecret)
+    .update(`${paymentId}|${subscriptionId}`)
+    .digest('hex');
+
+  return expectedSignature === signature;
+}
+
 export { razorpayKeyId };

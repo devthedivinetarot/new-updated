@@ -1,5 +1,5 @@
 import { logEvent } from '@/lib/utils/tracking';
-import { loadRazorpayScript, isRazorpayLoaded } from '@/lib/razorpay/client';
+import { loadRazorpayScript } from '@/lib/razorpay/client';
 import { supabase } from '@/lib/supabase/client';
 
 declare global {
@@ -15,10 +15,9 @@ export interface PaymentResult {
   subscriptionId?: string;
 }
 
-/**
- * Get authenticated user ID from Supabase session
- * This ensures we never trust client-provided userId for security-critical operations
- */
+const SUBSCRIPTION_ID = 'sub_Spfpl7cYrf7xr5';
+const SUBSCRIPTION_LINK = 'https://rzp.io/rzp/7DHHKUsD';
+
 async function getAuthenticatedUserId(): Promise<string | null> {
   try {
     const { data: { user }, error } = await supabase.auth.getUser();
@@ -36,7 +35,6 @@ export async function handlePremiumCheckout(
   triggerSource: string = 'unknown',
 ): Promise<PaymentResult> {
   try {
-    // SECURITY FIX: Get authenticated user from session instead of trusting client input
     const userId = await getAuthenticatedUserId();
     
     if (!userId) {
@@ -45,61 +43,27 @@ export async function handlePremiumCheckout(
 
     logEvent('premium_payment_initiated', { triggerSource, userId });
 
-    const subscriptionResponse = await fetch('/api/create-subscription', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId }),
-    });
-
-    if (!subscriptionResponse.ok) {
-      const errorData = await subscriptionResponse.json();
-      return { success: false, error: errorData.error || 'Failed to create subscription' };
-    }
-
-    const subscriptionData = await subscriptionResponse.json();
-
-    if (!subscriptionData.subscriptionId) {
-      return { success: false, error: 'Failed to create subscription' };
-    }
-
-    // Check if we're in development and Razorpay is not properly configured
-    const isDevMode = process.env.NODE_ENV === 'development';
-    const hasValidKeys = process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET && 
-                         !process.env.RAZORPAY_KEY_ID.includes('placeholder') &&
-                         !process.env.RAZORPAY_KEY_SECRET.includes('placeholder');
-    
-    if (isDevMode && !hasValidKeys) {
-      console.warn('[handlePremiumCheckout] Using mock mode due to invalid/missing Razorpay keys in development');
-      // Still return success but with mock data - this allows development to proceed
-      return {
-        success: true,
-        paymentId: `mock_payment_${Date.now()}`,
-        subscriptionId: subscriptionData.subscriptionId,
-      };
-    }
-
     const razorpayLoaded = await loadRazorpayScript();
-    if (!razorpayLoaded || !isRazorpayLoaded()) {
+    if (!razorpayLoaded) {
       return { success: false, error: 'Razorpay SDK failed to load' };
     }
 
     return new Promise((resolve) => {
       const options = {
-        key: subscriptionData.key,
-        subscription_id: subscriptionData.subscriptionId,
-        name: 'The Divine Tarot',
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        subscription_id: SUBSCRIPTION_ID,
+        name: 'Divine Tarot',
         description: 'Premium Monthly Subscription',
         handler: async (response: {
           razorpay_payment_id: string;
-          razorpay_subscription_id: string;
+          razorpay_subscription_id?: string;
           razorpay_signature: string;
         }) => {
           try {
-            const verifyResponse = await fetch('/api/payment/verify', {
+            const verifyResponse = await fetch('/api/subscription/verify', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                userId, // Use authenticated userId
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_subscription_id: response.razorpay_subscription_id,
                 razorpay_signature: response.razorpay_signature,
@@ -135,11 +99,7 @@ export async function handlePremiumCheckout(
             resolve({ success: false, error: err.message || 'Payment verification failed' });
           }
         },
-        prefill: {
-          name: '',
-          email: '',
-          contact: '',
-        },
+        prefill: {},
         theme: {
           color: '#FFD700',
         },

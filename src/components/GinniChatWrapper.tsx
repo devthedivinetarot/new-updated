@@ -111,7 +111,13 @@ export default function GinniChatWrapper() {
   }, [currentStage, lastActivityTime, triggerHesitation]);
 
   useEffect(() => {
+    const handleOpenPremiumModal = () => {
+      setShowUpgradeModal(true);
+    };
+
+    window.addEventListener('openPremiumModal', handleOpenPremiumModal);
     return () => {
+      window.removeEventListener('openPremiumModal', handleOpenPremiumModal);
       if (hesitationTimerRef.current) clearTimeout(hesitationTimerRef.current);
       if (autoHideTimerRef.current) clearTimeout(autoHideTimerRef.current);
     };

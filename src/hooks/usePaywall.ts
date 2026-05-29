@@ -31,7 +31,7 @@ async function callCheckAccess(userId: string, plan: 'free' | 'premium') {
 }
 
 export function usePaywallAccess(userId: string | null, plan: 'free' | 'premium' = 'free') {
-  const { plan: userPlan, isActive: premiumActive } = useSubscription();
+  const { plan: userPlan, isPremium: premiumActive } = useSubscription();
   const [state, setState] = useState<PaywallState>({
     canAccess: true,
     reason: 'loading',
@@ -129,8 +129,8 @@ export function usePaywallAccess(userId: string | null, plan: 'free' | 'premium'
  * Convenience hook to check if a specific feature requires upgrade.
  */
 export function useFeatureAccess(feature: string) {
-  const { plan, isActive } = useSubscription();
-  const isPremium = plan === 'premium' && isActive;
+  const { plan, isPremium } = useSubscription();
+  const premiumActive = plan === 'premium' && isPremium;
 
   const premiumFeatures = [
     'unlimited_readings',

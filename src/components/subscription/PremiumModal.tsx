@@ -1,13 +1,18 @@
-import { useState, useEffect } from 'react';
-import { loadRazorpayScript, openRazorpayCheckout, RazorpayOptions } from '@/lib/razorpay/client';
+import { useState, useEffect, useCallback } from 'react';
+import { loadRazorpayScript } from '@/lib/razorpay/client';
 import { useSubscription } from '@/hooks/useSubscription';
+import { logEvent } from '@/lib/utils/tracking';
 
 interface PremiumModalProps {
   isOpen: boolean;
   onClose: () => void;
+  triggerSource?: string;
+  onPaymentSuccess?: () => void;
 }
 
-export default function PremiumModal({ isOpen, onClose }: PremiumModalProps) {
+const SUBSCRIPTION_ID = 'sub_Spfpl7cYrf7xr5';
+
+export default function PremiumModal({ isOpen, onClose, triggerSource = 'modal', onPaymentSuccess }: PremiumModalProps) {
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +30,7 @@ export default function PremiumModal({ isOpen, onClose }: PremiumModalProps) {
     });
   }, [isOpen]);
 
-  const handleUpgrade = async () => {
+  const handleUpgrade = useCallback(async () => {
     if (!isScriptLoaded) {
       setError('Payment gateway not loaded. Please refresh and try again.');
       return;
@@ -35,56 +40,72 @@ export default function PremiumModal({ isOpen, onClose }: PremiumModalProps) {
     setError(null);
 
     try {
-      const response = await fetch('/api/premium-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
 
-      if (!response.ok) {
-        throw new Error('Failed to create order');
-      }
-
-      const { orderId, amount, currency, keyId } = await response.json();
-
-      const options: RazorpayOptions = {
+      const options = {
         key: keyId,
-        amount,
-        currency,
-        name: 'Divine Tarot Premium',
-        description: 'Unlock unlimited tarot readings for ₹199/month',
-        order_id: orderId,
+        subscription_id: SUBSCRIPTION_ID,
+        name: 'Divine Tarot',
+        description: 'Premium Monthly Subscription',
+        handler: async (response: {
+          razorpay_payment_id: string;
+          razorpay_subscription_id?: string;
+          razorpay_signature: string;
+        }) => {
+          try {
+            const verifyResponse = await fetch('/api/subscription/verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_subscription_id: response.razorpay_subscription_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            });
+
+            if (!verifyResponse.ok) {
+              throw new Error('Payment verification failed');
+            }
+
+            setSuccess(true);
+            logEvent('premium_payment_success', {
+              triggerSource,
+              paymentId: response.razorpay_payment_id,
+            });
+
+            localStorage.setItem('premium_override', Date.now().toString());
+            await refetch();
+            onPaymentSuccess?.();
+
+            setTimeout(() => {
+              onClose();
+              setSuccess(false);
+            }, 3000);
+          } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'Payment verification failed';
+            setError(errorMessage);
+          } finally {
+            setIsLoading(false);
+          }
+        },
+        theme: {
+          color: '#FFD700',
+        },
+        modal: {
+          ondismiss: () => {
+            setIsLoading(false);
+          },
+        },
       };
 
-      const paymentResponse = await openRazorpayCheckout(options);
-
-      const verifyResponse = await fetch('/api/premium-order/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          orderId: paymentResponse.razorpay_order_id,
-          paymentId: paymentResponse.razorpay_payment_id,
-          signature: paymentResponse.razorpay_signature,
-        }),
-      });
-
-      if (!verifyResponse.ok) {
-        throw new Error('Payment verification failed');
-      }
-
-      setSuccess(true);
-      await refetch();
-
-      setTimeout(() => {
-        onClose();
-        setSuccess(false);
-      }, 3000);
+      const rzp = new window.Razorpay(options);
+      rzp.open();
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Payment failed. Please try again.';
       setError(errorMessage);
-    } finally {
       setIsLoading(false);
     }
-  };
+  }, [isScriptLoaded, onPaymentSuccess, onClose, refetch, triggerSource]);
 
   if (!isOpen) return null;
 
@@ -109,7 +130,7 @@ export default function PremiumModal({ isOpen, onClose }: PremiumModalProps) {
 
           {success && (
             <div className="mb-4 p-3 bg-green-900/50 border border-green-500/50 rounded-lg text-green-300">
-              Payment successful! Welcome to Premium.
+              You're now Premium! ✨
             </div>
           )}
 

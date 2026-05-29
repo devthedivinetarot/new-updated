@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 export default function SubscriptionPage() {
-  const { isActive: isSubscribed } = useSubscription();
+  const { isPremium: isSubscribed } = useSubscription();
 
   if (isSubscribed) {
     return (
