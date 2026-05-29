@@ -56,7 +56,7 @@ export default function ReadingPage() {
 
   const handleMessageSent = async () => {
     if (!userId || isPremium) return;
-    const mod = await import('@/lib/subscription/checkAccess');
+    const mod = await import('@/app/actions/subscription');
     await mod.recordMessage(userId);
     consumeMessage();
     const { canSendMessage } = await mod.checkSubscriptionAccess(userId, 'free');
@@ -75,7 +75,7 @@ export default function ReadingPage() {
     if (userLoading) return;
     const doCheck = async () => {
       if (!userId) return;
-      const mod = await import('@/lib/subscription/checkAccess');
+      const mod = await import('@/app/actions/subscription');
       const { canSendMessage } = await mod.checkSubscriptionAccess(userId, 'free');
       if (!canSendMessage && !isPremium) setIframeBlocked(true);
     };
