@@ -137,7 +137,7 @@ export default function ReadingPage() {
   useEffect(() => {
     const handleOpenPremiumModal = () => {
       setShowUpgradeModal(true);
-      logEvent('premium_modal_opened_via_event', { userId });
+      logEvent('upgrade_requested', { userId });
     };
 
     window.addEventListener('openPremiumModal', handleOpenPremiumModal);
