@@ -12,12 +12,12 @@ interface PaywallState {
   shouldShowPaywall: boolean;
 }
 
-let checkSubscriptionAccessCached: typeof import('@/lib/subscription/checkAccess').checkSubscriptionAccess | null = null;
-let checkAccessModulePromise: Promise<typeof import('@/lib/subscription/checkAccess')> | null = null;
+let checkSubscriptionAccessCached: typeof import('@/app/actions/subscription').checkSubscriptionAccess | null = null;
+let checkAccessModulePromise: Promise<typeof import('@/app/actions/subscription')> | null = null;
 
 async function getCheckAccessModule() {
   if (!checkAccessModulePromise) {
-    checkAccessModulePromise = import('@/lib/subscription/checkAccess');
+    checkAccessModulePromise = import('@/app/actions/subscription');
   }
   return checkAccessModulePromise;
 }

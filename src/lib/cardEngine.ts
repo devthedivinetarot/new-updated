@@ -22,11 +22,11 @@ function getSuitFromId(id: number): Suit {
 }
 
 export function getCardById(cardId: number): CardMetadata | null {
-  const cards = tarotData.cards as CardMetadata[];
+  const cards = tarotData.cards as any[];
   const card = cards.find((c) => c.id === cardId);
-  
+
   if (!card) return null;
-  
+
   return {
     id: card.id,
     name: card.name,
@@ -39,11 +39,11 @@ export function getCardById(cardId: number): CardMetadata | null {
 }
 
 export function getCardByName(name: string): CardMetadata | null {
-  const cards = tarotData.cards as CardMetadata[];
+  const cards = tarotData.cards as any[];
   const card = cards.find((c) => c.name.toLowerCase() === name.toLowerCase());
-  
+
   if (!card) return null;
-  
+
   return {
     id: card.id,
     name: card.name,
@@ -56,7 +56,7 @@ export function getCardByName(name: string): CardMetadata | null {
 }
 
 export function getAllCards(): CardMetadata[] {
-  const cards = tarotData.cards as CardMetadata[];
+  const cards = tarotData.cards as any[];
   return cards.map((card) => ({
     id: card.id,
     name: card.name,

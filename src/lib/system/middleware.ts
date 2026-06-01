@@ -174,20 +174,6 @@ export async function withApiMiddleware(
     const rateLimitResult = rateLimit(rateLimitKey, limit, windowMs);
 
     if (rateLimitResult.limited) {
-      // Log rate limit event
-      logToApi('/api/log', {
-        type: 'server_error',
-        message: 'Rate limit exceeded',
-        ts: Date.now(),
-        metadata: {
-          path,
-          ip,
-          method,
-          limit,
-          windowMs
-        }
-      }).catch(() => {});
-
       const retryAfter = Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000);
       
       const errorResponse = NextResponse.json(
@@ -232,38 +218,11 @@ export async function withApiMiddleware(
 
     // Log successful request (non-blocking)
     const duration = Date.now() - start;
-    if (duration > 100 || response.status >= 400) {
-      logToApi('/api/log', {
-        type: duration > 1000 ? 'performance' : 'server_error',
-        metric: `${method} ${path}`,
-        value: duration,
-        ts: Date.now(),
-        metadata: {
-          status: response.status,
-          ip,
-          userAgent: req.headers.get('user-agent') ?? '',
-          duration
-        }
-      }).catch(() => {});
-    }
 
     return response;
   } catch (error: unknown) {
-    // Log server error
-    logToApi('/api/log', {
-      type: 'server_error',
-      message: error instanceof Error ? error.message : 'Unknown error',
-      ts: Date.now(),
-      metadata: {
-        path,
-        method,
-        ip,
-        stack: error instanceof Error ? error.stack : undefined
-      }
-    }).catch(() => {});
-
     const errorResponse = NextResponse.json(
-      { 
+      {
         error: 'internal_server_error',
         message: 'An unexpected error occurred. Please try again later.'
       },
