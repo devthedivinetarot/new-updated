@@ -102,10 +102,12 @@ export async function middleware(request: NextRequest) {
 
     const scriptSrcElemParts = [
       "'self'",
+      "'unsafe-inline'",
       "https://www.googletagmanager.com",
       "https://www.google-analytics.com",
       "https://cdn.clarity.ms",
       "https://checkout.razorpay.com",
+      "https://vercel.live",
     ];
 
     if (isDev) {
@@ -122,12 +124,12 @@ export async function middleware(request: NextRequest) {
 
     const scriptSrc = isDev
       ? "'self' 'unsafe-inline'"
-      : `'nonce-${nonce}'`;
+      : `'nonce-${nonce}' 'unsafe-inline'`;
 
     const csp = [
       `default-src 'self'`,
       `script-src ${scriptSrc}`,
-      `script-src-elem ${scriptSrcElem}`,
+      `script-src-elem ${scriptSrcElem} 'nonce-${nonce}'`,
       `style-src ${styleSrc}`,
       `font-src 'self' https://fonts.gstatic.com`,
       `img-src 'self' data: https:`,
