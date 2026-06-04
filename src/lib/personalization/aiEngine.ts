@@ -389,7 +389,9 @@ function trackAIConfigGeneration(
     language: Language;
   }
 ): void {
-  supabase
+  // Avoid strict insert typing issues during build by casting to `any`.
+  // (The schema may not be reflected in Supabase client types in this repo.)
+  void (supabase as any)
     .from('events')
     .insert({
       user_id: userId,
@@ -399,9 +401,10 @@ function trackAIConfigGeneration(
         timestamp: new Date().toISOString(),
       },
     })
-    .then(({ error }) => {
+    .then(({ error }: { error: unknown }) => {
       if (error) console.error(error);
-    });
+    })
+    .catch((e: unknown) => console.error(e));
 }
 
 export function getTonePrompt(tone: Tones, language: Language): string {
