@@ -1,14 +1,34 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-  },
-});
+// IMPORTANT:
+// If env vars are missing, do NOT silently fall back to placeholder URLs.
+// Silent fallbacks cause browser errors like:
+//   net::ERR_NAME_NOT_RESOLVED placeholder.supabase.co/rest/v1/...
+//
+// Downstream callers should guard with `isSupabaseConfigured()`.
+export const supabase = ((): ReturnType<typeof createClient> => {
+  if (!supabaseUrl || !supabaseAnonKey) {
+    // Create a non-functional client to avoid import-time crashes.
+    // Calls will fail quickly, but won't leak placeholder network errors.
+    return createClient('https://invalid.supabase.co', 'invalid-anon-key', {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: false,
+      },
+    });
+  }
+
+  return createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+    },
+  });
+})();
+
 
 export const isSupabaseConfigured = () => {
   return !!process.env.NEXT_PUBLIC_SUPABASE_URL && 

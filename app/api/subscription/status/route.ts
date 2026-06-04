@@ -21,11 +21,15 @@ export async function GET(request: NextRequest) {
     const authenticatedUserId = await getAuthenticatedUserId(request);
 
     if (!authenticatedUserId) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+      // Unauthenticated users are treated as free.
+      // Returning 401 here can break Server Components renders during hydration.
+      return NextResponse.json({
+        plan: 'free',
+        subscription_status: null,
+        subscription_end_date: null,
+      });
     }
+
 
     const supabase = await createServerClient();
     const { data: user, error } = await supabase
