@@ -103,7 +103,9 @@ export async function getUserProfile(userId: string): Promise<UserProfile | null
   // Supabase client typing can degrade to `never[]` in this repo; normalize to runtime shape.
   const typedEvents = events as Array<{ event_type?: string }>;
   const sessionsCount = typedEvents.filter(e => e.event_type === 'session_start').length;
-  const totalSpent = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
+  const typedPayments = payments as Array<{ amount?: number }>;
+  const totalSpent = typedPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
+
 
 
   const lastActiveAt = userData.last_active_at 
