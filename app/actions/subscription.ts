@@ -14,24 +14,20 @@ export interface AccessResult {
 
 export async function checkSubscriptionAccess(
   userId: string | null,
-  plan: 'free' | 'premium' = 'free',
+  _plan: 'free' | 'premium' = 'free',
 ): Promise<AccessResult> {
-  if (plan === 'premium') {
-    return {
-      allowed: true,
-      remainingMessages: -1,
-      canSendMessage: true,
-      isPremium: true,
-      plan: 'premium',
-      subscriptionStatus: 'active',
-    };
-  }
+  const supabase = await createServerClient();
 
-  if (!userId) {
+  // SECURITY: never trust caller-provided userId/plan.
+  const { data: authData } = await supabase.auth.getUser();
+  const authenticatedUserId = authData?.user?.id ?? null;
+  const effectiveUserId = authenticatedUserId ?? userId;
+
+  if (!effectiveUserId) {
     return {
-      allowed: true,
-      remainingMessages: 1,
-      canSendMessage: true,
+      allowed: false,
+      remainingMessages: 0,
+      canSendMessage: false,
       isPremium: false,
       plan: 'free',
       subscriptionStatus: null,
@@ -39,16 +35,15 @@ export async function checkSubscriptionAccess(
   }
 
   try {
-    const supabase = await createServerClient();
     const { data: user, error } = await supabase
       .from('users')
       .select('plan, subscription_status, subscription_end_date, readings_today, last_reading_date')
-      .eq('id', userId)
+      .eq('id', effectiveUserId)
       .single();
 
     if (error && error.code !== 'PGRST116') {
       console.error('[checkSubscriptionAccess] DB error:', error);
-      const remaining = await getRemainingMessages(userId);
+      const remaining = await getRemainingMessages(effectiveUserId);
       return {
         allowed: remaining > 0,
         remainingMessages: remaining,
@@ -59,61 +54,66 @@ export async function checkSubscriptionAccess(
       };
     }
 
-    if (user) {
-      const dbPlan = (user.plan || 'free') as 'free' | 'premium';
-      const status = user.subscription_status as 'active' | 'inactive' | 'cancelled' | 'past_due' | null;
-      const endDate = user.subscription_end_date
-        ? new Date(user.subscription_end_date)
-        : null;
-
-      const isPremiumActive =
-        dbPlan === 'premium' &&
-        status === 'active' &&
-        (!endDate || endDate > new Date());
-
-      if (isPremiumActive) {
-        return {
-          allowed: true,
-          remainingMessages: -1,
-          canSendMessage: true,
-          isPremium: true,
-          plan: 'premium',
-          subscriptionStatus: 'active',
-        };
-      }
-
-      const today = new Date().toDateString();
-      const lastReadingDate = user.last_reading_date
-        ? new Date(user.last_reading_date).toDateString()
-        : null;
-
-      let remaining = 1;
-      if (lastReadingDate === today) {
-        remaining = Math.max(0, 1 - (user.readings_today || 0));
-      }
-
+    if (!user) {
+      const remaining = await getRemainingMessages(effectiveUserId);
       return {
         allowed: remaining > 0,
         remainingMessages: remaining,
         canSendMessage: remaining > 0,
         isPremium: false,
         plan: 'free',
-        subscriptionStatus: status,
+        subscriptionStatus: null,
       };
     }
 
-    const remaining = await getRemainingMessages(userId);
+    const dbPlan = (user.plan || 'free') as 'free' | 'premium';
+    const status = user.subscription_status as
+      | 'active'
+      | 'inactive'
+      | 'cancelled'
+      | 'past_due'
+      | null;
+    const endDate = user.subscription_end_date
+      ? new Date(user.subscription_end_date)
+      : null;
+
+    const isPremiumActive =
+      dbPlan === 'premium' &&
+      status === 'active' &&
+      (!endDate || endDate > new Date());
+
+    if (isPremiumActive) {
+      return {
+        allowed: true,
+        remainingMessages: -1,
+        canSendMessage: true,
+        isPremium: true,
+        plan: 'premium',
+        subscriptionStatus: 'active',
+      };
+    }
+
+    const today = new Date().toDateString();
+    const lastReadingDate = user.last_reading_date
+      ? new Date(user.last_reading_date).toDateString()
+      : null;
+
+    let remaining = 1;
+    if (lastReadingDate === today) {
+      remaining = Math.max(0, 1 - (user.readings_today || 0));
+    }
+
     return {
       allowed: remaining > 0,
       remainingMessages: remaining,
       canSendMessage: remaining > 0,
       isPremium: false,
       plan: 'free',
-      subscriptionStatus: null,
+      subscriptionStatus: status,
     };
   } catch (error) {
     console.error('[checkSubscriptionAccess] Error:', error);
-    const remaining = await getRemainingMessages(userId);
+    const remaining = await getRemainingMessages(effectiveUserId);
     return {
       allowed: remaining > 0,
       remainingMessages: remaining,
@@ -126,10 +126,18 @@ export async function checkSubscriptionAccess(
 }
 
 export async function recordMessage(userId: string): Promise<void> {
+  const supabase = await createServerClient();
+
+  // SECURITY: user can only record messages for themselves.
+  const { data: authData } = await supabase.auth.getUser();
+  const authenticatedUserId = authData?.user?.id ?? null;
+  if (!authenticatedUserId || authenticatedUserId !== userId) {
+    return;
+  }
+
   await incrementMessageCount(userId);
 
   try {
-    const supabase = await createServerClient();
     const today = new Date();
     const todayStr = today.toDateString();
 
@@ -146,7 +154,8 @@ export async function recordMessage(userId: string): Promise<void> {
 
       await supabase.from('users').upsert({
         id: userId,
-        readings_today: lastDate === todayStr ? (user.readings_today || 0) + 1 : 1,
+        readings_today:
+          lastDate === todayStr ? (user.readings_today || 0) + 1 : 1,
         last_reading_date: today.toISOString(),
         updated_at: today.toISOString(),
       });
@@ -203,7 +212,7 @@ export async function checkSubscriptionStatus(
 }
 
 export async function createPremiumOrderServer(
-  userId: string
+  userId: string,
 ): Promise<{ orderId: string; amount: number; key: string } | null> {
   try {
     const response = await fetch('/api/premium-order', {
@@ -232,7 +241,7 @@ export async function activatePremiumSubscriptionServer(
     razorpay_order_id: string;
     razorpay_payment_id: string;
     razorpay_signature: string;
-  }
+  },
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const response = await fetch('/api/premium-order/verify', {
@@ -264,3 +273,4 @@ export async function resetDailyCounter(userId: string): Promise<void> {
   localStorage.setItem(`subscription_daily_date_${userId}`, today.toDateString());
   localStorage.setItem(`subscription_daily_count_${userId}`, '0');
 }
+
