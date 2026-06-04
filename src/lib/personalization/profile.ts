@@ -65,6 +65,9 @@ export async function getUserProfile(userId: string): Promise<UserProfile | null
     .eq('id', userId)
     .single();
 
+  // Avoid `never` inference from Supabase types in this repo.
+  const typedUserData = userData as any;
+
   if (userError || !userData) {
     const cacheEntry: ProfileCache = {
       profile: null,
@@ -108,10 +111,10 @@ export async function getUserProfile(userId: string): Promise<UserProfile | null
 
 
 
-  const lastActiveAt = userData.last_active_at 
-    ? new Date(userData.last_active_at) 
-    : userData.created_at 
-      ? new Date(userData.created_at) 
+  const lastActiveAt = typedUserData.last_active_at 
+    ? new Date(typedUserData.last_active_at) 
+    : typedUserData.created_at 
+      ? new Date(typedUserData.created_at) 
       : null;
 
   const daysSinceLastActive = lastActiveAt 
