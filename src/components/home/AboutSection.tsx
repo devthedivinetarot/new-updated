@@ -69,8 +69,8 @@ export default function AboutSection() {
               {/* Image container */}
               <div className="relative w-64 h-64 md:w-80 md:h-80">
                 <Image
-                  src="/tdt-v3/bharti.jpg"
-                  alt="Bharti Singh - Founder"
+src="/img-01.png"
+alt="About The Divine Tarot"
                   fill
                   className="object-cover rounded-full ring-2 ring-gold/20"
                 />

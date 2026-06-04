@@ -20,7 +20,7 @@ interface GinniChatProps {
   onClose?: () => void;
 }
 
-const GINNI_BASE_URL = 'https://ginni-ki-baatein.lovable.app/';
+const GINNI_BASE_URL = 'https://ginni-ki-baatein-buddy.lovable.app';
 
 export default function GinniChat({ 
   autoOpenDelay = 0, 

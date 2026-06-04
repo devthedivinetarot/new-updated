@@ -144,7 +144,7 @@ export default function Hero() {
               {/* Layer 1 - Base Background (imgbg.png) */}
               <div className="absolute inset-0 z-10">
                 <Image
-                  src="/tdt-v3/imgbg.png"
+src="/imgbg.png"
                   alt="Tarot Reading Background"
                   fill
                   className="object-cover rounded-2xl"
@@ -159,7 +159,7 @@ export default function Hero() {
               >
                 <div className="relative w-full max-w-[280px] sm:max-w-[340px] lg:max-w-[500px] aspect-[3/4]">
                   <Image
-                    src="/tdt-v3/img.png"
+src="/img.png"
                     alt="Tarot Reading"
                     fill
                     className="object-contain drop-shadow-2xl"
@@ -173,7 +173,7 @@ export default function Hero() {
               {/* Layer 3 - Logo (logo.png) at top-left */}
               <div className="absolute top-3 left-3 z-30">
                 <Image
-                  src="/tdt-v3/logo.png"
+src="/logo.png"
                   alt="The Devine Tarot"
                   width={48}
                   height={48}
