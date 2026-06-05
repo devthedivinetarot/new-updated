@@ -245,79 +245,96 @@ export default function ReadingPage() {
 
         {/* iframe + paywall overlay */}
         <AnimatePresence>
-          {loaded && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6 }}
-              className={`flex-1 relative transition-all duration-700 ${loaded ? 'opacity-100' : 'opacity-0'} ${iframeBlocked ? 'blur-sm' : ''}`}
-            >
-              {/* Paywall overlay */}
-              {iframeBlocked && !isPremium && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  className="absolute inset-0 z-30 flex items-center justify-center animate-fade-in-up"
-                  style={{ background: 'rgba(11,11,15,0.7)', backdropFilter: 'blur(8px)' }}
-                >
-                  <div className="text-center max-w-sm mx-4">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-purple-900/40 to-indigo-900/40 border border-purple-500/30 flex items-center justify-center">
-                      <svg className="w-7 h-7 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className={`flex-1 relative transition-all duration-700 ${loaded ? 'opacity-100' : 'opacity-0'} ${iframeBlocked ? 'blur-sm' : ''}`}
+          >
+            {/* If initError, show only an interior alert (do not block iframe mounting) */}
+            {initError && (
+              <div className="absolute inset-x-0 top-0 z-20 flex items-center justify-center px-4 pt-6">
+                <div className="w-full max-w-lg rounded-xl border border-purple-500/30 bg-[#120B1D]/70 backdrop-blur-md p-4 shadow-xl">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-900/40 to-indigo-900/40 border border-purple-500/30 flex items-center justify-center">
+                      <svg className="w-6 h-6 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
-                    <h3 className="font-heading text-xl text-white mb-2">Daily Reading Complete</h3>
-                    <p className="text-[#A1A1AA] text-sm mb-4">
-                      Your daily free reading is complete. Upgrade to Premium for unlimited guidance.
-                    </p>
-                    <div className="bg-white/[0.03] rounded-xl p-3 mb-4 border border-white/[0.05]">
-                      <div className="flex items-center gap-2 text-[11px] text-purple-300/60 mb-2">
-                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>Next reading in: {getTimeUntilReset()}</span>
-                      </div>
+                    <div className="flex-1">
+                      <h3 className="text-white font-semibold">Connection Interrupted</h3>
+                      <p className="text-[#A1A1AA] text-xs mt-1">{initError}</p>
                     </div>
-                    <button
-                      onClick={() => { setShowUpgradeModal(true); logEvent('upgrade_cta_clicked', { userId }); }}
-                      className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#FFD700] to-[#FFC400] text-black font-bold text-sm hover:shadow-lg hover:shadow-[#FFD700]/30 transition-all flex items-center justify-center gap-2"
-                    >
-                      <CrownIcon className="w-4 h-4" /> Unlock Premium - ₹199/month
-                    </button>
-                    <button
-                      onClick={() => setIframeBlocked(false)}
-                      className="w-full mt-2.5 text-xs text-purple-400/50 hover:text-purple-300 transition-colors py-1.5"
-                    >
-                      Continue with free experience
-                    </button>
                   </div>
-                </motion.div>
-              )}
-
-              {/* Reading iframe */}
-              <div className="flex-1 flex items-center justify-center">
-                <div className="w-[92vw] h-[88vh] md:w-[85vw] md:h-[88vh]">
-                  <iframe
-                    ref={iframeRef}
-                    src={`https://ginni-ki-baatein-buddy.lovable.app${isPremium ? '?plan=premium' : ''}`}
-                    width="100%"
-                    height="100%"
-                    className={`border-none transition-all duration-500 ${loaded ? 'opacity-100' : 'opacity-0'} ${iframeBlocked ? 'pointer-events-none opacity-40' : ''}`}
-                    onLoad={() => {
-                      setLoaded(true);
-                      logEvent('reading_iframe_loaded', { userId, plan, isPremium });
-                    }}
-                    allow="clipboard-write; microphone; camera"
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-                    title="Ginni AI Spiritual Reading"
-                    referrerPolicy="no-referrer"
-                    loading="lazy"
-                  />
                 </div>
               </div>
-            </motion.div>
-          )}
+            )}
+
+            {/* Paywall overlay */}
+            {iframeBlocked && !isPremium && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 z-30 flex items-center justify-center animate-fade-in-up"
+                style={{ background: 'rgba(11,11,15,0.7)', backdropFilter: 'blur(8px)' }}
+              >
+                <div className="text-center max-w-sm mx-4">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-purple-900/40 to-indigo-900/40 border border-purple-500/30 flex items-center justify-center">
+                    <svg className="w-7 h-7 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                  </div>
+                  <h3 className="font-heading text-xl text-white mb-2">Daily Reading Complete</h3>
+                  <p className="text-[#A1A1AA] text-sm mb-4">
+                    Your daily free reading is complete. Upgrade to Premium for unlimited guidance.
+                  </p>
+                  <div className="bg-white/[0.03] rounded-xl p-3 mb-4 border border-white/[0.05]">
+                    <div className="flex items-center gap-2 text-[11px] text-purple-300/60 mb-2">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>Next reading in: {getTimeUntilReset()}</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => { setShowUpgradeModal(true); logEvent('upgrade_cta_clicked', { userId }); }}
+                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#FFD700] to-[#FFC400] text-black font-bold text-sm hover:shadow-lg hover:shadow-[#FFD700]/30 transition-all flex items-center justify-center gap-2"
+                  >
+                    <CrownIcon className="w-4 h-4" /> Unlock Premium - ₹199/month
+                  </button>
+                  <button
+                    onClick={() => setIframeBlocked(false)}
+                    className="w-full mt-2.5 text-xs text-purple-400/50 hover:text-purple-300 transition-colors py-1.5"
+                  >
+                    Continue with free experience
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Reading iframe */}
+            <div className="flex-1 flex items-center justify-center">
+              <div className="w-[92vw] h-[88vh] md:w-[85vw] md:h-[88vh]">
+                <iframe
+                  ref={iframeRef}
+                  src={`https://ginni-ki-baatein-buddy.lovable.app${isPremium ? '?plan=premium' : ''}`}
+                  width="100%"
+                  height="100%"
+                  className={`border-none transition-all duration-500 ${loaded ? 'opacity-100' : 'opacity-0'} ${iframeBlocked ? 'pointer-events-none opacity-40' : ''}`}
+                  onLoad={() => {
+                    setLoaded(true);
+                    logEvent('reading_iframe_loaded', { userId, plan, isPremium });
+                  }}
+                  allow="clipboard-write; microphone; camera"
+                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                  title="Ginni AI Spiritual Reading"
+                  referrerPolicy="no-referrer"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          </motion.div>
         </AnimatePresence>
 
         {/* Usage indicator */}
