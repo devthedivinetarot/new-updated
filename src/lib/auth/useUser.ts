@@ -75,14 +75,18 @@ export function useUser() {
           return;
         }
 
-        const profileResult = await withTimeout(
+        const profileResult = await Promise.race([
           supabase
             .from('users')
             .select('id, phone, email, anonymous_id')
             .eq('id', authUser.id)
             .single(),
-          8000
-        );
+          new Promise<never>((_, reject) => {
+            setTimeout(() => {
+              reject(new Error('Supabase request timed out after 8000ms'));
+            }, 8000);
+          }),
+        ]);
 
         const { data: profile, error: profileError } = profileResult as unknown as {
           data: ExtendedUser | null;
