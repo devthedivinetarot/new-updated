@@ -315,7 +315,7 @@ export default function ReadingPage() {
 
             {/* Reading iframe */}
             <div className="flex-1 flex items-center justify-center">
-              <div className="w-[92vw] h-[88vh] md:w-[85vw] md:h-[88vh]">
+              <div className="w-[80vw] h-[80vh]">
                 <iframe
                   ref={iframeRef}
                   src={`https://ginni-ki-baatein-buddy.lovable.app${isPremium ? '?plan=premium' : ''}`}
@@ -330,7 +330,7 @@ export default function ReadingPage() {
                   sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
                   title="Ginni AI Spiritual Reading"
                   referrerPolicy="no-referrer"
-                  loading="lazy"
+                  loading="eager"
                 />
               </div>
             </div>
