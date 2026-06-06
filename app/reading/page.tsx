@@ -6,8 +6,10 @@ export default function ReadingPage() {
   return (
     <div className="min-h-[calc(100vh-0px)] bg-[#0B0B0F] text-white">
       <main className="min-h-[100vh] flex">
-        {/* Centered 80% viewport iframe */}
-        <section className="w-[80vw] h-[80vh] max-w-5xl mx-auto my-auto">
+
+        {/* Centered 90% viewport iframe */}
+        <section className="w-[80vw] h-[90vh] max-w-5xl mx-auto my-auto">
+
 
           <iframe
             src={READING_URL}
