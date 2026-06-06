@@ -36,9 +36,9 @@ export default function ReadingPage() {
 
   const isLoading = userLoading;
 
+  const showIframe = true;
 
-
-  // ── postMessage helpers ───────────────────────────────────────────────
+  // ── postMessage helpers
 
   const sendSubscriptionState = useCallback(() => {
     if (!iframeRef.current?.contentWindow) return;
@@ -193,7 +193,7 @@ export default function ReadingPage() {
 
     const buildIframeQuery = () => (isPremium ? '?plan=premium' : '');
 
-const defer = () => {
+    const defer = () => {
       // Keep it browser-friendly; avoid blocking render.
       if ('requestIdleCallback' in window) {
         (window as any).requestIdleCallback(() => {
@@ -241,7 +241,8 @@ const defer = () => {
 
         {/* Loading skeleton / error fallback */}
         {!loaded && (
-          <div className="flex-1 flex items-center justify-center relative z-10 p-4">
+          <div className="flex-1 flex items-center justify-center relative z-10 p-4" style={{ pointerEvents: 'none' }}>
+
             <div className="text-center max-w-md">
               {!initError ? (
                 <>
@@ -353,14 +354,16 @@ const defer = () => {
             )}
 
             {/* Reading iframe */}
-            <div className="flex-1 flex items-center justify-center">
-              <div
+            {showIframe && (
+              <div className="flex-1 flex items-center justify-center">
+                <div
                 className="relative mx-auto w-[80vw] max-w-[80vw] sm:w-[95vw] sm:max-w-[95vw]"
                 style={{
                   aspectRatio: '16 / 9',
                   maxHeight: '80vh',
                 }}
               >
+
                 {/* Loading spinner / skeleton */}
                 {!loaded && (
                   <div
@@ -389,13 +392,15 @@ const defer = () => {
                     logEvent('reading_iframe_loaded', { userId, plan, isPremium });
                   }}
                   allow="clipboard-write; microphone; camera"
-                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                  sandbox="allow-scripts allow-forms allow-popups"
+
                   title="Ginni AI Spiritual Reading"
                   referrerPolicy="no-referrer"
                   loading="lazy"
                 />
               </div>
             </div>
+            )}
           </motion.div>
         </AnimatePresence>
 
