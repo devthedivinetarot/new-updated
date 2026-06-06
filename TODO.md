@@ -1,18 +1,15 @@
-# TODO
+# TODO - /reading page refactor
 
-## Supabase env + build crash fix
-- [x] Update Vercel project Environment Variables:
-  - [ ] NEXT_PUBLIC_SUPABASE_URL (set to production Supabase URL)
-  - [ ] NEXT_PUBLIC_SUPABASE_ANON_KEY (set to production Supabase anon key)
-  - [ ] SUPABASE_SERVICE_ROLE_KEY (required for production server-side)
-- [ ] Trigger fresh Vercel production redeploy with cache cleared.
+- [ ] Confirm current `/reading/page.tsx` implementation details
+- [ ] Implement explicit layout constraints:
+  - [ ] No footer on this route (avoid `ClientLayout` footer)
+  - [ ] Page container max height exactly `h-[90vh]` and centered
+- [ ] Implement premium styling:
+  - [ ] Deep minimalist background `bg-[#0a0a0a]`
+  - [ ] Back to Home button styling per spec (border/text yellow, gold glow, rounded-full)
+- [ ] Implement iframe constraints:
+  - [ ] Wrap iframe in `w-[90%] h-[90%]` relative to parent section
+  - [ ] Add rounded-2xl, overflow-hidden, gold/yellow shadow aura
+- [ ] Verify Tailwind classes compile
+- [ ] (Optional) Run lint/tests/build if available
 
-
-## Reading page layout fix
-- [x] Refactor `app/reading/page.tsx` to ensure a single unified return.
-- [x] Render “Connection Interrupted” alert inline via `{initError && (...)}`.
-- [x] Ensure Lovable iframe container always mounts outside any conditional.
-- [ ] Validate build/lint (optional): `npm run build` (may require env vars; local build may fail due to missing env).
-
-
- 
