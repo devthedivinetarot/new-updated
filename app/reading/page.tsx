@@ -224,9 +224,11 @@ const defer = () => {
   // ── Render ────────────────────────────────────────────────────────────
 
 
+  // Single unified return (avoid early returns that block layout rendering)
   return (
     <>
       <main className="flex-1 flex flex-col overflow-hidden bg-[#0B0B0F] relative">
+
 
         {/* Background glow */}
         <div className="absolute inset-0 pointer-events-none">
