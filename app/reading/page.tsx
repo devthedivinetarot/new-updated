@@ -5,8 +5,9 @@ const READING_URL = 'https://ginni-ki-baatein-buddy.lovable.app';
 export default function ReadingPage() {
   return (
     <div className="bg-[#0a0a0a] text-white">
-      {/* 90% viewscreen height immersive container */}
-      <main className="h-[90vh] w-full flex flex-col items-center justify-center relative bg-[#0a0a0a]">
+      {/* Extend section above footer: occupy ~80% of screen height */}
+      <main className="h-[80vh] w-full flex flex-col items-center justify-center relative bg-[#0a0a0a]">
+
         {/* Premium "Back to Home" (top-left, above iframe) */}
         <Link
           href="/"
