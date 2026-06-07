@@ -88,8 +88,8 @@ export default function ReadingPage() {
         {/* 90vw x 90vh chat wrapper (must fill exactly) */}
         <div id="reading-chat-wrapper" className="relative w-[90vw] h-[90vh] flex items-stretch justify-center overflow-hidden">
           <div className="relative chatbot-parent-container w-full h-full rounded-none border-none bg-black/10 backdrop-blur shadow-[0_0_70px_rgba(109,40,217,0.18)] overflow-hidden">
-            <style jsx global>{`
-              /* High-specificity override to avoid global layout/iframe defaults */
+            {/* Inline style tag (no styled-jsx to avoid build tooling issues) */}
+            <style>{`
               #reading-chat-iframe {
                 display: block !important;
                 width: 100% !important;
@@ -100,7 +100,6 @@ export default function ReadingPage() {
                 outline: none !important;
                 box-sizing: border-box !important;
               }
-              /* Ensure wrapper padding/margins never sneak in */
               #reading-chat-wrapper,
               #reading-chat-wrapper * {
                 margin: 0 !important;
