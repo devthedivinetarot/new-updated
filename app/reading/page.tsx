@@ -71,7 +71,7 @@ export default function ReadingPage() {
         }
       `}</style>
 
-      <main className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+      <main className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8 h-screen flex flex-col">
         {/* Premium Back to Home */}
         <div className="flex items-start justify-start">
           <Link
@@ -86,7 +86,7 @@ export default function ReadingPage() {
         </div>
 
         {/* Iframe container */}
-        <div className="relative mt-8 flex w-full items-center justify-center">
+        <div className="relative flex flex-1 items-stretch justify-center w-full">
           <div
             className="relative w-full max-w-6xl overflow-hidden rounded-3xl border border-amber-500/20 bg-black/10 shadow-[0_0_50px_rgba(217,119,6,0.15),_0_0_100px_rgba(109,40,217,0.1)] backdrop-blur"
           >
@@ -144,7 +144,7 @@ export default function ReadingPage() {
             )}
 
             {/* Responsive iframe box */}
-            <div className="relative w-[90%] sm:w-[92%] h-[70vh] sm:h-[78vh] md:h-[82vh]">
+            <div className="relative w-full h-[90vh]">
               <iframe
                 src={READING_URL}
                 title="Tarot Reading Buddy"
