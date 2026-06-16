@@ -271,11 +271,6 @@ export default function AboutPage() {
                     ? t('about.redesigned.differentiator.p1')
                     : 'Where ancient tradition meets intuitive innovation. I bridge the timeless wisdom of Eastern mysticism with a grounded, modern approach — creating a holistic experience that honors both spirit and practicality.'}
                 </p>
-                <p className="text-foreground-secondary text-center text-lg">
-                  {isHydrated
-                    ? t('about.redesigned.differentiator.p2')
-                    : 'Every reading is a sacred conversation, not a template. Your energy is unique; your guidance should be too.'}
-                </p>
 
               </div>
             </div>
