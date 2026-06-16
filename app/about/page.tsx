@@ -138,7 +138,7 @@ export default function AboutPage() {
                 {/* Image as requested: use <img> tag + placeholder URL */}
                 <div className="relative w-full aspect-[4/5] md:aspect-square">
                   <img
-                    src="https://images.unsplash.com/photo-1520975916090-3105956dac38?auto=format&fit=crop&w=1200&q=80"
+                    src="/img-02.png"
                     alt="About — Elite Tarot Experience"
                     className="w-full h-full object-cover rounded-2xl"
                     loading="eager"
