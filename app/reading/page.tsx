@@ -306,7 +306,9 @@ export default function ReadingPage() {
             <div className="relative w-full h-full">
               <iframe
                 id="reading-chat-iframe"
+                key={READING_URL + '__v1'}
                 src={READING_URL}
+
                 title="Ginni Ki Baatein — Your Tarot Bestie 🌙"
                 className="h-full w-full border-0 rounded-none"
                 loading="lazy"
