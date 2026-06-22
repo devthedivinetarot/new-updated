@@ -13,8 +13,8 @@ const ORGANIZATION_SCHEMA = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'The Divine Tarot',
-  url: 'https://thedivinetarot.com',
-  logo: 'https://thedivinetarot.com/logo.png',
+  url: 'https://thedivinetarotonline.com',
+  logo: 'https://thedivinetarotonline.com/logo.png',
   sameAs: [
     'https://instagram.com/thedivineetarot',
     'https://facebook.com/profile.php?id=61578567343068',

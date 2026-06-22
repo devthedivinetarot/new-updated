@@ -19,14 +19,12 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const subject = encodeURIComponent(`Contact from ${formData.name}`);
+    const body = encodeURIComponent(
+      `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`
+    );
+    window.location.href = `mailto:thedivinetarot11@gmail.com?subject=${subject}&body=${body}`;
     setSubmitted(true);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
   };
 
   return (
@@ -67,15 +65,6 @@ export default function ContactPage() {
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
-              <FloatingInput
-                label="Tumhara naam"
-                value={formData.name}
-                onChange={(v) => setFormData({ ...formData, name: v })}
-                placeholder="Apna naam yahan likho"
-                icon={<User className="h-5 w-5" />}
-                helperText="Kyun? Taaki tumhe personal tarah se address kar saken"
-                required
-              />
               <FloatingInput
                 label={t('contact.name')}
                 value={formData.name}

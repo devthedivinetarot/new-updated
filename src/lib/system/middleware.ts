@@ -64,7 +64,7 @@ export function rateLimit(
  */
 const corsConfig = {
   origins: [
-    process.env.NEXT_PUBLIC_APP_URL || 'https://thedivinetarot.com',
+    process.env.NEXT_PUBLIC_APP_URL || 'https://thedivinetarotonline.com',
     process.env.NEXT_PUBLIC_VERCEL_URL || '',
     'http://localhost:3000',
     'http://localhost:3001',
