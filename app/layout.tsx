@@ -16,13 +16,85 @@ function getNonce(): string | undefined {
   }
 }
 
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://thedivinetarotonline.com';
+const SITE_NAME = 'The Divine Tarot';
+
 export const metadata: Metadata = {
-  title: "The Divine Tarot | Premium Tarot Readings",
-  description: "Get answers from the universe in seconds. Experience mystical, emotionally intelligent tarot readings.",
-  keywords: "tarot, tarot reading, spiritual guidance, fortune telling, psychic reading",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: 'The Divine Tarot | Premium Tarot Readings in English, Hindi & Hinglish',
+    template: '%s | The Divine Tarot',
+  },
+  description:
+    'Get answers from the universe in seconds. Experience mystical, emotionally intelligent tarot readings for love, career and life — in English, Hindi and Hinglish.',
+  applicationName: SITE_NAME,
+  authors: [{ name: 'The Divine Tarot' }, { name: 'Bharti Singh' }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  category: 'Spirituality',
+  keywords: [
+    'tarot',
+    'tarot reading',
+    'online tarot reading',
+    'hindi tarot',
+    'hinglish tarot',
+    'tarot card reading',
+    'love tarot',
+    'career tarot',
+    'spiritual guidance',
+    'psychic reading',
+    'fortune telling',
+    'daily tarot',
+    'The Divine Tarot',
+  ],
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    siteName: SITE_NAME,
+    title: 'The Divine Tarot | Premium Tarot Readings',
+    description:
+      'Mystical, emotionally intelligent tarot readings for love, career and life — in English, Hindi and Hinglish.',
+    url: '/',
+    locale: 'en_US',
+    alternateLocale: ['hi_IN', 'en_IN'],
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'The Divine Tarot — Premium Tarot Readings',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'The Divine Tarot | Premium Tarot Readings',
+    description:
+      'Mystical, emotionally intelligent tarot readings in English, Hindi & Hinglish.',
+    images: ['/og-image.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
   icons: {
-    icon: "/favicon.ico",
-    apple: "/favicon.ico",
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
+  },
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
   },
 };
 
@@ -30,6 +102,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
+  themeColor: '#6d28d9',
 };
 
 export default function RootLayout({
@@ -69,5 +142,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-

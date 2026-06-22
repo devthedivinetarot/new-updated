@@ -1,41 +1,100 @@
 /**
  * FooterJsonLd
  *
- * Renders the Organization schema as script-src JSON-LD.
- * This is intentionally a Server Component (no 'use client').
- * 
- * Note: next/script with id avoids CSP nonce requirement for JSON-LD,
- * and works correctly with Next.js's script handling.
+ * Site-wide JSON-LD structured data graph. Rendered server-side and CSP-safe
+ * via next/script. A connected @graph (Organization + WebSite + Service +
+ * founder Person) gives both classic search engines and AI answer engines
+ * (GEO) a clear, citable understanding of the brand, its services and entities.
  */
 import Script from 'next/script';
 
-const ORGANIZATION_SCHEMA = {
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://thedivinetarotonline.com';
+
+const STRUCTURED_DATA = {
   '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: 'The Divine Tarot',
-  url: 'https://thedivinetarotonline.com',
-  logo: 'https://thedivinetarotonline.com/logo.png',
-  sameAs: [
-    'https://instagram.com/thedivineetarot',
-    'https://facebook.com/profile.php?id=61578567343068',
-    'https://youtube.com/@TheDivineTarot',
-    'https://youtube.com/@thedivineetarot',
+  '@graph': [
+    {
+      '@type': ['Organization', 'ProfessionalService'],
+      '@id': `${BASE_URL}/#organization`,
+      name: 'The Divine Tarot',
+      alternateName: 'TheDivineTarot Online',
+      url: BASE_URL,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${BASE_URL}/logo.png`,
+        width: 426,
+        height: 500,
+      },
+      image: `${BASE_URL}/og-image.png`,
+      description:
+        'Online tarot reading service offering mystical, emotionally intelligent spiritual guidance for love, career and life in English, Hindi and Hinglish.',
+      email: 'thedivinetarot11@gmail.com',
+      foundingDate: '2020',
+      founder: { '@id': `${BASE_URL}/#founder` },
+      knowsLanguage: ['en', 'hi'],
+      areaServed: [
+        { '@type': 'Country', name: 'India' },
+        { '@type': 'Place', name: 'Worldwide' },
+      ],
+      priceRange: '₹₹',
+      contactPoint: {
+        '@type': 'ContactPoint',
+        email: 'thedivinetarot11@gmail.com',
+        contactType: 'customer support',
+        availableLanguage: ['English', 'Hindi'],
+      },
+      sameAs: [
+        'https://instagram.com/thedivineetarot',
+        'https://facebook.com/profile.php?id=61578567343068',
+        'https://youtube.com/@TheDivineTarot',
+        'https://youtube.com/@thedivineetarot',
+      ],
+    },
+    {
+      '@type': 'Person',
+      '@id': `${BASE_URL}/#founder`,
+      name: 'Bharti Singh',
+      jobTitle: 'Tarot Reader & Spiritual Life Coach',
+      worksFor: { '@id': `${BASE_URL}/#organization` },
+      knowsLanguage: ['en', 'hi'],
+      sameAs: ['https://youtube.com/@TheDivineTarot'],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${BASE_URL}/#website`,
+      url: BASE_URL,
+      name: 'The Divine Tarot',
+      description:
+        'Premium online tarot readings and spiritual guidance in English, Hindi and Hinglish.',
+      publisher: { '@id': `${BASE_URL}/#organization` },
+      inLanguage: ['en', 'hi'],
+    },
+    {
+      '@type': 'Service',
+      '@id': `${BASE_URL}/#service`,
+      serviceType: 'Tarot Card Reading',
+      name: 'Online Tarot Reading',
+      provider: { '@id': `${BASE_URL}/#organization` },
+      areaServed: [
+        { '@type': 'Country', name: 'India' },
+        { '@type': 'Place', name: 'Worldwide' },
+      ],
+      availableChannel: {
+        '@type': 'ServiceChannel',
+        serviceUrl: `${BASE_URL}/reading`,
+      },
+      description:
+        'Instant, emotionally intelligent tarot readings for love, relationships, career, money and life decisions, available in English, Hindi and Hinglish.',
+    },
   ],
-  contactPoint: {
-    '@type': 'ContactPoint',
-    email: 'thedivinetarot11@gmail.com',
-    contactType: 'customer support',
-  },
 };
 
 export default function FooterJsonLd() {
-  const jsonLd = JSON.stringify(ORGANIZATION_SCHEMA);
-
   return (
     <Script
-      id="organization-json-ld"
+      id="site-structured-data"
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: jsonLd }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURED_DATA) }}
     />
   );
 }
