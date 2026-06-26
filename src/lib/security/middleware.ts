@@ -131,6 +131,7 @@ export const securityHeadersMiddleware: NextMiddleware = async (req: NextRequest
     "frame-src https://ginni-ki-baatein-buddy.lovable.app"
       + " https://ginnitdt.lovable.app"
       + " https://tdt-ginni-1.vercel.app"
+      + " https://chat.thedivinetarotonline.com"
       + " https://checkout.razorpay.com"
       + " https://securecdn.razorpay.com",
     "worker-src 'self' blob:",

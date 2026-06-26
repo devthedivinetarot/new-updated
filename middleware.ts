@@ -134,7 +134,7 @@ export async function middleware(request: NextRequest) {
       `font-src 'self' https://fonts.gstatic.com`,
       `img-src 'self' data: https:`,
       `connect-src 'self' https://*.supabase.co https://api.openai.com https://api.razorpay.com https://*.ingest.us.sentry.io https://*.ingest.sentry.io`,
-      `frame-src https://ginni-ki-baatein-buddy.lovable.app https://ginnitdt.lovable.app https://tdt-ginni-1.vercel.app https://checkout.razorpay.com https://securecdn.razorpay.com https://vercel.live`,
+      `frame-src https://ginni-ki-baatein-buddy.lovable.app https://ginnitdt.lovable.app https://tdt-ginni-1.vercel.app https://chat.thedivinetarotonline.com https://checkout.razorpay.com https://securecdn.razorpay.com https://vercel.live`,
       `worker-src 'self' blob:`,
       `object-src 'none'`,
       `base-uri 'self'`,

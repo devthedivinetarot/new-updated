@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-const READING_URL = "https://tdt-ginni-1.vercel.app/";
+const READING_URL = "https://chat.thedivinetarotonline.com/";
 
 export default function ReadingPage() {
   const [isLoaded, setIsLoaded] = useState(false);
