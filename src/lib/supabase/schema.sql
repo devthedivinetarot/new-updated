@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS public.users (
   metadata JSONB DEFAULT '{}'
 );
 
-CREATE INDEX idx_users_anonymous ON public.users(anonymous_id);
-CREATE INDEX idx_users_created ON public.users(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_users_anonymous ON public.users(anonymous_id);
+CREATE INDEX IF NOT EXISTS idx_users_created ON public.users(created_at DESC);
 
 -- ============================================
 -- READINGS TABLE
@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS public.readings (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE INDEX idx_readings_user ON public.readings(user_id);
-CREATE INDEX idx_readings_created ON public.readings(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_readings_user ON public.readings(user_id);
+CREATE INDEX IF NOT EXISTS idx_readings_created ON public.readings(created_at DESC);
 
 -- ============================================
 -- CARDS_DRAWN TABLE
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS public.cards_drawn (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE INDEX idx_cards_reading ON public.cards_drawn(reading_id);
+CREATE INDEX IF NOT EXISTS idx_cards_reading ON public.cards_drawn(reading_id);
 
 -- ============================================
 -- AI_RESPONSES TABLE
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS public.ai_responses (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE INDEX idx_ai_responses_reading ON public.ai_responses(reading_id);
+CREATE INDEX IF NOT EXISTS idx_ai_responses_reading ON public.ai_responses(reading_id);
 
 -- ============================================
 -- EVENTS TABLE (Full Funnel Tracking)
@@ -71,9 +71,9 @@ CREATE TABLE IF NOT EXISTS public.events (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE INDEX idx_events_user ON public.events(user_id);
-CREATE INDEX idx_events_name ON public.events(event_name);
-CREATE INDEX idx_events_created ON public.events(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_events_user ON public.events(user_id);
+CREATE INDEX IF NOT EXISTS idx_events_name ON public.events(event_name);
+CREATE INDEX IF NOT EXISTS idx_events_created ON public.events(created_at DESC);
 
 -- ============================================
 -- USER_MEMORY TABLE (Personalization)
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS public.user_memory (
   UNIQUE(user_id, key)
 );
 
-CREATE INDEX idx_user_memory_user ON public.user_memory(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_memory_user ON public.user_memory(user_id);
 
 -- ============================================
 -- FUNNEL ANALYTICS VIEW
@@ -153,9 +153,12 @@ ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.readings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.events ENABLE ROW LEVEL SECURITY;
 
--- Allow public read access to analytics
-CREATE POLICY "Enable read access for all users" ON public.funnel_summary FOR SELECT USING (true);
-CREATE POLICY "Enable read access for user retention" ON public.user_retention FOR SELECT USING (true);
+-- Allow public read access to the analytics VIEWS.
+-- NOTE: RLS policies cannot be attached to a VIEW (Postgres raises 42809:
+-- "<name> is not a table"). Views are exposed with GRANTs instead; the
+-- underlying tables remain protected by their own row level security.
+GRANT SELECT ON public.funnel_summary TO anon, authenticated;
+GRANT SELECT ON public.user_retention TO anon, authenticated;
 
 -- ============================================
 -- SUBSCRIPTION & PAYMENT SCHEMA (v2 Additions)
