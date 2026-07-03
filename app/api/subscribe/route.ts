@@ -62,9 +62,24 @@ export async function POST(req: NextRequest) {
           alreadySubscribed = true;
           supabaseStored = true;
         } else {
-          console.error('[newsletter] supabase insert error', error);
+          const code = (error as any)?.code;
+          if (code === '42P01') {
+            console.error(
+              '[newsletter] Table public.newsletter_subscribers is missing. Run src/lib/supabase/schema.sql in the Supabase SQL editor.'
+            );
+          } else if (code === '42501') {
+            console.error(
+              '[newsletter] Insert blocked by RLS. Set SUPABASE_SERVICE_ROLE_KEY in the deployment env (service role bypasses RLS).'
+            );
+          } else {
+            console.error('[newsletter] supabase insert error', error);
+          }
         }
       }
+    } else {
+      console.warn(
+        '[newsletter] Supabase not configured (need NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY).'
+      );
     }
   } catch (err) {
     console.error('[newsletter] supabase step failed', err);
@@ -75,6 +90,9 @@ export async function POST(req: NextRequest) {
 
   // Fail only if the email could not be saved anywhere.
   if (!supabaseStored && !sheetStored) {
+    console.error(
+      '[newsletter] No storage available — configure Supabase (run schema.sql + service role key) and/or GOOGLE_SHEET_WEBHOOK_URL.'
+    );
     return NextResponse.json(
       { success: false, message: 'We could not save your email right now. Please try again.' },
       { status: 500 }

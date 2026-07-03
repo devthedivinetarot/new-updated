@@ -212,7 +212,7 @@ const Footer = () => {
       {/* COPYRIGHT BAR */}
       <div className="border-t border-white/10 mt-4 pt-6 flex flex-col md:flex-row justify-between text-sm text-gray-400 px-6">
         <div>
-          Designed by <a href="https://www.sitelytc.com/" target="_blank" rel="noopener noreferrer" className="hover:text-amber-500/70 transition-colors">Sitelytc</a>
+          Designed by <span className="text-amber-500/70">Sitelytc</span>
         </div>
         <div className="flex items-center gap-4 mt-2 md:mt-0">
           {/* <span>Privacy Policy</span>
