@@ -61,24 +61,30 @@ export default function Header() {
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="mx-auto flex h-14 sm:h-16 lg:h-[68px] w-full max-w-7xl items-center justify-between px-4 sm:px-6">
-          <Link href="/" className="flex items-center gap-2 sm:gap-3 group">
-            <div className="relative w-8 h-8 sm:w-10 sm:h-10">
+        <div className="mx-auto grid h-14 sm:h-16 lg:h-[68px] w-full max-w-7xl grid-cols-2 lg:grid-cols-3 items-center px-4 sm:px-6">
+          {/* Left: logo + website info, left-aligned */}
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 group justify-self-start">
+            <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0">
                 <Image
                  src="/logo.png"
                  alt="The Divine Tarot Logo"
-                width={32}
-                height={32}
+                width={40}
+                height={40}
                 className="object-contain transition-transform duration-300 group-hover:scale-105"
               />
             </div>
-            <span className="font-heading text-base sm:text-lg font-semibold text-white whitespace-nowrap">
-              The Divine Tarot
+            <span className="flex flex-col leading-tight">
+              <span className="font-heading text-base sm:text-lg font-semibold text-white whitespace-nowrap">
+                The Divine Tarot
+              </span>
+              <span className="text-[10px] sm:text-[11px] font-medium tracking-[0.15em] text-[#FFD700]/80 uppercase whitespace-nowrap">
+                Premium Tarot Guidance
+              </span>
             </span>
           </Link>
 
-          {/* Desktop navigation: hidden on tablet and below */}
-          <nav className="hidden items-center gap-4 lg:gap-6 lg:flex">
+          {/* Middle: nav menu, center-aligned. Hidden on tablet and below */}
+          <nav className="hidden items-center justify-center gap-4 lg:gap-6 lg:flex justify-self-center">
             {navLinks.map((link) => (
               link.isExternal ? (
                 <a
@@ -113,13 +119,23 @@ export default function Header() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-1 sm:gap-3">
-            <Link 
+          {/* Right: Contact + Course buttons, right-aligned */}
+          <div className="flex items-center gap-1 sm:gap-3 justify-self-end">
+            <Link
               href="/contact"
-              className="hidden lg:block bg-gradient-to-r from-[#FF4D4D] to-[#FFD700] text-black font-medium rounded-xl px-3 sm:px-5 py-2 text-sm hover:scale-105 transition-transform active:scale-95"
+              className="hidden lg:block border border-white/25 text-white font-semibold rounded-full px-4 sm:px-6 py-2 text-sm hover:bg-white/10 transition-colors active:scale-95"
             >
               {isHydrated ? t('nav.contact') : 'Contact'}
             </Link>
+
+            <a
+              href="https://learn.thedivinetarotonline.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden lg:block bg-gradient-to-r from-[#FF4D4D] to-[#FFD700] text-black font-semibold rounded-full px-4 sm:px-6 py-2 text-sm hover:scale-105 transition-transform active:scale-95"
+            >
+              Course
+            </a>
 
             <button
               className="lg:hidden p-2 text-white min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors active:scale-95"
@@ -195,14 +211,23 @@ export default function Header() {
                     </Link>
                   )
                 ))}
-                <div className="pt-4 mt-2 border-t border-white/10">
+                <div className="pt-4 mt-2 border-t border-white/10 flex flex-col gap-3">
                   <Link
                     href="/contact"
                     onClick={() => setIsMobileOpen(false)}
-                    className="block w-full text-center bg-gradient-to-r from-[#FF4D4D] to-[#FFD700] text-black font-semibold rounded-xl px-5 py-3 min-h-[48px] flex items-center justify-center"
+                    className="block w-full text-center border border-white/25 text-white font-semibold rounded-xl px-5 py-3 min-h-[48px] flex items-center justify-center hover:bg-white/10 transition-colors"
                   >
                     {isHydrated ? t('nav.contact') : 'Contact'}
                   </Link>
+                  <a
+                    href="https://learn.thedivinetarotonline.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setIsMobileOpen(false)}
+                    className="block w-full text-center bg-gradient-to-r from-[#FF4D4D] to-[#FFD700] text-black font-semibold rounded-xl px-5 py-3 min-h-[48px] flex items-center justify-center"
+                  >
+                    Course
+                  </a>
                 </div>
               </nav>
             </motion.div>
