@@ -134,7 +134,7 @@ export default function Header() {
               rel="noopener noreferrer"
               className="hidden lg:block bg-gradient-to-r from-[#FF4D4D] to-[#FFD700] text-black font-semibold rounded-full px-4 sm:px-6 py-2 text-sm hover:scale-105 transition-transform active:scale-95"
             >
-              Course
+              Our Course
             </a>
 
             <button
