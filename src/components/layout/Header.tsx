@@ -9,7 +9,7 @@ import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
 
-const navLinks = [
+const navLinks: { href: string; labelKey: string; isExternal?: boolean }[] = [
   { href: '/', labelKey: 'nav.home' },
   { href: '/about', labelKey: 'nav.about' },
   { href: '/reading', labelKey: 'nav.reading' },
