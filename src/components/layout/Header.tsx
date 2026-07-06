@@ -13,7 +13,7 @@ const navLinks = [
   { href: '/', labelKey: 'nav.home' },
   { href: '/about', labelKey: 'nav.about' },
   { href: '/reading', labelKey: 'nav.reading' },
-  { href: '/reading?upgrade=1', labelKey: 'nav.subscription', isExternal: false },
+  // { href: '/reading?upgrade=1', labelKey: 'nav.subscription', isExternal: false },
   // { href: 'https://course.thedivinetarotonline.com/', labelKey: 'nav.course', isExternal: true },
   // { href: 'https://blog.thedivinetarotonline.com/', labelKey: 'nav.blog', isExternal: true },
   // { href: 'https://thedivinetarotonline.co.in/', labelKey: 'nav.booking', isExternal: true },
