@@ -8,12 +8,19 @@
     },
     "app/api/youtube/cron/route.ts": {
       "maxDuration": 60
+    },
+    "app/api/newsletter/daily/route.ts": {
+      "maxDuration": 60
     }
   },
   "crons": [
     {
       "path": "/api/youtube/cron",
       "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/newsletter/daily",
+      "schedule": "0 3 * * *"
     }
   ],
   "routes": [
