@@ -174,7 +174,7 @@ src="/img.png"
               <div className="absolute top-3 left-3 z-30">
                 <Image
 src="/logo.png"
-                  alt="The Devine Tarot"
+                  alt="The Divine Tarot"
                   width={48}
                   height={48}
                   className="w-10 h-10 lg:w-16 lg:h-16 object-contain drop-shadow-lg"

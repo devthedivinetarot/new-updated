@@ -100,7 +100,7 @@ export default function AboutPage() {
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.6 }}
+            viewport={{ once: true, amount: 0.15 }}
             transition={{ duration: 0.75, ease: [0.25, 0.1, 0.25, 1] }}
             className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center"
           >
@@ -180,7 +180,7 @@ export default function AboutPage() {
         <motion.section
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
+          viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.65, ease: 'easeOut' }}
           className="mb-20 md:mb-28"
           aria-label="Why this space exists"
@@ -208,7 +208,7 @@ export default function AboutPage() {
         <motion.section
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
+          viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.65, ease: 'easeOut' }}
           className="mb-20 md:mb-28"
           aria-label="The paths I walk"
@@ -223,7 +223,7 @@ export default function AboutPage() {
                 key={index}
                 initial={{ opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.6 }}
+                viewport={{ once: true, amount: 0.15 }}
                 transition={{ delay: 0.08 * index, duration: 0.55 }}
                 className="group relative"
               >
@@ -252,7 +252,7 @@ export default function AboutPage() {
         <motion.section
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
+          viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.65, ease: 'easeOut' }}
           className="mb-20 md:mb-28"
           aria-label="The sacred blend"
@@ -311,7 +311,7 @@ export default function AboutPage() {
         <motion.section
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
+          viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.65, ease: 'easeOut' }}
           className="mb-20 md:mb-28"
           aria-label="Closing message"
@@ -337,7 +337,7 @@ export default function AboutPage() {
         <motion.section
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.6 }}
+          viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.65, ease: 'easeOut' }}
           className="text-center"
           aria-label="Start your reading"

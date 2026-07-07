@@ -27,10 +27,12 @@ export const SUBSCRIPTION_PLANS: Record<PlanType, SubscriptionPlan> = {
     price: 0,
     priceId: '',
     features: [
-      '1 message per day to Ginni',
+      // Keep in sync with the free limit enforced by the reading chat app
+      // (chat.thedivinetarotonline.com), which users actually see.
+      '3 free readings per day',
       'Basic tarot guidance',
     ],
-    readingsPerDay: 1,
+    readingsPerDay: 3,
     aiResponsesPriority: false,
     personalConsultation: false,
     whatsappExclusive: false,

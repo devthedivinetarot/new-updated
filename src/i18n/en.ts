@@ -201,7 +201,7 @@ export const en: TranslationSchema = {
    },
 
    whySection: {
-      title: 'Why The Devine Tarot?',
+      title: 'Why The Divine Tarot?',
       description: 'We combine ancient tarot wisdom to create something truly unique - readings that feel personal, profound, and precisely tailored to you.',
       readings: '10,000+ readings',
       rating: '4.9 rating',

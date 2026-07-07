@@ -242,7 +242,7 @@ export const hinglish: TranslationSchema = {
 
    whySection: {
       ...en.whySection,
-      title: 'Kyun The Devine Tarot?',
+      title: 'Kyun The Divine Tarot?',
       description: 'Hum ancient tarot wisdom ko tumhari energy ke saath mix karte hain - readings jo personal, profound aur bilkul tumhare liye perfect hain.',
       readings: '10,000+ readings',
       rating: '4.9 rating',

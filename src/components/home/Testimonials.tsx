@@ -31,7 +31,7 @@ const testimonials = [
   },
   {
     name: 'Priya S.',
-    text: "This felt too accurate... I didn't expect this level of insight from an AI. Still gives me chills thinking about it.",
+    text: "This felt too accurate... I didn't expect this level of insight from an online reading. Still gives me chills thinking about it.",
     role: 'Verified Reader',
     rating: 5,
   },

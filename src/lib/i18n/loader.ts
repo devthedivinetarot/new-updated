@@ -88,7 +88,7 @@ const FALLBACK: Record<string, Record<string, string>> = {
     'testimonials.title': 'What Seekers Say',
     'testimonials.seeMore': 'See more reviews',
     // Why Section
-    'whySection.title': 'Why The Devine Tarot?',
+    'whySection.title': 'Why The Divine Tarot?',
     'whySection.description': 'We combine ancient tarot wisdom with cutting-edge AI technology.',
     'whySection.features.personalized': 'Personalized readings based on your energy',
     'whySection.features.ai': 'AI-powered insights with human warmth',
@@ -161,6 +161,21 @@ const FALLBACK: Record<string, Record<string, string>> = {
     'reading.selectCards': 'Select 3 cards',
     'reading.loading': "Let's see what comes through…",
     'reading.cardsSaying': "Your cards are saying:",
+    // Contact page
+    'contact.heading': 'Get in Touch',
+    'contact.subtitle': "Have a question or need guidance? We'd love to hear from you.",
+    'contact.name': 'Your Name',
+    'contact.namePlaceholder': 'Enter your name',
+    'contact.nameHelper': 'So we know who to address',
+    'contact.email': 'Email Address',
+    'contact.emailPlaceholder': 'you@example.com',
+    'contact.emailHelper': "We'll reply to this address",
+    'contact.message': 'Your Message',
+    'contact.messagePlaceholder': 'Write your message here…',
+    'contact.messageHelper': 'Share as much detail as you like',
+    'contact.submit': 'Send Message',
+    'contact.success.title': 'Message on its way!',
+    'contact.success.message': "Thank you for reaching out. We'll get back to you soon. ✨",
   },
   hi: {
     // Nav
@@ -304,6 +319,21 @@ const FALLBACK: Record<string, Record<string, string>> = {
     'reading.selectCards': '3 पत्ते चुनें',
     'reading.loading': 'चलो देखते हैं क्या आता है…',
     'reading.cardsSaying': 'आपके पत्ते कह रहे हैं:',
+    // Contact page
+    'contact.heading': 'संपर्क करें',
+    'contact.subtitle': 'कोई सवाल है या मार्गदर्शन चाहिए? हमें आपसे सुनकर खुशी होगी।',
+    'contact.name': 'आपका नाम',
+    'contact.namePlaceholder': 'अपना नाम लिखें',
+    'contact.nameHelper': 'ताकि हम जानें किससे बात कर रहे हैं',
+    'contact.email': 'ईमेल पता',
+    'contact.emailPlaceholder': 'you@example.com',
+    'contact.emailHelper': 'हम इसी पते पर जवाब देंगे',
+    'contact.message': 'आपका संदेश',
+    'contact.messagePlaceholder': 'अपना संदेश यहां लिखें…',
+    'contact.messageHelper': 'जितना चाहें उतना विस्तार से लिखें',
+    'contact.submit': 'संदेश भेजें',
+    'contact.success.title': 'संदेश भेज दिया गया!',
+    'contact.success.message': 'संपर्क करने के लिए धन्यवाद। हम जल्द ही आपसे संपर्क करेंगे। ✨',
   },
    hinglish: {
      // Nav
@@ -375,7 +405,7 @@ const FALLBACK: Record<string, Record<string, string>> = {
      'landing.about.linkText': 'Humare baare mein aur jaano',
      'testimonials.title': 'Seekers kya kehte hain',
      'testimonials.seeMore': 'Aur reviews dekho',
-     'whySection.title': 'Kyun The Devine Tarot?',
+     'whySection.title': 'Kyun The Divine Tarot?',
      'whySection.description': 'Hum ancient tarot wisdom ko AI tech ke saath mix karte hain.',
      'whySection.features.personalized': 'Tumhari energy ke according personalized readings',
      'whySection.features.ai': 'AI-powered insights with human touch',
@@ -447,6 +477,21 @@ const FALLBACK: Record<string, Record<string, string>> = {
     'reading.selectCards': '3 cards choose karo',
     'reading.loading': "Bas dekhte hain kya aa raha hai…",
     'reading.cardsSaying': "Tumhare cards keh rahe hain:",
+    // Contact page
+    'contact.heading': 'Humse Baat Karo',
+    'contact.subtitle': 'Koi sawaal hai ya guidance chahiye? Hum sunne ke liye ready hain.',
+    'contact.name': 'Tumhara Naam',
+    'contact.namePlaceholder': 'Apna naam likho',
+    'contact.nameHelper': 'Taaki hum jaanein kisse baat kar rahe hain',
+    'contact.email': 'Email Address',
+    'contact.emailPlaceholder': 'you@example.com',
+    'contact.emailHelper': 'Hum isi address pe reply karenge',
+    'contact.message': 'Tumhara Message',
+    'contact.messagePlaceholder': 'Apna message yahan likho…',
+    'contact.messageHelper': 'Jitna chaaho detail mein likho',
+    'contact.submit': 'Message Bhejo',
+    'contact.success.title': 'Message chala gaya!',
+    'contact.success.message': 'Reach out karne ke liye shukriya. Hum jaldi reply karenge. ✨',
   },
 }
 
@@ -486,105 +531,4 @@ function getFlatTranslation(key: string, lang: Language): string | undefined {
   if (mappedLang !== 'english') {
     const englishDict = flatDicts.english
     if (englishDict?.[key]) {
-      return englishDict[key]
-    }
-  }
-  return undefined
-}
-
-/**
- * Sync translation getter (main export for useLanguage)
- * Merges nested and flat translation sources
- */
-export function getTranslationSync(key: string, lang: Language): string {
-  // 1. Try nested structure first (existing translations)
-  const nested = getNestedTranslation(key, lang)
-  // If nested returned something different from key, it's a valid translation
-  if (nested !== key) return nested
-
-  // 2. Try flat store (CMS-managed)
-  const flat = getFlatTranslation(key, lang)
-  if (flat) return flat
-
-  // 3. Try emergency fallback
-  const fallbackValue = FALLBACK[lang]?.[key]
-  if (fallbackValue) {
-    return fallbackValue
-  }
-
-  // 4. Return human-readable fallback - extract last part of key
-  const parts = key.split('.')
-  const readable = parts[parts.length - 1]
-  if (readable && readable.length > 0) {
-    return readable.charAt(0).toUpperCase() + readable.slice(1)
-  }
-  return key
-}
-
-/**
- * Load translations from API with caching
- */
-export async function loadTranslations(lang: Language = 'en'): Promise<Record<string, string>> {
-  // Check cache first
-  if (translationCache && (Date.now() - translationCache.lastFetched) < CACHE_DURATION) {
-    const cacheLang = lang as keyof typeof translationCache.data
-    return translationCache.data[cacheLang] || {}
-  }
-
-  try {
-    // Fetch from API (for dynamic CMS updates)
-    const res = await fetch('/api/translations', {
-      cache: 'no-store'
-    })
-
-    if (res.ok) {
-      const data = await res.json()
-      translationCache = {
-        data,
-        lastFetched: Date.now()
-      }
-      return data[lang] || data.english || {}
-    }
-  } catch (error) {
-    console.warn('[i18n] Failed to fetch translations from API, using fallback:', error)
-  }
-
-  // Fallback: merge static sources (nested + flat)
-  const result: Record<string, string> = {}
-  
-  // From nested (flatten all keys)
-  const flattenNested = (obj: unknown, prefix = ''): void => {
-    if (obj && typeof obj === 'object') {
-      Object.entries(obj as Record<string, unknown>).forEach(([k, v]) => {
-        const newPrefix = prefix ? `${prefix}.${k}` : k
-        if (typeof v === 'string') {
-          result[newPrefix] = v
-        } else {
-          flattenNested(v, newPrefix)
-        }
-      })
-    }
-  }
-  flattenNested(TRANSLATIONS[lang] || {})
-  
-  // From flat store
-  const flatDicts: Record<string, Record<string, string>> = flatTranslations
-  const flatLangKey = lang as keyof typeof flatDicts
-  Object.assign(result, flatDicts[flatLangKey] || {})
-  
-  return result
-}
-
-/**
- * Clear translation cache (call after CMS updates)
- */
-export function clearTranslationCache(): void {
-  translationCache = null
-}
-
-/**
- * Refresh translations (clear cache; next fetch will be fresh)
- */
-export function refreshTranslations(): void {
-  clearTranslationCache()
-}
+      return englishDict[k

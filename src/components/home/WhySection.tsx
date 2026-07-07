@@ -25,14 +25,14 @@ export default function WhySection() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="font-heading text-heading text-foreground mb-element">
-              {isHydrated ? t('whySection.title') : 'Why The Devine Tarot?'}
+              {isHydrated ? t('whySection.title') : 'Why The Divine Tarot?'}
             </h2>
             <p className="text-subheading text-foreground-secondary leading-relaxed mb-block">
               {isHydrated ? t('whySection.description') : 'We combine ancient tarot wisdom with cutting-edge technology to create something truly unique.'}
             </p>
             <p className="text-body text-foreground-secondary leading-relaxed mb-block">
-              Unlike generic fortune tellers, we understands context, recognizes
-              emotional patterns, and provides guidance that resonates with your
+              Unlike generic fortune tellers, we understand context, recognize
+              emotional patterns, and provide guidance that resonates with your
               specific journey.
             </p>
 
@@ -80,8 +80,7 @@ export default function WhySection() {
                 </motion.div>
                 <div>
                   <h3 className="font-heading text-lg font-semibold text-foreground mb-element">
-                    {isHydrated ? t(`whySection.features.${feature.key}`) : 
-                      feature.key === 'personalized' ? 'Reading That Feels You' :
+                    {feature.key === 'personalized' ? 'Reading That Feels You' :
                       feature.key === 'ai' ? 'Personalized Insights' :
                       feature.key === 'privacy' ? 'Instant Clarity' : 'Deep Emotional Connection'}
                   </h3>
