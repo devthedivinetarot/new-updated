@@ -5,8 +5,17 @@
   "functions": {
     "app/api/subscription/webhook/route.ts": {
       "maxDuration": 30
+    },
+    "app/api/youtube/cron/route.ts": {
+      "maxDuration": 60
     }
   },
+  "crons": [
+    {
+      "path": "/api/youtube/cron",
+      "schedule": "*/15 * * * *"
+    }
+  ],
   "routes": [
     {
       "src": "/api/(.*)",
