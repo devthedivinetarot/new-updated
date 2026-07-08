@@ -47,7 +47,7 @@ export function moonTropicalLongitude(jd: number): number {
   const f = F * DEG;
 
   // Largest longitude periodic terms, coefficient in degrees.
-  let lon =
+  const lon =
     Lp +
     6.288774 * Math.sin(mp) +
     1.274027 * Math.sin(2 * d - mp) +
