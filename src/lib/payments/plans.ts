@@ -27,8 +27,9 @@ export const SUBSCRIPTION_PLANS: Record<PlanType, SubscriptionPlan> = {
     price: 0,
     priceId: '',
     features: [
-      // Keep in sync with the free limit enforced by the reading chat app
-      // (chat.thedivinetarotonline.com), which users actually see.
+      // Client decision (Jul 2026): free tier = 3 reading per day.
+      // NOTE: the actual limit is enforced by the reading chat app
+      // (chat.thedivinetarotonline.com) — keep that app's limit in sync.
       '3 free readings per day',
       'Basic tarot guidance',
     ],

@@ -192,7 +192,7 @@ const Footer = () => {
           {error && <p className="text-red-400 text-xs" role="alert">{error}</p>}
           <div className="pt-2 flex items-center gap-2 text-[#A1A1AA] text-sm">
             <Mail className="w-4 h-4 text-amber-500/70 flex-shrink-0" />
-            <span>thedivinetarot11@gmail.com</span>
+            <span>thedivinetarot111@gmail.com</span>
           </div>
         </div>
       </div>
