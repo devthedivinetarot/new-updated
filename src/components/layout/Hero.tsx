@@ -201,11 +201,11 @@ src="/logo.png"
               {isHydrated ? t('home.hero.sloganLine2') : "This is the clarity you already feel within…"}
             </motion.p>
 
-            {/* Powerful Quote (Hook) */}
+            {/* Powerful Quote (Hook) — semantic h1 for SEO */}
             <motion.div variants={itemVariants} className="mb-block">
-              <p className="font-serif text-2xl sm:text-3xl lg:text-hero text-text-primary leading-tight text-glow px-2">
+              <h1 className="font-serif text-2xl sm:text-3xl lg:text-hero text-text-primary leading-tight text-glow px-2">
                 &quot;{isHydrated ? t('home.hero.quote') : "The answer you're looking for… you already feel it."}&quot;
-              </p>
+              </h1>
             </motion.div>
 
             {/* CTA Button - Red to Yellow gradient, highest visual dominance, pulse animation */}

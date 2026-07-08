@@ -227,7 +227,7 @@ const Footer = () => {
           <span className="w-px h-3 bg-white/10" />
           <span>Terms of Service</span>
           <span className="w-px h-3 bg-white/10" /> */}
-          <span id="footer-year">© 2026 The Divine Tarot. All rights reserved.</span>
+          <span id="footer-year">© {new Date().getFullYear()} The Divine Tarot. All rights reserved.</span>
         </div>
       </div>
     </footer>

@@ -54,12 +54,9 @@ export default function Header() {
     <>
       <motion.header
         className={cn(
-          "sticky top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-md bg-black/60 border-b border-white/10",
+          "sticky top-0 left-0 right-0 z-50 transition-transform duration-300 backdrop-blur-md bg-black/60 border-b border-white/10",
           isHidden ? "translate-y-[-100%]" : "translate-y-0"
         )}
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
       >
         <div className="mx-auto grid h-14 sm:h-16 lg:h-[68px] w-full max-w-7xl grid-cols-2 lg:grid-cols-3 items-center px-4 sm:px-6">
           {/* Left: logo + website info, left-aligned */}

@@ -10,52 +10,32 @@ interface ClientProvidersProps {
 
 export default function ClientProviders({ children }: ClientProvidersProps) {
   const [userId, setUserId] = useState<string | null>(null);
-  const [isReady, setIsReady] = useState(false);
 
+  // Resolve the user id in the background. This MUST NOT block rendering the
+  // app: gating the whole tree behind supabase.auth.getUser() meant the server
+  // (and initial client) render was just a "Loading…" screen — no <h1>, no hero,
+  // broken SEO, a black first paint, and entrance animations that mounted late.
+  // Personalization simply starts with a null userId and updates once known.
   useEffect(() => {
+    let cancelled = false;
+
     const initUser = async () => {
       try {
-        // Check for authenticated user first
         const { data: { user }, error } = await supabase.auth.getUser();
-        
-        if (user && !error) {
-          setUserId(user.id);
-        } else {
-          // Fallback to anonymous ID
-          const anonId = crypto.randomUUID();
-          setUserId(anonId);
-        }
+        if (cancelled) return;
+        setUserId(user && !error ? user.id : crypto.randomUUID());
       } catch (e) {
         console.warn('[User] Failed to get user session:', e);
-        const anonId = crypto.randomUUID();
-        setUserId(anonId);
-      } finally {
-        setIsReady(true);
+        if (!cancelled) setUserId(crypto.randomUUID());
       }
     };
 
     initUser();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
-
-  // Add timeout to prevent infinite loading
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (!isReady) {
-        console.warn('[User] ClientProviders timeout reached');
-        setIsReady(true);
-      }
-    }, 5000);
-
-    return () => clearTimeout(timeout);
-  }, [isReady]);
-
-  if (!isReady) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[rgb(var(--background))]">
-        <div className="text-foreground animate-pulse">Loading...</div>
-      </div>
-    );
-  }
 
   return (
     <PersonalizationProvider userId={userId}>
