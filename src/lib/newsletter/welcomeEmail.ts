@@ -4,7 +4,7 @@
  */
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://thedivinetarotonline.com';
-const SUPPORT_EMAIL = 'thedivinetarot11@gmail.com';
+const SUPPORT_EMAIL = 'thedivinetarot111@gmail.com';
 
 export function welcomeEmailHtml(): string {
   return `<!DOCTYPE html>

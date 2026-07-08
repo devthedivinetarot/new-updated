@@ -7,7 +7,7 @@
 import type { DailyMessage } from './dailyMessages';
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://thedivinetarotonline.com';
-const SUPPORT_EMAIL = 'thedivinetarot11@gmail.com';
+const SUPPORT_EMAIL = 'thedivinetarot111@gmail.com';
 
 export function dailyEmailHtml(msg: DailyMessage): string {
   const readingUrl = `${SITE_URL}/reading?utm_source=newsletter&utm_medium=email&utm_campaign=daily&utm_content=${encodeURIComponent(

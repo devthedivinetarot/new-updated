@@ -28,7 +28,7 @@ const STRUCTURED_DATA = {
       image: `${BASE_URL}/og-image.png`,
       description:
         'Online tarot reading service offering mystical, emotionally intelligent spiritual guidance for love, career and life in English, Hindi and Hinglish.',
-      email: 'thedivinetarot11@gmail.com',
+      email: 'thedivinetarot111@gmail.com',
       foundingDate: '2020',
       founder: { '@id': `${BASE_URL}/#founder` },
       knowsLanguage: ['en', 'hi'],
@@ -39,7 +39,7 @@ const STRUCTURED_DATA = {
       priceRange: '₹₹',
       contactPoint: {
         '@type': 'ContactPoint',
-        email: 'thedivinetarot11@gmail.com',
+        email: 'thedivinetarot111@gmail.com',
         contactType: 'customer support',
         availableLanguage: ['English', 'Hindi'],
       },

@@ -23,7 +23,7 @@ export default function ContactPage() {
     const body = encodeURIComponent(
       `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`
     );
-    window.location.href = `mailto:thedivinetarot11@gmail.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:thedivinetarot111@gmail.com?subject=${subject}&body=${body}`;
     setSubmitted(true);
   };
 
