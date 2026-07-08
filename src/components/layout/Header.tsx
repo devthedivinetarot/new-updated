@@ -60,9 +60,9 @@ export default function Header() {
           isHidden ? "translate-y-[-100%]" : "translate-y-0"
         )}
       >
-        <div className="mx-auto grid h-14 sm:h-16 lg:h-[68px] w-full max-w-7xl grid-cols-2 lg:grid-cols-3 items-center px-4 sm:px-6">
+        <div className="mx-auto flex h-14 sm:h-16 lg:h-[68px] w-full max-w-7xl items-center gap-3 px-4 sm:px-6">
           {/* Left: logo + website info, left-aligned */}
-          <Link href="/" className="flex items-center gap-2 sm:gap-3 group justify-self-start">
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
             <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0">
                 <Image
                  src="/logo.png"
@@ -82,8 +82,8 @@ export default function Header() {
             </span>
           </Link>
 
-          {/* Middle: nav menu, center-aligned. Hidden on tablet and below */}
-          <nav className="hidden items-center justify-center gap-4 lg:gap-6 lg:flex justify-self-center">
+          {/* Middle: nav menu, center-aligned. Collapses into the mobile menu below xl. */}
+          <nav className="hidden xl:flex flex-1 items-center justify-center gap-5 xl:gap-6">
             {navLinks.map((link) => (
               link.isExternal ? (
                 <a
@@ -118,26 +118,26 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Right: language switcher + Contact + CTA, right-aligned */}
-          <div className="flex items-center gap-1 sm:gap-3 justify-self-end">
-            <LanguageSwitcher className="hidden lg:inline-flex" />
+          {/* Right: language switcher + Contact + CTA. Collapses into mobile menu below xl. */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0 ml-auto">
+            <LanguageSwitcher className="hidden xl:inline-flex" />
 
             <Link
               href="/contact"
-              className="hidden lg:block border border-white/25 text-white font-semibold rounded-full px-4 sm:px-6 py-2 text-sm hover:bg-white/10 transition-colors active:scale-95"
+              className="hidden xl:inline-flex items-center justify-center whitespace-nowrap border border-white/25 text-white font-semibold rounded-full px-5 py-2 text-sm hover:bg-white/10 transition-colors active:scale-95"
             >
               {isHydrated ? t('nav.contact') : 'Contact'}
             </Link>
 
             <Link
               href="/reading"
-              className="hidden lg:inline-flex items-center justify-center whitespace-nowrap shrink-0 bg-gradient-to-r from-[#FF4D4D] to-[#FFD700] text-black font-semibold rounded-full px-5 sm:px-6 py-2 text-sm hover:scale-105 transition-transform active:scale-95"
+              className="hidden xl:inline-flex items-center justify-center whitespace-nowrap bg-gradient-to-r from-[#FF4D4D] to-[#FFD700] text-black font-semibold rounded-full px-5 py-2 text-sm hover:scale-105 transition-transform active:scale-95"
             >
               {isHydrated ? t('nav.askQuestion') : 'Ask your question here'}
             </Link>
 
             <button
-              className="lg:hidden p-2 text-white min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors active:scale-95"
+              className="xl:hidden p-2 text-white min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors active:scale-95"
               onClick={() => setIsMobileOpen(true)}
               aria-label="Open menu"
             >
