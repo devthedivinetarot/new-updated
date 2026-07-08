@@ -531,4 +531,105 @@ function getFlatTranslation(key: string, lang: Language): string | undefined {
   if (mappedLang !== 'english') {
     const englishDict = flatDicts.english
     if (englishDict?.[key]) {
-      return englishDict[k
+      return englishDict[key]
+    }
+  }
+  return undefined
+}
+
+/**
+ * Sync translation getter (main export for useLanguage)
+ * Merges nested and flat translation sources
+ */
+export function getTranslationSync(key: string, lang: Language): string {
+  // 1. Try nested structure first (existing translations)
+  const nested = getNestedTranslation(key, lang)
+  // If nested returned something different from key, it's a valid translation
+  if (nested !== key) return nested
+
+  // 2. Try flat store (CMS-managed)
+  const flat = getFlatTranslation(key, lang)
+  if (flat) return flat
+
+  // 3. Try emergency fallback
+  const fallbackValue = FALLBACK[lang]?.[key]
+  if (fallbackValue) {
+    return fallbackValue
+  }
+
+  // 4. Return human-readable fallback - extract last part of key
+  const parts = key.split('.')
+  const readable = parts[parts.length - 1]
+  if (readable && readable.length > 0) {
+    return readable.charAt(0).toUpperCase() + readable.slice(1)
+  }
+  return key
+}
+
+/**
+ * Load translations from API with caching
+ */
+export async function loadTranslations(lang: Language = 'en'): Promise<Record<string, string>> {
+  // Check cache first
+  if (translationCache && (Date.now() - translationCache.lastFetched) < CACHE_DURATION) {
+    const cacheLang = lang as keyof typeof translationCache.data
+    return translationCache.data[cacheLang] || {}
+  }
+
+  try {
+    // Fetch from API (for dynamic CMS updates)
+    const res = await fetch('/api/translations', {
+      cache: 'no-store'
+    })
+
+    if (res.ok) {
+      const data = await res.json()
+      translationCache = {
+        data,
+        lastFetched: Date.now()
+      }
+      return data[lang] || data.english || {}
+    }
+  } catch (error) {
+    console.warn('[i18n] Failed to fetch translations from API, using fallback:', error)
+  }
+
+  // Fallback: merge static sources (nested + flat)
+  const result: Record<string, string> = {}
+
+  // From nested (flatten all keys)
+  const flattenNested = (obj: unknown, prefix = ''): void => {
+    if (obj && typeof obj === 'object') {
+      Object.entries(obj as Record<string, unknown>).forEach(([k, v]) => {
+        const newPrefix = prefix ? `${prefix}.${k}` : k
+        if (typeof v === 'string') {
+          result[newPrefix] = v
+        } else {
+          flattenNested(v, newPrefix)
+        }
+      })
+    }
+  }
+  flattenNested(TRANSLATIONS[lang] || {})
+
+  // From flat store
+  const flatDicts: Record<string, Record<string, string>> = flatTranslations
+  const flatLangKey = lang as keyof typeof flatDicts
+  Object.assign(result, flatDicts[flatLangKey] || {})
+
+  return result
+}
+
+/**
+ * Clear translation cache (call after CMS updates)
+ */
+export function clearTranslationCache(): void {
+  translationCache = null
+}
+
+/**
+ * Refresh translations (clear cache; next fetch will be fresh)
+ */
+export function refreshTranslations(): void {
+  clearTranslationCache()
+}
