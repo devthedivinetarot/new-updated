@@ -12,7 +12,13 @@ export const useLanguageStore = create<LanguageState>((set) => ({
   language: getDefaultLanguage(),
 
   setLanguage: (lang: Language) => {
-    localStorage.setItem("lang", lang)
+    // Update state first so the UI always switches, even if persistence fails
+    // (private mode, storage disabled, etc.).
     set({ language: lang })
+    try {
+      localStorage.setItem("lang", lang)
+    } catch {
+      /* ignore storage failures */
+    }
   },
 }))

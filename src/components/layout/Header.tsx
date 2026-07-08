@@ -131,7 +131,7 @@ export default function Header() {
 
             <Link
               href="/reading"
-              className="hidden lg:block bg-gradient-to-r from-[#FF4D4D] to-[#FFD700] text-black font-semibold rounded-full px-4 sm:px-6 py-2 text-sm hover:scale-105 transition-transform active:scale-95"
+              className="hidden lg:inline-flex items-center justify-center whitespace-nowrap shrink-0 bg-gradient-to-r from-[#FF4D4D] to-[#FFD700] text-black font-semibold rounded-full px-5 sm:px-6 py-2 text-sm hover:scale-105 transition-transform active:scale-95"
             >
               {isHydrated ? t('nav.askQuestion') : 'Ask your question here'}
             </Link>
