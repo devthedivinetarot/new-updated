@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -50,6 +51,13 @@ function SectionTitle({
 
 export default function AboutPage() {
   const { t, isHydrated } = useLanguage();
+  // Reveal the above-the-fold hero on mount. `whileInView`/mount-enter can be
+  // skipped for content already in view on first paint, which left the whole
+  // top of the page stuck at opacity:0. Toggling after mount fires reliably.
+  const [entered, setEntered] = useState(false);
+  useEffect(() => {
+    setEntered(true);
+  }, []);
 
   const authorityBadges = [
     {
@@ -99,15 +107,14 @@ export default function AboutPage() {
         <header>
           <motion.div
             initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.15 }}
+            animate={entered ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
             transition={{ duration: 0.75, ease: [0.25, 0.1, 0.25, 1] }}
             className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center"
           >
             {/* Left / Center Text */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
+              animate={entered ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
               transition={{ duration: 0.6, delay: 0.05 }}
               className="order-1 md:order-1"
             >
@@ -148,7 +155,7 @@ export default function AboutPage() {
             {/* Right / Featured Image */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
+              animate={entered ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
               transition={{ duration: 0.65, delay: 0.12 }}
               className="order-2 md:order-2 relative mt-10 md:mt-0"
             >

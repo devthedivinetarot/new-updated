@@ -5,8 +5,10 @@ import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/hooks/useLanguage';
 
 export default function FinalCTA() {
+  const { t, isHydrated } = useLanguage();
   return (
     <section className="relative py-14 md:py-20 bg-gradient-to-br from-[rgb(var(--background))] via-[rgb(var(--surface))] to-[rgb(var(--background))] overflow-hidden">
       {/* Background Effects */}
@@ -63,20 +65,19 @@ export default function FinalCTA() {
           </motion.div>
 
           <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl text-[rgb(var(--foreground))] mb-6 leading-tight">
-            Tumhare answers wait kar rahe hain...
+            {isHydrated ? t('home.finalCta.title') : 'Your answers are waiting…'}
           </h2>
           <p className="text-base sm:text-lg text-[rgb(var(--foreground-muted))] mb-10 leading-relaxed">
-            Cards fail jaane hain. Tumhara guidance ready hai. 
-            Clarity ke liye pehla step lo.
+            {isHydrated ? t('home.finalCta.subtitle') : 'The cards are ready. Your guidance is ready. Take the first step toward clarity.'}
           </p>
-          
+
           <Link href="/reading" className={cn(buttonVariants({ size: 'xl' }), 'btn-cta-pulse w-full sm:w-auto flex items-center justify-center gap-2 mx-auto')}>
-            <span>Aage Badhte Hain</span>
+            <span>{isHydrated ? t('home.finalCta.button') : "Let's Begin"}</span>
             <ArrowRight className="h-6 w-6" />
           </Link>
-          
+
           <p className="mt-6 text-sm text-[rgb(var(--foreground-muted))]">
-            60 seconds se kam lagega &bull; Free try karo
+            {isHydrated ? t('home.finalCta.subtext') : 'Takes less than 60 seconds • Try it free'}
           </p>
         </motion.div>
       </div>

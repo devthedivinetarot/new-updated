@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, Mail, Phone, MapPin, Clock, User, MessageSquare } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -14,6 +14,12 @@ export default function ContactPage() {
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  // Reveal on mount rather than relying on framer's mount-enter, which could
+  // leave the heading + form stuck at opacity:0 until the user scrolled.
+  const [entered, setEntered] = useState(false);
+  useEffect(() => {
+    setEntered(true);
+  }, []);
 
   const { t } = useTranslation();
 
@@ -32,7 +38,7 @@ export default function ContactPage() {
       <div className="mx-auto max-w-xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={entered ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
@@ -46,7 +52,7 @@ export default function ContactPage() {
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={entered ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           {submitted ? (

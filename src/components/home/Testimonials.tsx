@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Star } from 'lucide-react';
 import PremiumCarousel from '@/components/ui/PremiumCarousel';
+import { useLanguage } from '@/hooks/useLanguage';
 
 const testimonials = [
   {
@@ -43,6 +44,7 @@ const itemVariants = {
 };
 
 export default function Testimonials() {
+  const { t, isHydrated } = useLanguage();
   return (
     <section className="py-16 md:py-20 bg-background overflow-hidden">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
@@ -54,9 +56,11 @@ export default function Testimonials() {
           className="text-center mb-12"
         >
           <h2 className="font-heading text-2xl md:text-3xl lg:text-4xl text-foreground">
-            Voices of the Illuminated
+            {isHydrated ? t('testimonials.title') : 'Voices of the Illuminated'}
           </h2>
-          <p className="mt-4 text-foreground-muted">What seekers are saying about their journey</p>
+          <p className="mt-4 text-foreground-muted">
+            {isHydrated ? t('testimonials.subtitle') : 'What seekers are saying about their journey'}
+          </p>
         </motion.div>
 
         <PremiumCarousel itemsPerView={{ mobile: 1, tablet: 2, desktop: 3 }} autoScroll={true} autoScrollInterval={25000}>
@@ -81,7 +85,7 @@ export default function Testimonials() {
                 </div>
                 <div>
                   <p className="font-medium text-foreground">{testimonial.name}</p>
-                  <p className="text-xs text-foreground-muted">{testimonial.role}</p>
+                  <p className="text-xs text-foreground-muted">{isHydrated ? t('testimonials.role') : testimonial.role}</p>
                 </div>
               </div>
             </motion.div>

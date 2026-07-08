@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -43,6 +43,15 @@ const floatAnimation = {
 
 export default function Hero() {
   const { t, isHydrated } = useLanguage();
+  // Drive the entrance as a post-mount state update. A plain `animate="visible"`
+  // relies on framer-motion's mount-enter animation, which can be skipped
+  // (e.g. under React StrictMode's double-invoke), leaving the hero stuck at
+  // its `initial` (opacity:0) state. Toggling after mount guarantees the
+  // animation runs as an update, which fires reliably.
+  const [entered, setEntered] = useState(false);
+  useEffect(() => {
+    setEntered(true);
+  }, []);
 
   useEffect(() => {
     const shouldProtect = shouldBlockContextMenu() || shouldBlockDevTools() || shouldBlockScreenshots();
@@ -188,7 +197,7 @@ src="/logo.png"
           <motion.div
             variants={containerVariants}
             initial="hidden"
-            animate="visible"
+            animate={entered ? 'visible' : 'hidden'}
             className="text-center lg:text-left order-2 lg:order-1"
           >
             {/* Micro Bio */}

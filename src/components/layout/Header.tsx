@@ -8,13 +8,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 const navLinks: { href: string; labelKey: string; isExternal?: boolean }[] = [
   { href: '/', labelKey: 'nav.home' },
   { href: '/about', labelKey: 'nav.about' },
   { href: '/reading', labelKey: 'nav.reading' },
+  { href: 'https://learn.thedivinetarotonline.com/', labelKey: 'nav.course', isExternal: true },
+  { href: '/kundli-milan', labelKey: 'nav.kundli' },
   // { href: '/reading?upgrade=1', labelKey: 'nav.subscription', isExternal: false },
-  // { href: 'https://course.thedivinetarotonline.com/', labelKey: 'nav.course', isExternal: true },
   // { href: 'https://blog.thedivinetarotonline.com/', labelKey: 'nav.blog', isExternal: true },
   // { href: 'https://thedivinetarotonline.co.in/', labelKey: 'nav.booking', isExternal: true },
 ];
@@ -116,8 +118,10 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Right: Contact + Course buttons, right-aligned */}
+          {/* Right: language switcher + Contact + CTA, right-aligned */}
           <div className="flex items-center gap-1 sm:gap-3 justify-self-end">
+            <LanguageSwitcher className="hidden lg:inline-flex" />
+
             <Link
               href="/contact"
               className="hidden lg:block border border-white/25 text-white font-semibold rounded-full px-4 sm:px-6 py-2 text-sm hover:bg-white/10 transition-colors active:scale-95"
@@ -125,14 +129,12 @@ export default function Header() {
               {isHydrated ? t('nav.contact') : 'Contact'}
             </Link>
 
-            <a
-              href="https://learn.thedivinetarotonline.com/"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/reading"
               className="hidden lg:block bg-gradient-to-r from-[#FF4D4D] to-[#FFD700] text-black font-semibold rounded-full px-4 sm:px-6 py-2 text-sm hover:scale-105 transition-transform active:scale-95"
             >
-              Our Course
-            </a>
+              {isHydrated ? t('nav.askQuestion') : 'Ask your question here'}
+            </Link>
 
             <button
               className="lg:hidden p-2 text-white min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors active:scale-95"
@@ -209,6 +211,9 @@ export default function Header() {
                   )
                 ))}
                 <div className="pt-4 mt-2 border-t border-white/10 flex flex-col gap-3">
+                  <div className="flex justify-center pb-1">
+                    <LanguageSwitcher />
+                  </div>
                   <Link
                     href="/contact"
                     onClick={() => setIsMobileOpen(false)}
@@ -216,15 +221,13 @@ export default function Header() {
                   >
                     {isHydrated ? t('nav.contact') : 'Contact'}
                   </Link>
-                  <a
-                    href="https://learn.thedivinetarotonline.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Link
+                    href="/reading"
                     onClick={() => setIsMobileOpen(false)}
                     className="block w-full text-center bg-gradient-to-r from-[#FF4D4D] to-[#FFD700] text-black font-semibold rounded-xl px-5 py-3 min-h-[48px] flex items-center justify-center"
                   >
-                    Course
-                  </a>
+                    {isHydrated ? t('nav.askQuestion') : 'Ask your question here'}
+                  </Link>
                 </div>
               </nav>
             </motion.div>
