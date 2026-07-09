@@ -2,11 +2,17 @@
 
 import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Heart, Download, Loader2, CheckCircle2, AlertTriangle } from 'lucide-react';
-import { computeMatch, type MatchResult, type Person } from '@/lib/astrology/ashtakoota';
+import {
+  Sparkles, Heart, Download, Loader2, CheckCircle2, AlertTriangle,
+  User, Calendar, Clock, Globe2,
+} from 'lucide-react';
+import {
+  computeMatch, kootaImpact, type MatchResult, type Person,
+} from '@/lib/astrology/ashtakoota';
 import { moonSiderealPosition, toUtcInstant } from '@/lib/astrology/moon';
 import { loadRazorpayScript, openRazorpayCheckout } from '@/lib/razorpay/client';
 import { buttonVariants } from '@/components/ui/button';
+import FloatingInput from '@/components/ui/FloatingInput';
 import { cn } from '@/lib/utils';
 
 const TIMEZONES = [
@@ -19,6 +25,10 @@ const TIMEZONES = [
   { label: 'US Eastern (-5:00)', value: -300 },
   { label: 'US Pacific (-8:00)', value: -480 },
 ];
+
+const FIELD =
+  'w-full bg-[#0B0F1A] border border-[#2A2F3A] rounded-xl py-3 pl-10 pr-4 text-white text-base ' +
+  'focus:outline-none focus:border-[#D4AF37] focus:shadow-[0_0_10px_rgba(212,175,55,0.3)] transition-all duration-300 [color-scheme:dark]';
 
 interface FormState {
   name: string;
@@ -63,6 +73,9 @@ export default function KundliMilanPage() {
     setResult(computeMatch(a, b));
     setPurchased(false);
     setBuyError('');
+    setTimeout(() => {
+      document.getElementById('kundli-result')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   };
 
   const handleBuy = async () => {
@@ -86,15 +99,9 @@ export default function KundliMilanPage() {
         fetch('/api/kundli-report/verify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email,
-            person1: persons.a,
-            person2: persons.b,
-            ...extra,
-          }),
+          body: JSON.stringify({ email, person1: persons.a, person2: persons.b, ...extra }),
         }).then((r) => r.json());
 
-      // Mock mode (no Razorpay configured): deliver immediately.
       if (orderRes.mock) {
         const v = await verifyPayload({ orderId: orderRes.orderId });
         if (!v?.success) throw new Error(v?.error || 'Delivery failed');
@@ -131,7 +138,7 @@ export default function KundliMilanPage() {
 
   return (
     <div className="relative min-h-screen bg-background text-foreground overflow-hidden">
-      {/* Ambient mystical background — matches the site's gold / deep-red / purple glow */}
+      {/* Ambient mystical background */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(1200px_600px_at_50%_-10%,rgba(244,197,66,0.12),transparent_55%),radial-gradient(900px_520px_at_15%_85%,rgba(193,18,31,0.10),transparent_55%),radial-gradient(700px_500px_at_85%_30%,rgba(124,58,237,0.10),transparent_60%)]" />
       </div>
@@ -144,8 +151,8 @@ export default function KundliMilanPage() {
           </div>
           <h1 className="font-heading text-3xl md:text-5xl leading-tight mb-3 text-glow">Kundli Milan</h1>
           <p className="text-foreground-secondary max-w-xl mx-auto">
-            Ashtakoota Guna Milan out of 36 — computed live from both birth charts.
-            Nadi, Bhakoot, Gana, Yoni and more.
+            Two birth charts, one verdict. Get your Ashtakoota Guna Milan score out of 36 — and see
+            exactly how each factor shapes your life together.
           </p>
           <div className="mx-auto mt-5 h-px w-24 bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
         </div>
@@ -156,7 +163,7 @@ export default function KundliMilanPage() {
           <PersonCard title="Person 2" subtitle="bride / partner" state={p2} onChange={setP2} accent="rgb(var(--secondary))" />
         </div>
 
-        <div className="mt-7 flex flex-col items-center gap-3">
+        <div className="mt-8 flex flex-col items-center gap-3">
           <button
             onClick={handleCalculate}
             disabled={!canCalculate}
@@ -168,7 +175,7 @@ export default function KundliMilanPage() {
             <Heart className="h-5 w-5" /> Calculate Match
           </button>
           {error && <p className="text-[rgb(var(--secondary))] text-sm">{error}</p>}
-          <p className="text-xs text-foreground-muted max-w-md text-center">
+          <p className="text-xs text-foreground-muted max-w-md text-center italic">
             If exact birth time is unknown, keep 12:00 — the Moon sign is correct on most days but may shift near a transition.
           </p>
         </div>
@@ -177,10 +184,11 @@ export default function KundliMilanPage() {
         <AnimatePresence>
           {result && persons && (
             <motion.div
+              id="kundli-result"
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="mt-12"
+              className="mt-14 scroll-mt-24"
             >
               <Scorecard result={result} />
 
@@ -217,10 +225,7 @@ export default function KundliMilanPage() {
                         <button
                           onClick={handleBuy}
                           disabled={buying}
-                          className={cn(
-                            buttonVariants({ variant: 'primary', size: 'md' }),
-                            'whitespace-nowrap disabled:opacity-60'
-                          )}
+                          className={cn(buttonVariants({ variant: 'primary', size: 'md' }), 'whitespace-nowrap disabled:opacity-60')}
                         >
                           {buying ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Get report · ₹99</>}
                         </button>
@@ -235,7 +240,7 @@ export default function KundliMilanPage() {
         </AnimatePresence>
 
         <p className="mt-14 text-center text-xs text-foreground-muted max-w-lg mx-auto">
-          Ashtakoota computed from approximate Moon positions (Lahiri ayanamsa). A guide to think clearly —
+          Ashtakoota computed from approximate Moon positions (Lahiri ayanamsa). A guide to reflect clearly —
           not a substitute for a professional jyotishi or your own judgement.
         </p>
       </div>
@@ -251,72 +256,97 @@ function PersonCard({
 }) {
   const set = (patch: Partial<FormState>) => onChange({ ...state, ...patch });
   return (
-    <div className="rounded-2xl border border-gold/10 bg-card/40 backdrop-blur-sm p-5">
-      <div className="flex items-baseline gap-2 mb-4">
+    <div className="rounded-2xl border border-gold/10 bg-card/40 backdrop-blur-sm p-5 md:p-6">
+      <div className="flex items-baseline gap-2 mb-1">
         <span className="h-2 w-2 rounded-full" style={{ background: accent }} />
         <h3 className="font-heading text-lg">{title}</h3>
         <span className="text-xs text-foreground-muted">{subtitle}</span>
       </div>
-      <div className="space-y-3">
-        <Field label="Name">
+
+      <FloatingInput
+        label="Name"
+        value={state.name}
+        onChange={(v) => set({ name: v })}
+        placeholder="Full name"
+        icon={<User className="h-5 w-5" />}
+        helperText="So we can personalise your report"
+      />
+
+      <div className="grid grid-cols-2 gap-3">
+        <ThemedField label="Date of birth" icon={<Calendar className="h-5 w-5" />}>
           <input
-            type="text" value={state.name}
-            onChange={(e) => set({ name: e.target.value })}
-            placeholder="Full name"
-            className="w-full rounded-lg bg-card/60 border border-gold/15 px-3 py-2.5 text-sm text-foreground placeholder-foreground-muted outline-none focus:border-gold/50 transition-colors"
+            type="date" value={state.date}
+            onChange={(e) => set({ date: e.target.value })}
+            className={FIELD}
           />
-        </Field>
-        <div className="grid grid-cols-2 gap-3">
-          <Field label="Date of birth">
-            <input
-              type="date" value={state.date}
-              onChange={(e) => set({ date: e.target.value })}
-              className="w-full rounded-lg bg-card/60 border border-gold/15 px-3 py-2.5 text-sm text-foreground outline-none focus:border-gold/50 transition-colors [color-scheme:dark]"
-            />
-          </Field>
-          <Field label="Time (local)">
-            <input
-              type="time" value={state.time}
-              onChange={(e) => set({ time: e.target.value })}
-              className="w-full rounded-lg bg-card/60 border border-gold/15 px-3 py-2.5 text-sm text-foreground outline-none focus:border-gold/50 transition-colors [color-scheme:dark]"
-            />
-          </Field>
-        </div>
-        <Field label="Birth timezone">
-          <select
-            value={state.tz}
-            onChange={(e) => set({ tz: Number(e.target.value) })}
-            className="w-full rounded-lg bg-card/60 border border-gold/15 px-3 py-2.5 text-sm text-foreground outline-none focus:border-gold/50 transition-colors"
-          >
-            {TIMEZONES.map((tz) => (
-              <option key={tz.label} value={tz.value} className="bg-background text-foreground">{tz.label}</option>
-            ))}
-          </select>
-        </Field>
+        </ThemedField>
+        <ThemedField label="Time" icon={<Clock className="h-5 w-5" />} helper="12:00 if unknown">
+          <input
+            type="time" value={state.time}
+            onChange={(e) => set({ time: e.target.value })}
+            className={FIELD}
+          />
+        </ThemedField>
       </div>
+
+      <ThemedField label="Birth timezone" icon={<Globe2 className="h-5 w-5" />}>
+        <select
+          value={state.tz}
+          onChange={(e) => set({ tz: Number(e.target.value) })}
+          className={FIELD}
+        >
+          {TIMEZONES.map((tz) => (
+            <option key={tz.label} value={tz.value} className="bg-background text-foreground">{tz.label}</option>
+          ))}
+        </select>
+      </ThemedField>
     </div>
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function ThemedField({
+  label, icon, helper, children,
+}: {
+  label: string; icon?: React.ReactNode; helper?: string; children: React.ReactNode;
+}) {
   return (
-    <label className="block">
-      <span className="mb-1 block text-xs text-foreground-secondary">{label}</span>
-      {children}
-    </label>
+    <div className="relative w-full mt-6">
+      <div className="relative">
+        {icon && (
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted pointer-events-none z-10">
+            {icon}
+          </div>
+        )}
+        {children}
+        <span className="absolute -top-2 left-9 text-xs font-medium text-gold bg-background px-1">{label}</span>
+      </div>
+      {helper && <p className="mt-1 text-xs text-foreground-muted italic">{helper}</p>}
+    </div>
   );
 }
 
+const LEVEL_STYLE: Record<string, { badge: string; bar: string; label: string }> = {
+  strong: { badge: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30', bar: 'rgb(16 185 129)', label: 'Strong' },
+  fair: { badge: 'bg-gold/15 text-gold border-gold/30', bar: 'rgb(var(--gold))', label: 'Fair' },
+  weak: { badge: 'bg-[rgb(var(--secondary))]/15 text-red-300 border-[rgb(var(--secondary))]/40', bar: 'rgb(var(--secondary))', label: 'Needs care' },
+};
+
 function Scorecard({ result }: { result: MatchResult }) {
   const pct = useMemo(() => Math.round((result.total / 36) * 100), [result.total]);
+  const impacts = useMemo(() => result.kootas.map((k) => ({ k, i: kootaImpact(k) })), [result]);
+  const strongCount = impacts.filter((x) => x.i.level === 'strong').length;
+  const weakAreas = impacts.filter((x) => x.i.level === 'weak').map((x) => x.i.area);
+
   return (
-    <div className="rounded-2xl border border-gold/10 bg-card/40 backdrop-blur-sm p-6 md:p-8">
-      <div className="text-center mb-6">
+    <div className="space-y-6">
+      {/* Headline score */}
+      <div className="rounded-2xl border border-gold/15 bg-card/40 backdrop-blur-sm p-6 md:p-8 text-center">
+        <div className="text-xs uppercase tracking-[0.2em] text-foreground-secondary mb-2">Your compatibility</div>
         <div className="font-heading text-6xl font-bold text-gold leading-none text-glow">
           {result.total}
           <span className="text-2xl text-foreground-muted"> / 36</span>
         </div>
-        <div className="mt-2 text-foreground-secondary">{result.verdict}</div>
+        <div className="mt-2 text-foreground">{result.verdict}</div>
         <div className="mx-auto mt-4 h-2 max-w-md overflow-hidden rounded-full bg-white/10">
           <motion.div
             className="h-full rounded-full bg-gradient-to-r from-[rgb(var(--accent-start))] via-gold to-emerald-500"
@@ -325,32 +355,70 @@ function Scorecard({ result }: { result: MatchResult }) {
             transition={{ duration: 0.9, ease: 'easeOut' }}
           />
         </div>
+
+        <p className="mt-5 text-sm text-foreground-secondary max-w-xl mx-auto">
+          <span className="text-emerald-300 font-semibold">{strongCount} of 8</span> life areas are strongly aligned.
+          {weakAreas.length > 0 ? (
+            <> The areas that need the most care: <span className="text-red-300">{weakAreas.join(', ')}</span>.</>
+          ) : (
+            <> No major weak areas — a rare and easy fit.</>
+          )}
+        </p>
+
+        {result.doshas.length > 0 && (
+          <div className="mt-4 inline-flex items-start gap-2 rounded-xl border border-[rgb(var(--secondary))]/40 bg-[rgb(var(--secondary))]/10 px-4 py-2 text-sm text-red-200">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+            <span><strong>{result.doshas.join(' & ')}</strong> present — often mitigable with traditional remedies.</span>
+          </div>
+        )}
       </div>
 
-      {result.doshas.length > 0 && (
-        <div className="mb-5 flex items-start gap-2 rounded-xl border border-[rgb(var(--secondary))]/40 bg-[rgb(var(--secondary))]/10 p-3 text-sm text-red-200">
-          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
-          <span><strong>{result.doshas.join(' & ')}</strong> detected — often mitigable with traditional remedies.</span>
-        </div>
-      )}
+      {/* All eight points */}
+      <div>
+        <h2 className="font-heading text-xl md:text-2xl text-center mb-1">The 8 Kootas — and what they mean for you</h2>
+        <p className="text-center text-sm text-foreground-muted mb-6">
+          Each factor carries a different weight. Heavier factors shape your life together the most.
+        </p>
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        {result.kootas.map((k) => {
-          const ratio = k.score / k.max;
-          const color = ratio >= 0.66 ? 'rgb(16 185 129)' : ratio >= 0.34 ? 'rgb(var(--gold))' : 'rgb(var(--secondary))';
-          return (
-            <div key={k.key} className="rounded-xl border border-gold/10 bg-background/40 p-4">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold">{k.label}</span>
-                <span className="text-sm font-mono" style={{ color }}>{k.score} / {k.max}</span>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {impacts.map(({ k, i }) => {
+            const ratio = k.max ? k.score / k.max : 0;
+            const style = LEVEL_STYLE[i.level];
+            return (
+              <div key={k.key} className="rounded-2xl border border-gold/10 bg-card/40 backdrop-blur-sm p-5">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="font-heading text-base">{k.label}</div>
+                    <div className="text-xs text-foreground-muted">{i.area}</div>
+                  </div>
+                  <span className={cn('shrink-0 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold', style.badge)}>
+                    {style.label}
+                  </span>
+                </div>
+
+                <div className="mt-3 flex items-center gap-3">
+                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/10">
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{ background: style.bar }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${ratio * 100}%` }}
+                      transition={{ duration: 0.7, ease: 'easeOut' }}
+                    />
+                  </div>
+                  <span className="text-sm font-mono" style={{ color: style.bar }}>{k.score}/{k.max}</span>
+                </div>
+
+                <p className="mt-3 text-sm text-foreground-secondary">{i.impact}</p>
+
+                <div className="mt-3 flex items-center gap-1.5 text-[11px] text-foreground-muted">
+                  <Heart className="h-3 w-3 text-gold/70" />
+                  Impact on your bond: <span className="text-foreground-secondary font-medium">{i.weight}% of the total match</span>
+                </div>
               </div>
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
-                <div className="h-full rounded-full" style={{ width: `${ratio * 100}%`, background: color }} />
-              </div>
-              <p className="mt-2 text-xs text-foreground-secondary">{k.note}</p>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );

@@ -238,6 +238,80 @@ function nadi(boy: Person, girl: Person): { res: KootaResult; dosha: boolean } {
   };
 }
 
+/* ------------------------------------------------- Couple-life impact ---- */
+export interface KootaImpact {
+  area: string;               // life area this koota governs
+  level: 'strong' | 'fair' | 'weak';
+  weight: number;             // share of the 36 total this koota can add (%)
+  impact: string;             // plain-language effect on the relationship
+}
+
+const KOOTA_META: Record<
+  string,
+  { area: string; strong: string; fair: string; weak: string }
+> = {
+  varna: {
+    area: 'Ego & mutual respect',
+    strong: 'Egos stay balanced — neither partner dominates, respect flows naturally.',
+    fair: 'Mostly respectful, with occasional tussles over who leads.',
+    weak: 'Ego clashes and control struggles can surface; conscious humility helps.',
+  },
+  vashya: {
+    area: 'Attraction & influence',
+    strong: 'Healthy magnetism — you naturally draw and hold each other’s attention.',
+    fair: 'A workable pull; effort to stay interested in each other matters.',
+    weak: 'One partner may feel less desired or less heard; keep effort mutual.',
+  },
+  tara: {
+    area: 'Destiny, health & fortune',
+    strong: 'Your fortunes support each other — steady health and shared luck over time.',
+    fair: 'Ups and downs, but nothing that patience can’t carry you through.',
+    weak: 'Rough patches in health or timing are possible; face them as a team.',
+  },
+  yoni: {
+    area: 'Physical & intimate bond',
+    strong: 'Strong physical chemistry and instinctive intimacy.',
+    fair: 'Decent physical rapport; talking openly keeps it warm.',
+    weak: 'Intimate rhythms differ — honest communication about needs is key.',
+  },
+  graha: {
+    area: 'Mental bond & friendship',
+    strong: 'Minds meet easily — friendship, trust and shared thinking.',
+    fair: 'You think differently at times but can find common ground.',
+    weak: 'Different mindsets can breed misunderstanding; build shared rituals.',
+  },
+  gana: {
+    area: 'Temperament & nature',
+    strong: 'Compatible temperaments — day-to-day harmony and fewer clashes.',
+    fair: 'Two different paces that meet in the middle with give-and-take.',
+    weak: 'Contrasting natures may spark friction; respect each other’s style.',
+  },
+  bhakoot: {
+    area: 'Emotional bond, family & money',
+    strong: 'Emotionally secure — supports family growth and financial stability.',
+    fair: 'A steady emotional base with the usual bumps of shared life.',
+    weak: 'Bhakoot dosha can strain emotions, health or finances; remedies advised.',
+  },
+  nadi: {
+    area: 'Health, vitality & children',
+    strong: 'Complementary energies — supports the couple’s health and progeny.',
+    fair: 'Generally supportive of well-being and family plans.',
+    weak: 'Nadi dosha is the most serious koota — affecting health/progeny; remedies strongly advised.',
+  },
+};
+
+export function kootaImpact(k: KootaResult): KootaImpact {
+  const ratio = k.max ? k.score / k.max : 0;
+  const level: KootaImpact['level'] = ratio >= 0.66 ? 'strong' : ratio >= 0.34 ? 'fair' : 'weak';
+  const meta = KOOTA_META[k.key] ?? { area: '', strong: '', fair: '', weak: '' };
+  return {
+    area: meta.area,
+    level,
+    weight: Math.round((k.max / 36) * 100),
+    impact: meta[level],
+  };
+}
+
 /* -------------------------------------------------------------- Aggregate */
 export function computeMatch(boy: Person, girl: Person): MatchResult {
   const bh = bhakoot(boy, girl);
