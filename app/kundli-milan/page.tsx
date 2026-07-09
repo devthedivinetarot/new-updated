@@ -6,6 +6,8 @@ import { Sparkles, Heart, Download, Loader2, CheckCircle2, AlertTriangle } from 
 import { computeMatch, type MatchResult, type Person } from '@/lib/astrology/ashtakoota';
 import { moonSiderealPosition, toUtcInstant } from '@/lib/astrology/moon';
 import { loadRazorpayScript, openRazorpayCheckout } from '@/lib/razorpay/client';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 const TIMEZONES = [
   { label: 'India (IST +5:30)', value: 330 },
@@ -110,7 +112,7 @@ export default function KundliMilanPage() {
         name: 'The Divine Tarot',
         description: 'Kundli Milan — Detailed Compatibility Report',
         order_id: orderRes.orderId,
-        theme: { color: '#6d28d9' },
+        theme: { color: '#F4C542' },
       });
 
       const v = await verifyPayload({
@@ -128,41 +130,45 @@ export default function KundliMilanPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#050508] text-zinc-100 overflow-hidden">
-      {/* Ambient background */}
+    <div className="relative min-h-screen bg-background text-foreground overflow-hidden">
+      {/* Ambient mystical background — matches the site's gold / deep-red / purple glow */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(1200px_600px_at_50%_-10%,rgba(109,40,217,0.22),transparent_55%),radial-gradient(800px_500px_at_15%_90%,rgba(234,179,8,0.10),transparent_55%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(1200px_600px_at_50%_-10%,rgba(244,197,66,0.12),transparent_55%),radial-gradient(900px_520px_at_15%_85%,rgba(193,18,31,0.10),transparent_55%),radial-gradient(700px_500px_at_85%_30%,rgba(124,58,237,0.10),transparent_60%)]" />
       </div>
 
       <div className="relative mx-auto max-w-4xl px-5 py-14 md:py-20">
         {/* Hero */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 text-[#FFD700] text-xs uppercase tracking-[0.2em] mb-3">
+          <div className="inline-flex items-center gap-2 text-gold text-xs uppercase tracking-[0.2em] mb-3">
             <Sparkles className="h-4 w-4" /> Vedic Match Engine
           </div>
-          <h1 className="font-heading text-3xl md:text-5xl leading-tight mb-3">Kundli Milan</h1>
-          <p className="text-zinc-400 max-w-xl mx-auto">
+          <h1 className="font-heading text-3xl md:text-5xl leading-tight mb-3 text-glow">Kundli Milan</h1>
+          <p className="text-foreground-secondary max-w-xl mx-auto">
             Ashtakoota Guna Milan out of 36 — computed live from both birth charts.
             Nadi, Bhakoot, Gana, Yoni and more.
           </p>
+          <div className="mx-auto mt-5 h-px w-24 bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
         </div>
 
         {/* Input cards */}
         <div className="grid gap-5 md:grid-cols-2">
-          <PersonCard title="Person 1" subtitle="groom / self" state={p1} onChange={setP1} accent="#FFD700" />
-          <PersonCard title="Person 2" subtitle="bride / partner" state={p2} onChange={setP2} accent="#C084FC" />
+          <PersonCard title="Person 1" subtitle="groom / self" state={p1} onChange={setP1} accent="rgb(var(--gold))" />
+          <PersonCard title="Person 2" subtitle="bride / partner" state={p2} onChange={setP2} accent="rgb(var(--secondary))" />
         </div>
 
-        <div className="mt-6 flex flex-col items-center gap-3">
+        <div className="mt-7 flex flex-col items-center gap-3">
           <button
             onClick={handleCalculate}
             disabled={!canCalculate}
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6d28d9] to-[#9333ea] px-8 py-3 font-semibold text-white transition-transform hover:scale-[1.03] active:scale-95 disabled:opacity-40 disabled:hover:scale-100"
+            className={cn(
+              buttonVariants({ variant: 'primary', size: 'lg' }),
+              'btn-cta-pulse w-full sm:w-auto disabled:opacity-40 disabled:pointer-events-none'
+            )}
           >
             <Heart className="h-5 w-5" /> Calculate Match
           </button>
-          {error && <p className="text-red-400 text-sm">{error}</p>}
-          <p className="text-xs text-zinc-500 max-w-md text-center">
+          {error && <p className="text-[rgb(var(--secondary))] text-sm">{error}</p>}
+          <p className="text-xs text-foreground-muted max-w-md text-center">
             If exact birth time is unknown, keep 12:00 — the Moon sign is correct on most days but may shift near a transition.
           </p>
         </div>
@@ -179,23 +185,23 @@ export default function KundliMilanPage() {
               <Scorecard result={result} />
 
               {/* Paywall / report */}
-              <div className="mt-8 rounded-2xl border border-[#FFD700]/25 bg-white/[0.03] p-6 md:p-8">
+              <div className="mt-8 rounded-2xl border border-gold/25 bg-card/40 backdrop-blur-sm p-6 md:p-8">
                 {purchased ? (
                   <div className="text-center py-4">
-                    <CheckCircle2 className="mx-auto h-10 w-10 text-green-400 mb-3" />
+                    <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-400 mb-3" />
                     <h3 className="font-heading text-xl mb-1">Your report is on its way ✨</h3>
-                    <p className="text-zinc-400 text-sm">
-                      We&apos;ve emailed your detailed Kundli Milan report to <span className="text-zinc-200">{email}</span>.
+                    <p className="text-foreground-secondary text-sm">
+                      We&apos;ve emailed your detailed Kundli Milan report to <span className="text-foreground">{email}</span>.
                       Check your inbox (and spam) in a minute.
                     </p>
                   </div>
                 ) : (
                   <div className="md:flex md:items-center md:justify-between gap-6">
                     <div className="mb-4 md:mb-0">
-                      <div className="flex items-center gap-2 text-[#FFD700] font-semibold">
+                      <div className="flex items-center gap-2 text-gold font-semibold">
                         <Download className="h-5 w-5" /> Full downloadable report
                       </div>
-                      <p className="text-sm text-zinc-400 mt-1 max-w-md">
+                      <p className="text-sm text-foreground-secondary mt-1 max-w-md">
                         Detailed guna-by-guna breakdown, dosha analysis and remedies — emailed to you as a report you can keep.
                       </p>
                     </div>
@@ -206,17 +212,20 @@ export default function KundliMilanPage() {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="you@example.com"
-                          className="rounded-full bg-black/40 border border-white/15 px-4 py-3 text-sm outline-none focus:border-[#FFD700]/50 min-w-0 sm:w-56"
+                          className="rounded-full bg-card/60 border border-gold/20 px-4 py-3 text-sm text-foreground placeholder-foreground-muted outline-none focus:border-gold/60 min-w-0 sm:w-56"
                         />
                         <button
                           onClick={handleBuy}
                           disabled={buying}
-                          className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#FF4D4D] to-[#FFD700] px-6 py-3 font-semibold text-black transition-transform hover:scale-[1.03] active:scale-95 disabled:opacity-60"
+                          className={cn(
+                            buttonVariants({ variant: 'primary', size: 'md' }),
+                            'whitespace-nowrap disabled:opacity-60'
+                          )}
                         >
                           {buying ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Get report · ₹99</>}
                         </button>
                       </div>
-                      {buyError && <p className="text-red-400 text-xs mt-2 text-center sm:text-right">{buyError}</p>}
+                      {buyError && <p className="text-[rgb(var(--secondary))] text-xs mt-2 text-center sm:text-right">{buyError}</p>}
                     </div>
                   </div>
                 )}
@@ -225,7 +234,7 @@ export default function KundliMilanPage() {
           )}
         </AnimatePresence>
 
-        <p className="mt-14 text-center text-xs text-zinc-600 max-w-lg mx-auto">
+        <p className="mt-14 text-center text-xs text-foreground-muted max-w-lg mx-auto">
           Ashtakoota computed from approximate Moon positions (Lahiri ayanamsa). A guide to think clearly —
           not a substitute for a professional jyotishi or your own judgement.
         </p>
@@ -242,11 +251,11 @@ function PersonCard({
 }) {
   const set = (patch: Partial<FormState>) => onChange({ ...state, ...patch });
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+    <div className="rounded-2xl border border-gold/10 bg-card/40 backdrop-blur-sm p-5">
       <div className="flex items-baseline gap-2 mb-4">
         <span className="h-2 w-2 rounded-full" style={{ background: accent }} />
         <h3 className="font-heading text-lg">{title}</h3>
-        <span className="text-xs text-zinc-500">{subtitle}</span>
+        <span className="text-xs text-foreground-muted">{subtitle}</span>
       </div>
       <div className="space-y-3">
         <Field label="Name">
@@ -254,7 +263,7 @@ function PersonCard({
             type="text" value={state.name}
             onChange={(e) => set({ name: e.target.value })}
             placeholder="Full name"
-            className="w-full rounded-lg bg-black/40 border border-white/15 px-3 py-2.5 text-sm outline-none focus:border-white/40"
+            className="w-full rounded-lg bg-card/60 border border-gold/15 px-3 py-2.5 text-sm text-foreground placeholder-foreground-muted outline-none focus:border-gold/50 transition-colors"
           />
         </Field>
         <div className="grid grid-cols-2 gap-3">
@@ -262,14 +271,14 @@ function PersonCard({
             <input
               type="date" value={state.date}
               onChange={(e) => set({ date: e.target.value })}
-              className="w-full rounded-lg bg-black/40 border border-white/15 px-3 py-2.5 text-sm outline-none focus:border-white/40 [color-scheme:dark]"
+              className="w-full rounded-lg bg-card/60 border border-gold/15 px-3 py-2.5 text-sm text-foreground outline-none focus:border-gold/50 transition-colors [color-scheme:dark]"
             />
           </Field>
           <Field label="Time (local)">
             <input
               type="time" value={state.time}
               onChange={(e) => set({ time: e.target.value })}
-              className="w-full rounded-lg bg-black/40 border border-white/15 px-3 py-2.5 text-sm outline-none focus:border-white/40 [color-scheme:dark]"
+              className="w-full rounded-lg bg-card/60 border border-gold/15 px-3 py-2.5 text-sm text-foreground outline-none focus:border-gold/50 transition-colors [color-scheme:dark]"
             />
           </Field>
         </div>
@@ -277,10 +286,10 @@ function PersonCard({
           <select
             value={state.tz}
             onChange={(e) => set({ tz: Number(e.target.value) })}
-            className="w-full rounded-lg bg-black/40 border border-white/15 px-3 py-2.5 text-sm outline-none focus:border-white/40"
+            className="w-full rounded-lg bg-card/60 border border-gold/15 px-3 py-2.5 text-sm text-foreground outline-none focus:border-gold/50 transition-colors"
           >
             {TIMEZONES.map((tz) => (
-              <option key={tz.label} value={tz.value} className="bg-[#0a0a12]">{tz.label}</option>
+              <option key={tz.label} value={tz.value} className="bg-background text-foreground">{tz.label}</option>
             ))}
           </select>
         </Field>
@@ -292,7 +301,7 @@ function PersonCard({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-xs text-zinc-400">{label}</span>
+      <span className="mb-1 block text-xs text-foreground-secondary">{label}</span>
       {children}
     </label>
   );
@@ -301,16 +310,16 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function Scorecard({ result }: { result: MatchResult }) {
   const pct = useMemo(() => Math.round((result.total / 36) * 100), [result.total]);
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+    <div className="rounded-2xl border border-gold/10 bg-card/40 backdrop-blur-sm p-6 md:p-8">
       <div className="text-center mb-6">
-        <div className="text-6xl font-bold text-[#FFD700] leading-none">
+        <div className="font-heading text-6xl font-bold text-gold leading-none text-glow">
           {result.total}
-          <span className="text-2xl text-zinc-500"> / 36</span>
+          <span className="text-2xl text-foreground-muted"> / 36</span>
         </div>
-        <div className="mt-2 text-zinc-300">{result.verdict}</div>
+        <div className="mt-2 text-foreground-secondary">{result.verdict}</div>
         <div className="mx-auto mt-4 h-2 max-w-md overflow-hidden rounded-full bg-white/10">
           <motion.div
-            className="h-full rounded-full bg-gradient-to-r from-[#FF4D4D] via-[#FFD700] to-[#22c55e]"
+            className="h-full rounded-full bg-gradient-to-r from-[rgb(var(--accent-start))] via-gold to-emerald-500"
             initial={{ width: 0 }}
             animate={{ width: `${pct}%` }}
             transition={{ duration: 0.9, ease: 'easeOut' }}
@@ -319,7 +328,7 @@ function Scorecard({ result }: { result: MatchResult }) {
       </div>
 
       {result.doshas.length > 0 && (
-        <div className="mb-5 flex items-start gap-2 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-200">
+        <div className="mb-5 flex items-start gap-2 rounded-xl border border-[rgb(var(--secondary))]/40 bg-[rgb(var(--secondary))]/10 p-3 text-sm text-red-200">
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
           <span><strong>{result.doshas.join(' & ')}</strong> detected — often mitigable with traditional remedies.</span>
         </div>
@@ -328,9 +337,9 @@ function Scorecard({ result }: { result: MatchResult }) {
       <div className="grid gap-3 sm:grid-cols-2">
         {result.kootas.map((k) => {
           const ratio = k.score / k.max;
-          const color = ratio >= 0.66 ? '#22c55e' : ratio >= 0.34 ? '#FFD700' : '#FF6b6b';
+          const color = ratio >= 0.66 ? 'rgb(16 185 129)' : ratio >= 0.34 ? 'rgb(var(--gold))' : 'rgb(var(--secondary))';
           return (
-            <div key={k.key} className="rounded-xl border border-white/10 bg-black/20 p-4">
+            <div key={k.key} className="rounded-xl border border-gold/10 bg-background/40 p-4">
               <div className="flex items-center justify-between">
                 <span className="font-semibold">{k.label}</span>
                 <span className="text-sm font-mono" style={{ color }}>{k.score} / {k.max}</span>
@@ -338,7 +347,7 @@ function Scorecard({ result }: { result: MatchResult }) {
               <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
                 <div className="h-full rounded-full" style={{ width: `${ratio * 100}%`, background: color }} />
               </div>
-              <p className="mt-2 text-xs text-zinc-400">{k.note}</p>
+              <p className="mt-2 text-xs text-foreground-secondary">{k.note}</p>
             </div>
           );
         })}
