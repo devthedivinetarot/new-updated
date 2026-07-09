@@ -8,7 +8,7 @@ const WEBHOOK_TOKEN = process.env.GOOGLE_SHEET_WEBHOOK_TOKEN;
 
 export async function appendToSheet(
   email: string,
-  extra?: { source?: string; locale?: string }
+  extra?: { source?: string; locale?: string; phone?: string }
 ): Promise<boolean> {
   if (!WEBHOOK_URL) {
     console.warn('[newsletter] GOOGLE_SHEET_WEBHOOK_URL not set — skipping sheet write');
@@ -23,6 +23,7 @@ export async function appendToSheet(
       redirect: 'follow',
       body: JSON.stringify({
         email,
+        phone: extra?.phone || '',
         token: WEBHOOK_TOKEN || '',
         source: extra?.source || 'website',
         locale: extra?.locale || '',

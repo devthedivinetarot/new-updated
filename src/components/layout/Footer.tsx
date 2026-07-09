@@ -30,6 +30,7 @@ const YoutubeIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 const Footer = () => {
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -48,6 +49,12 @@ const Footer = () => {
       return;
     }
 
+    const trimmedPhone = phone.replace(/[^\d+]/g, '');
+    if (trimmedPhone && trimmedPhone.replace(/\D/g, '').length < 10) {
+      setError('Please enter a valid WhatsApp number, or leave it blank.');
+      return;
+    }
+
     setIsSubmitting(true);
     setError('');
 
@@ -55,12 +62,13 @@ const Footer = () => {
       const response = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, phone: trimmedPhone || undefined, source: 'footer' }),
       });
 
       if (response.ok) {
         setIsSuccess(true);
         setEmail('');
+        setPhone('');
         setTimeout(() => setIsSuccess(false), 3000);
       } else {
         const data = await response.json();
@@ -174,6 +182,18 @@ const Footer = () => {
               className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-[#EAEAF0] placeholder-[#A1A1AA] focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all text-sm"
               disabled={isSubmitting || isSuccess}
               aria-label="Email for daily insights"
+            />
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => {
+                setPhone(e.target.value);
+                setError('');
+              }}
+              placeholder="WhatsApp number (optional)"
+              className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-[#EAEAF0] placeholder-[#A1A1AA] focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all text-sm"
+              disabled={isSubmitting || isSuccess}
+              aria-label="WhatsApp number for daily insights (optional)"
             />
             <button
               type="submit"

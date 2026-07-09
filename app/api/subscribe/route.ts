@@ -28,6 +28,10 @@ export async function POST(req: NextRequest) {
   const source = typeof body?.source === 'string' ? body.source.slice(0, 60) : 'website';
   const locale = typeof body?.locale === 'string' ? body.locale.slice(0, 20) : undefined;
 
+  // Optional WhatsApp opt-in. Keep digits only (E.164 without '+').
+  const rawPhone = String(body?.phone ?? '').replace(/[^\d]/g, '');
+  const phone = rawPhone.length >= 10 && rawPhone.length <= 15 ? rawPhone : '';
+
   if (!EMAIL_RE.test(email) || email.length > 254) {
     return NextResponse.json(
       { success: false, message: 'Please enter a valid email address.' },
@@ -85,8 +89,40 @@ export async function POST(req: NextRequest) {
     console.error('[newsletter] supabase step failed', err);
   }
 
+  // 1b) WhatsApp opt-in (best-effort, non-fatal) — only when a number is given.
+  if (phone) {
+    try {
+      const { createServerClient, isSupabaseConfigured } = await import('@/lib/supabase/server');
+      if (isSupabaseConfigured()) {
+        const supabase = await createServerClient();
+        const { data: existingPhone } = await supabase
+          .from('whatsapp_subscribers')
+          .select('id')
+          .eq('phone', phone)
+          .maybeSingle();
+        if (!existingPhone) {
+          const { error } = await supabase
+            .from('whatsapp_subscribers')
+            .insert({ phone, source, locale, status: 'subscribed' });
+          if (error) {
+            const code = (error as any)?.code;
+            if (code === '42P01') {
+              console.warn(
+                '[newsletter] whatsapp_subscribers table missing — run src/lib/db/daily-newsletter-schema.sql'
+              );
+            } else if (code !== '23505') {
+              console.error('[newsletter] whatsapp insert error', error);
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error('[newsletter] whatsapp step failed', err);
+    }
+  }
+
   // 2) Google Sheet (best-effort)
-  const sheetStored = await appendToSheet(email, { source, locale });
+  const sheetStored = await appendToSheet(email, { source, locale, phone });
 
   // Fail only if the email could not be saved anywhere.
   if (!supabaseStored && !sheetStored) {
