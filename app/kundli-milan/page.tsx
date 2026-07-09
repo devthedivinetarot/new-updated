@@ -329,9 +329,9 @@ function Field({
 }
 
 const LEVEL_STYLE: Record<string, { badge: string; bar: string; label: string }> = {
-  strong: { badge: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30', bar: 'rgb(16 185 129)', label: 'Strong' },
-  fair: { badge: 'bg-gold/15 text-gold border-gold/30', bar: 'rgb(var(--gold))', label: 'Fair' },
-  weak: { badge: 'bg-[rgb(var(--secondary))]/15 text-red-300 border-[rgb(var(--secondary))]/40', bar: 'rgb(var(--secondary))', label: 'Needs care' },
+  strong: { badge: 'bg-emerald-500 text-emerald-950 shadow-[0_0_14px_rgba(16,185,129,0.45)]', bar: 'rgb(16 185 129)', label: 'Strong' },
+  fair: { badge: 'bg-amber-400 text-amber-950 shadow-[0_0_14px_rgba(251,191,36,0.45)]', bar: 'rgb(251 191 36)', label: 'Fair' },
+  weak: { badge: 'bg-red-500 text-white shadow-[0_0_14px_rgba(239,68,68,0.45)]', bar: 'rgb(239 68 68)', label: 'Needs care' },
 };
 
 function Scorecard({ result }: { result: MatchResult }) {
@@ -394,7 +394,7 @@ function Scorecard({ result }: { result: MatchResult }) {
                     <div className="font-heading text-base">{k.label}</div>
                     <div className="text-xs text-foreground-muted">{i.area}</div>
                   </div>
-                  <span className={cn('shrink-0 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold', style.badge)}>
+                  <span className={cn('shrink-0 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide', style.badge)}>
                     {style.label}
                   </span>
                 </div>

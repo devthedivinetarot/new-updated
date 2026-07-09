@@ -30,11 +30,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid birth data' }, { status: 400 });
     }
 
-    // In configured (production) mode, require a valid Razorpay signature.
-    // When Razorpay isn't configured, allow delivery so the flow is testable.
-    const configured = !!process.env.RAZORPAY_KEY_SECRET;
-    const isMock = typeof orderId === 'string' && orderId.startsWith('mock_');
-    if (configured && !isMock) {
+    // Production ALWAYS requires a verified Razorpay signature — no free reports
+    // and no accepting a `mock_` order. Mock delivery is dev-only.
+    const isProd = process.env.NODE_ENV === 'production';
+    const isMock = !isProd && typeof orderId === 'string' && orderId.startsWith('mock_');
+    const mustVerify = isProd || !!process.env.RAZORPAY_KEY_SECRET;
+    if (mustVerify && !isMock) {
       if (!orderId || !paymentId || !signature) {
         return NextResponse.json({ error: 'Missing payment fields' }, { status: 400 });
       }
