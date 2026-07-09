@@ -12,7 +12,6 @@ import {
 import { moonSiderealPosition, toUtcInstant } from '@/lib/astrology/moon';
 import { loadRazorpayScript, openRazorpayCheckout } from '@/lib/razorpay/client';
 import { buttonVariants } from '@/components/ui/button';
-import FloatingInput from '@/components/ui/FloatingInput';
 import { cn } from '@/lib/utils';
 
 const TIMEZONES = [
@@ -257,60 +256,65 @@ function PersonCard({
   const set = (patch: Partial<FormState>) => onChange({ ...state, ...patch });
   return (
     <div className="rounded-2xl border border-gold/10 bg-card/40 backdrop-blur-sm p-5 md:p-6">
-      <div className="flex items-baseline gap-2 mb-1">
+      <div className="flex items-baseline gap-2 mb-5 pb-4 border-b border-white/5">
         <span className="h-2 w-2 rounded-full" style={{ background: accent }} />
         <h3 className="font-heading text-lg">{title}</h3>
         <span className="text-xs text-foreground-muted">{subtitle}</span>
       </div>
 
-      <FloatingInput
-        label="Name"
-        value={state.name}
-        onChange={(v) => set({ name: v })}
-        placeholder="Full name"
-        icon={<User className="h-5 w-5" />}
-        helperText="So we can personalise your report"
-      />
+      <div className="space-y-4">
+        <Field label="Name" icon={<User className="h-5 w-5" />} helper="So we can personalise your report">
+          <input
+            type="text" value={state.name}
+            onChange={(e) => set({ name: e.target.value })}
+            placeholder="Full name"
+            className={FIELD}
+          />
+        </Field>
 
-      <div className="grid grid-cols-2 gap-3">
-        <ThemedField label="Date of birth" icon={<Calendar className="h-5 w-5" />}>
-          <input
-            type="date" value={state.date}
-            onChange={(e) => set({ date: e.target.value })}
-            className={FIELD}
-          />
-        </ThemedField>
-        <ThemedField label="Time" icon={<Clock className="h-5 w-5" />} helper="12:00 if unknown">
-          <input
-            type="time" value={state.time}
-            onChange={(e) => set({ time: e.target.value })}
-            className={FIELD}
-          />
-        </ThemedField>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="Date of birth" icon={<Calendar className="h-5 w-5" />}>
+            <input
+              type="date" value={state.date}
+              onChange={(e) => set({ date: e.target.value })}
+              className={FIELD}
+            />
+          </Field>
+          <Field label="Time" icon={<Clock className="h-5 w-5" />} helper="12:00 if unknown">
+            <input
+              type="time" value={state.time}
+              onChange={(e) => set({ time: e.target.value })}
+              className={FIELD}
+            />
+          </Field>
+        </div>
+
+        <Field label="Birth timezone" icon={<Globe2 className="h-5 w-5" />}>
+          <select
+            value={state.tz}
+            onChange={(e) => set({ tz: Number(e.target.value) })}
+            className={cn(FIELD, 'cursor-pointer')}
+          >
+            {TIMEZONES.map((tz) => (
+              <option key={tz.label} value={tz.value} className="bg-background text-foreground">{tz.label}</option>
+            ))}
+          </select>
+        </Field>
       </div>
-
-      <ThemedField label="Birth timezone" icon={<Globe2 className="h-5 w-5" />}>
-        <select
-          value={state.tz}
-          onChange={(e) => set({ tz: Number(e.target.value) })}
-          className={FIELD}
-        >
-          {TIMEZONES.map((tz) => (
-            <option key={tz.label} value={tz.value} className="bg-background text-foreground">{tz.label}</option>
-          ))}
-        </select>
-      </ThemedField>
     </div>
   );
 }
 
-function ThemedField({
+function Field({
   label, icon, helper, children,
 }: {
   label: string; icon?: React.ReactNode; helper?: string; children: React.ReactNode;
 }) {
   return (
-    <div className="relative w-full mt-6">
+    <div className="w-full">
+      <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-gold/90">
+        {label}
+      </label>
       <div className="relative">
         {icon && (
           <div className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted pointer-events-none z-10">
@@ -318,7 +322,6 @@ function ThemedField({
           </div>
         )}
         {children}
-        <span className="absolute -top-2 left-9 text-xs font-medium text-gold bg-background px-1">{label}</span>
       </div>
       {helper && <p className="mt-1 text-xs text-foreground-muted italic">{helper}</p>}
     </div>
