@@ -59,11 +59,12 @@ export async function getUserProfile(userId: string): Promise<UserProfile | null
     return cached!.profile;
   }
 
+  // maybeSingle() returns null (not a 406) when the anonymous user has no row.
   const { data: userData, error: userError } = await supabase
     .from('users')
     .select('*')
     .eq('id', userId)
-    .single();
+    .maybeSingle();
 
   // Avoid `never` inference from Supabase types in this repo.
   const typedUserData = userData as any;
