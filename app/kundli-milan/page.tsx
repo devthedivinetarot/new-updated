@@ -56,6 +56,7 @@ export default function KundliMilanPage() {
   const [email, setEmail] = useState('');
   const [buying, setBuying] = useState(false);
   const [purchased, setPurchased] = useState(false);
+  const [delivered, setDelivered] = useState(true);
   const [buyError, setBuyError] = useState('');
 
   const canCalculate = p1.name && p1.date && p2.name && p2.date;
@@ -104,6 +105,7 @@ export default function KundliMilanPage() {
       if (orderRes.mock) {
         const v = await verifyPayload({ orderId: orderRes.orderId });
         if (!v?.success) throw new Error(v?.error || 'Delivery failed');
+        setDelivered(v.emailed !== false);
         setPurchased(true);
         return;
       }
@@ -127,6 +129,7 @@ export default function KundliMilanPage() {
         signature: payment.razorpay_signature,
       });
       if (!v?.success) throw new Error(v?.error || 'Payment verification failed');
+      setDelivered(v.emailed !== false);
       setPurchased(true);
     } catch (e) {
       setBuyError(e instanceof Error ? e.message : 'Something went wrong');
@@ -194,14 +197,27 @@ export default function KundliMilanPage() {
               {/* Paywall / report */}
               <div className="mt-8 rounded-2xl border border-gold/25 bg-card/40 backdrop-blur-sm p-6 md:p-8">
                 {purchased ? (
-                  <div className="text-center py-4">
-                    <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-400 mb-3" />
-                    <h3 className="font-heading text-xl mb-1">Your report is on its way ✨</h3>
-                    <p className="text-foreground-secondary text-sm">
-                      We&apos;ve emailed your detailed Kundli Milan report to <span className="text-foreground">{email}</span>.
-                      Check your inbox (and spam) in a minute.
-                    </p>
-                  </div>
+                  delivered ? (
+                    <div className="text-center py-4">
+                      <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-400 mb-3" />
+                      <h3 className="font-heading text-xl mb-1">Your report is on its way ✨</h3>
+                      <p className="text-foreground-secondary text-sm">
+                        We&apos;ve emailed your detailed Kundli Milan report to <span className="text-foreground">{email}</span>.
+                        Check your inbox (and spam) in a minute.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="text-center py-4">
+                      <AlertTriangle className="mx-auto h-10 w-10 text-amber-400 mb-3" />
+                      <h3 className="font-heading text-xl mb-1">Payment received ✓</h3>
+                      <p className="text-foreground-secondary text-sm">
+                        Your payment went through, but we hit a snag emailing the report to{' '}
+                        <span className="text-foreground">{email}</span>. Please email{' '}
+                        <a href="mailto:thedivinetarot111@gmail.com" className="text-gold underline">thedivinetarot111@gmail.com</a>{' '}
+                        and we&apos;ll send it right away — no need to pay again.
+                      </p>
+                    </div>
+                  )
                 ) : (
                   <div className="md:flex md:items-center md:justify-between gap-6">
                     <div className="mb-4 md:mb-0">
