@@ -11,6 +11,9 @@
     },
     "app/api/newsletter/daily/route.ts": {
       "maxDuration": 60
+    },
+    "app/api/kundli-report/webhook/route.ts": {
+      "maxDuration": 30
     }
   },
   "crons": [

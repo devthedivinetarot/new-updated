@@ -90,7 +90,7 @@ export default function KundliMilanPage() {
       const orderRes = await fetch('/api/kundli-report', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, person1: persons.a, person2: persons.b }),
       }).then((r) => r.json());
 
       if (!orderRes?.success) throw new Error(orderRes?.error || 'Could not start payment');

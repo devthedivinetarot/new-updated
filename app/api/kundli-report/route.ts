@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createOrder } from '@/lib/razorpay/server';
+import { sanitizePerson } from '@/lib/astrology/deliver';
+import { saveKundliOrder } from '@/lib/astrology/orders';
+
+export const runtime = 'nodejs';
 
 // Downloadable Kundli Milan report — one-time purchase, no login required.
 const KUNDLI_AMOUNT = 9900; // ₹99.00 in paise
@@ -11,6 +15,14 @@ export async function POST(request: NextRequest) {
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json({ error: 'A valid email is required' }, { status: 400 });
+    }
+
+    // Person data captured up front so the report can be delivered server-side
+    // (via the webhook) even if the browser never calls /verify.
+    const p1 = sanitizePerson(body?.person1);
+    const p2 = sanitizePerson(body?.person2);
+    if (!p1 || !p2) {
+      return NextResponse.json({ error: 'Invalid birth data' }, { status: 400 });
     }
 
     const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
@@ -41,6 +53,9 @@ export async function POST(request: NextRequest) {
 
     const receiptId = `kundli_${Date.now()}`;
     const order = await createOrder(KUNDLI_AMOUNT, 'INR', receiptId);
+
+    // Persist so the webhook can deliver even if the client drops off.
+    await saveKundliOrder({ orderId: order.id, email, person1: p1, person2: p2, amount: KUNDLI_AMOUNT });
 
     return NextResponse.json({
       success: true,

@@ -1,18 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyPaymentSignature } from '@/lib/razorpay/server';
-import { computeMatch, type Person } from '@/lib/astrology/ashtakoota';
-import { buildReportHtml, sendReportEmail, logReportToSheet, type ReportInput } from '@/lib/astrology/report';
+import { sanitizePerson, generateAndSend } from '@/lib/astrology/deliver';
+import { deliverForOrder } from '@/lib/astrology/orders';
 
-function sanitizePerson(p: unknown): Person | null {
-  if (!p || typeof p !== 'object') return null;
-  const o = p as Record<string, unknown>;
-  const name = String(o.name ?? '').trim().slice(0, 60) || 'Person';
-  const rashi = Number(o.rashi);
-  const nakshatra = Number(o.nakshatra);
-  if (!Number.isInteger(rashi) || rashi < 0 || rashi > 11) return null;
-  if (!Number.isInteger(nakshatra) || nakshatra < 0 || nakshatra > 26) return null;
-  return { name, rashi, nakshatra };
-}
+export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
   try {
@@ -45,17 +36,27 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Recompute the match server-side so the emailed report is authoritative.
-    const match = computeMatch(p1, p2);
-    const input: ReportInput = { email: clean, person1: p1, person2: p2, match };
-    const html = buildReportHtml(input);
+    // Deliver idempotently via the persisted order (shared with the webhook, so
+    // the report is sent exactly once). If there's no persisted row (Supabase
+    // not configured, or a mock/dev order), fall back to a direct send using
+    // the data the client just posted.
+    let emailed = false;
+    if (typeof orderId === 'string' && !isMock) {
+      const d = await deliverForOrder(orderId, typeof paymentId === 'string' ? paymentId : undefined);
+      if (d.ok) {
+        emailed = d.emailed !== false;
+      } else if (d.reason === 'no-row' || d.reason === 'supabase-not-configured') {
+        const res = await generateAndSend(clean, p1, p2);
+        emailed = res.emailed;
+      } else {
+        emailed = false; // email-failed / error — surfaced to the user
+      }
+    } else {
+      const res = await generateAndSend(clean, p1, p2);
+      emailed = res.emailed;
+    }
 
-    const [emailed, logged] = await Promise.all([
-      sendReportEmail(clean, p1.name, p2.name, html),
-      logReportToSheet(input),
-    ]);
-
-    return NextResponse.json({ success: true, emailed, logged });
+    return NextResponse.json({ success: true, emailed });
   } catch (error) {
     console.error('[Kundli Verify] Error:', error);
     return NextResponse.json({ error: 'Verification failed' }, { status: 500 });
