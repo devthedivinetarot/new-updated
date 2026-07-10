@@ -129,12 +129,16 @@ export default function RootLayout({
           gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}
           gtmId={process.env.NEXT_PUBLIC_GTM_ID}
         />
-        <Script
-          id="clarity-analytics"
-          src="https://cdn.clarity.ms/script/0.0.0/script.js"
-          strategy="afterInteractive"
-          nonce={nonce}
-        />
+        {process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID ? (
+          <Script
+            id="clarity-analytics"
+            strategy="afterInteractive"
+            nonce={nonce}
+            dangerouslySetInnerHTML={{
+              __html: `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","${process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID}");`,
+            }}
+          />
+        ) : null}
         <ErrorBoundary>
           <ClientLayout>{children}</ClientLayout>
         </ErrorBoundary>

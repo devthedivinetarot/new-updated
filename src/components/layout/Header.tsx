@@ -118,16 +118,9 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Right: language switcher + Contact + CTA. Collapses into mobile menu below xl. */}
+          {/* Right: language switcher + CTA. Collapses into mobile menu below xl. */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0 ml-auto">
             <LanguageSwitcher className="hidden xl:inline-flex" />
-
-            <Link
-              href="/contact"
-              className="hidden xl:inline-flex items-center justify-center whitespace-nowrap border border-white/25 text-white font-semibold rounded-full px-5 py-2 text-sm hover:bg-white/10 transition-colors active:scale-95"
-            >
-              {isHydrated ? t('nav.contact') : 'Contact'}
-            </Link>
 
             <Link
               href="/reading"
@@ -214,13 +207,6 @@ export default function Header() {
                   <div className="flex justify-center pb-1">
                     <LanguageSwitcher />
                   </div>
-                  <Link
-                    href="/contact"
-                    onClick={() => setIsMobileOpen(false)}
-                    className="block w-full text-center border border-white/25 text-white font-semibold rounded-xl px-5 py-3 min-h-[48px] flex items-center justify-center hover:bg-white/10 transition-colors"
-                  >
-                    {isHydrated ? t('nav.contact') : 'Contact'}
-                  </Link>
                   <Link
                     href="/reading"
                     onClick={() => setIsMobileOpen(false)}

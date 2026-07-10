@@ -129,7 +129,6 @@ const Footer = () => {
               { nameKey: 'footer.quickLinks.about', name: 'About', href: '/about' },
               { nameKey: 'footer.quickLinks.readings', name: 'Readings', href: '/reading' },
               { nameKey: 'footer.quickLinks.premium', name: 'Premium', href: '/reading?upgrade=1' },
-              { nameKey: 'footer.quickLinks.contact', name: 'Contact', href: '/contact' },
             ].map((link) => (
               <li key={link.name}>
                 <Link
@@ -163,6 +162,12 @@ const Footer = () => {
               </a>
             ))}
           </div>
+          <Link
+            href="/contact"
+            className="mt-3 text-xs text-[#A1A1AA]/70 hover:text-amber-500 transition-colors w-fit"
+          >
+            {isHydrated ? t('footer.quickLinks.contact') : 'Contact us'}
+          </Link>
         </div>
 
         {/* COLUMN 4 — NEWSLETTER */}
@@ -243,10 +248,13 @@ const Footer = () => {
           </a>
         </div>
         <div className="flex items-center gap-4 mt-2 md:mt-0">
-          {/* <span>Privacy Policy</span>
+          <Link
+            href="/privacy"
+            className="text-gray-400 hover:text-amber-400 transition-colors duration-200"
+          >
+            {isHydrated ? t('footer.privacy') : 'Privacy'}
+          </Link>
           <span className="w-px h-3 bg-white/10" />
-          <span>Terms of Service</span>
-          <span className="w-px h-3 bg-white/10" /> */}
           <span id="footer-year">© {new Date().getFullYear()} The Divine Tarot. All rights reserved.</span>
         </div>
       </div>

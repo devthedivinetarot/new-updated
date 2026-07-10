@@ -105,8 +105,9 @@ export async function middleware(request: NextRequest) {
       "'unsafe-inline'",
       "https://www.googletagmanager.com",
       "https://www.google-analytics.com",
-      "https://cdn.clarity.ms",
+      "https://*.clarity.ms",
       "https://checkout.razorpay.com",
+      "https://*.razorpay.com",
       "https://vercel.live",
     ];
 
@@ -133,8 +134,8 @@ export async function middleware(request: NextRequest) {
       `style-src ${styleSrc}`,
       `font-src 'self' https://fonts.gstatic.com`,
       `img-src 'self' data: https:`,
-      `connect-src 'self' https://*.supabase.co https://api.openai.com https://api.razorpay.com https://*.ingest.us.sentry.io https://*.ingest.sentry.io`,
-      `frame-src https://ginni-ki-baatein-buddy.lovable.app https://ginnitdt.lovable.app https://tdt-ginni-1.vercel.app https://chat.thedivinetarotonline.com https://checkout.razorpay.com https://securecdn.razorpay.com https://vercel.live`,
+      `connect-src 'self' https://*.supabase.co https://api.openai.com https://api.razorpay.com https://*.razorpay.com https://lumberjack.razorpay.com https://*.ingest.us.sentry.io https://*.ingest.sentry.io`,
+      `frame-src https://ginni-ki-baatein-buddy.lovable.app https://ginnitdt.lovable.app https://tdt-ginni-1.vercel.app https://chat.thedivinetarotonline.com https://checkout.razorpay.com https://api.razorpay.com https://securecdn.razorpay.com https://*.razorpay.com https://vercel.live`,
       `worker-src 'self' blob:`,
       `object-src 'none'`,
       `base-uri 'self'`,
@@ -156,7 +157,7 @@ export async function middleware(request: NextRequest) {
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set(
     'Permissions-Policy',
-    'accelerometer=(), camera=(), geolocation=(), gyroscope=(), microphone=(), payment=(), usb=()',
+    'accelerometer=(), camera=(), geolocation=(), gyroscope=(), microphone=(), payment=(self "https://checkout.razorpay.com" "https://api.razorpay.com"), usb=()',
   );
   response.headers.set('X-DNS-Prefetch-Control', 'off');
 
