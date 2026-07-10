@@ -3,8 +3,8 @@
 import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Sparkles, Heart, Download, Loader2, CheckCircle2, AlertTriangle,
-  User, Calendar, Clock, Globe2,
+  Sparkles, Heart, Loader2, CheckCircle2, AlertTriangle,
+  User, Calendar, Clock, Globe2, Lock, Check,
 } from 'lucide-react';
 import {
   computeMatch, kootaImpact, type MatchResult, type Person,
@@ -192,64 +192,80 @@ export default function KundliMilanPage() {
               transition={{ duration: 0.5 }}
               className="mt-14 scroll-mt-24"
             >
-              <Scorecard result={result} />
+              {purchased ? (
+                <>
+                  <Scorecard result={result} />
 
-              {/* Paywall / report */}
-              <div className="mt-8 rounded-2xl border border-gold/25 bg-card/40 backdrop-blur-sm p-6 md:p-8">
-                {purchased ? (
-                  delivered ? (
-                    <div className="text-center py-4">
-                      <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-400 mb-3" />
-                      <h3 className="font-heading text-xl mb-1">Your report is on its way ✨</h3>
-                      <p className="text-foreground-secondary text-sm">
-                        We&apos;ve emailed your detailed Kundli Milan report to <span className="text-foreground">{email}</span>.
-                        Check your inbox (and spam) in a minute.
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="text-center py-4">
-                      <AlertTriangle className="mx-auto h-10 w-10 text-amber-400 mb-3" />
-                      <h3 className="font-heading text-xl mb-1">Payment received ✓</h3>
-                      <p className="text-foreground-secondary text-sm">
-                        Your payment went through, but we hit a snag emailing the report to{' '}
-                        <span className="text-foreground">{email}</span>. Please email{' '}
-                        <a href="mailto:thedivinetarot111@gmail.com" className="text-gold underline">thedivinetarot111@gmail.com</a>{' '}
-                        and we&apos;ll send it right away — no need to pay again.
-                      </p>
-                    </div>
-                  )
-                ) : (
-                  <div className="md:flex md:items-center md:justify-between gap-6">
-                    <div className="mb-4 md:mb-0">
-                      <div className="flex items-center gap-2 text-gold font-semibold">
-                        <Download className="h-5 w-5" /> Full downloadable report
+                  <div className="mt-8 rounded-2xl border border-gold/25 bg-card/40 backdrop-blur-sm p-6 md:p-8">
+                    {delivered ? (
+                      <div className="text-center py-4">
+                        <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-400 mb-3" />
+                        <h3 className="font-heading text-xl mb-1">Your report is on its way ✨</h3>
+                        <p className="text-foreground-secondary text-sm">
+                          We&apos;ve emailed your detailed Kundli Milan report to <span className="text-foreground">{email}</span>.
+                          Check your inbox (and spam) in a minute.
+                        </p>
                       </div>
-                      <p className="text-sm text-foreground-secondary mt-1 max-w-md">
-                        Detailed guna-by-guna breakdown, dosha analysis and remedies — emailed to you as a report you can keep.
-                      </p>
-                    </div>
-                    <div className="shrink-0 w-full md:w-auto">
-                      <div className="flex flex-col sm:flex-row gap-2">
-                        <input
-                          type="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          placeholder="you@example.com"
-                          className="rounded-full bg-card/60 border border-gold/20 px-4 py-3 text-sm text-foreground placeholder-foreground-muted outline-none focus:border-gold/60 min-w-0 sm:w-56"
-                        />
-                        <button
-                          onClick={handleBuy}
-                          disabled={buying}
-                          className={cn(buttonVariants({ variant: 'primary', size: 'md' }), 'whitespace-nowrap disabled:opacity-60')}
-                        >
-                          {buying ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Get report · ₹99</>}
-                        </button>
+                    ) : (
+                      <div className="text-center py-4">
+                        <AlertTriangle className="mx-auto h-10 w-10 text-amber-400 mb-3" />
+                        <h3 className="font-heading text-xl mb-1">Payment received ✓</h3>
+                        <p className="text-foreground-secondary text-sm">
+                          Your payment went through, but we hit a snag emailing the report to{' '}
+                          <span className="text-foreground">{email}</span>. Please email{' '}
+                          <a href="mailto:thedivinetarot111@gmail.com" className="text-gold underline">thedivinetarot111@gmail.com</a>{' '}
+                          and we&apos;ll send it right away — no need to pay again.
+                        </p>
                       </div>
-                      {buyError && <p className="text-[rgb(var(--secondary))] text-xs mt-2 text-center sm:text-right">{buyError}</p>}
-                    </div>
+                    )}
                   </div>
-                )}
-              </div>
+                </>
+              ) : (
+                /* Paywall gate — shown the moment Calculate is pressed, BEFORE the result */
+                <div className="rounded-2xl border border-gold/25 bg-card/40 backdrop-blur-sm p-6 md:p-10 text-center">
+                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gold/15 border border-gold/30">
+                    <Lock className="h-8 w-8 text-gold" />
+                  </div>
+                  <h2 className="font-heading text-2xl md:text-3xl mb-2 text-glow">Your Kundli Milan is ready</h2>
+                  <p className="text-foreground-secondary max-w-md mx-auto mb-6">
+                    Unlock your full compatibility result for just ₹99 — the score out of 36, the
+                    8-koota breakdown, dosha analysis and a detailed report emailed to you.
+                  </p>
+
+                  <ul className="mx-auto mb-7 max-w-sm space-y-2 text-left text-sm text-foreground-secondary">
+                    {[
+                      'Full 36-guna Ashtakoota compatibility score',
+                      'All 8 kootas — and what they mean for your life together',
+                      'Nadi & Bhakoot dosha analysis with remedies',
+                      'Detailed report emailed to your inbox',
+                    ].map((f) => (
+                      <li key={f} className="flex items-start gap-2">
+                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
+                        <span>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="mx-auto flex max-w-md flex-col sm:flex-row gap-2 justify-center">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="you@example.com"
+                      className="rounded-full bg-card/60 border border-gold/20 px-4 py-3 text-sm text-foreground placeholder-foreground-muted outline-none focus:border-gold/60 min-w-0 sm:w-60"
+                    />
+                    <button
+                      onClick={handleBuy}
+                      disabled={buying}
+                      className={cn(buttonVariants({ variant: 'primary', size: 'md' }), 'whitespace-nowrap disabled:opacity-60')}
+                    >
+                      {buying ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Pay ₹99 &amp; Reveal Result</>}
+                    </button>
+                  </div>
+                  {buyError && <p className="text-[rgb(var(--secondary))] text-xs mt-3">{buyError}</p>}
+                  <p className="mt-4 text-xs text-foreground-muted">Secure payment via Razorpay · Instant delivery</p>
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
