@@ -163,10 +163,10 @@ const Footer = () => {
             ))}
           </div>
           <Link
-            href="/contact"
+            href="/privacy"
             className="mt-3 text-xs text-[#A1A1AA]/70 hover:text-amber-500 transition-colors w-fit"
           >
-            {isHydrated ? t('footer.quickLinks.contact') : 'Contact us'}
+            {isHydrated ? t('footer.privacy') : 'Privacy Policy'}
           </Link>
         </div>
 
