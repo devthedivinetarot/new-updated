@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Sparkles, Heart, Loader2, CheckCircle2, AlertTriangle,
@@ -212,8 +213,8 @@ export default function KundliMilanPage() {
                         <h3 className="font-heading text-xl mb-1">Payment received ✓</h3>
                         <p className="text-foreground-secondary text-sm">
                           Your payment went through, but we hit a snag emailing the report to{' '}
-                          <span className="text-foreground">{email}</span>. Please email{' '}
-                          <a href="mailto:thedivinetarot111@gmail.com" className="text-gold underline">thedivinetarot111@gmail.com</a>{' '}
+                          <span className="text-foreground">{email}</span>. Please{' '}
+                          <Link href="/contact" className="text-gold underline">contact us</Link>{' '}
                           and we&apos;ll send it right away — no need to pay again.
                         </p>
                       </div>
