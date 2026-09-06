@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import { Crown } from 'lucide-react';
 import { useUser } from '@/lib/auth/useUser';
 import { useSubscription } from '@/hooks/useSubscription';
@@ -17,7 +16,6 @@ export default function SubscriptionButton({
   size = 'md',
   className = '',
 }: SubscriptionButtonProps) {
-  const router = useRouter();
   const { isLoading: userLoading } = useUser();
   const { isPremium } = useSubscription();
 
@@ -41,10 +39,11 @@ export default function SubscriptionButton({
 
   const handleClick = useCallback(() => {
     if (isPremium) return;
-    // All premium buttons route to the reading page, which auto-opens the
-    // subscription modal (PremiumUpgradeModal) via the ?upgrade=1 param.
-    router.push('/reading?upgrade=1');
-  }, [isPremium, router]);
+    // All premium buttons route to the reading app (now on its own
+    // subdomain), which auto-opens the subscription modal
+    // (PremiumUpgradeModal) via the ?upgrade=1 param.
+    window.location.href = 'https://reading.thedivinetarotonline.com/?upgrade=1';
+  }, [isPremium]);
 
   return (
     <button

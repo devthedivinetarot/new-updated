@@ -9,7 +9,7 @@
  *   Language: en (or set WHATSAPP_TEMPLATE_LANG)
  *   Body:     {{1}}
  *             (single variable holding the day's teaser text)
- *   Button:   URL button -> https://thedivinetarotonline.com/reading
+ *   Button:   URL button -> https://reading.thedivinetarotonline.com/
  *
  * Env vars:
  *   WHATSAPP_ACCESS_TOKEN     — permanent System User token

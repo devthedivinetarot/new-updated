@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -167,12 +166,12 @@ export default function Preview() {
             transition={{ delay: 0.5 }}
             className="px-5 md:px-8 lg:px-12 pt-2 pb-8"
           >
-            <Link
-              href="/reading"
+            <a
+              href="https://reading.thedivinetarotonline.com/"
               className="flex items-center justify-center h-14 rounded-full bg-gradient-to-r from-[#FF5F6D] to-[#FFC371] text-black font-semibold text-base md:text-lg w-full max-w-[700px] mx-auto shadow-[0_0_40px_rgba(255,200,0,0.35)] hover:scale-[1.02] transition-all duration-300"
             >
               {previewReading.ctaButton}
-            </Link>
+            </a>
             <p className="mt-3 text-[11px] md:text-xs text-gray-400 font-normal text-center">{previewReading.ctaSubtext}</p>
           </motion.div>
         </motion.div>

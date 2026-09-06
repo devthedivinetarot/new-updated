@@ -25,7 +25,7 @@ export function welcomeEmailHtml(): string {
           <p style="margin:0 0 14px;">Whenever you need clarity, the cards are waiting.</p>
         </td></tr>
         <tr><td style="padding:16px 40px 32px;text-align:center;">
-          <a href="${SITE_URL}/reading" style="display:inline-block;background:linear-gradient(90deg,#6d28d9,#9333ea);color:#fff;text-decoration:none;padding:14px 30px;border-radius:999px;font-size:16px;">Start a free reading</a>
+          <a href="https://reading.thedivinetarotonline.com/" style="display:inline-block;background:linear-gradient(90deg,#6d28d9,#9333ea);color:#fff;text-decoration:none;padding:14px 30px;border-radius:999px;font-size:16px;">Start a free reading</a>
         </td></tr>
         <tr><td style="padding:20px 40px;border-top:1px solid rgba(255,255,255,0.08);color:#7c7690;font-size:12px;line-height:1.6;text-align:center;">
           <p style="margin:0 0 6px;">The Divine Tarot · Online tarot readings, worldwide</p>

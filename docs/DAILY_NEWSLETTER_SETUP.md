@@ -20,7 +20,7 @@ WhatsApp Cloud API.
 5. It records the date in `daily_newsletter_state` — a retried or duplicate
    cron run **never double-sends the same day**.
 
-Every email CTA links to `/reading` with UTM tags
+Every email CTA links to `https://reading.thedivinetarotonline.com/` with UTM tags
 (`utm_campaign=daily&utm_content=<message-id>`) so you can see in analytics
 which messages drive the most visits.
 
@@ -64,7 +64,7 @@ Steps for the direct route:
    - Body: `{{1}}`  — the day's teaser text goes in this variable.
      If Meta rejects a bare `{{1}}` body, use:
      `🔮 The Divine Tarot: {{1}}`
-   - Button: **Visit website** → `https://thedivinetarotonline.com/reading`
+   - Button: **Visit website** → `https://reading.thedivinetarotonline.com/`
 4. Wait for template approval (usually minutes to hours).
 5. Set env vars in Vercel:
    - `WHATSAPP_ACCESS_TOKEN`

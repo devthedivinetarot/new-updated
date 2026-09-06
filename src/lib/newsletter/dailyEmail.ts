@@ -10,7 +10,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://thedivinetarotonlin
 const SUPPORT_EMAIL = 'thedivinetarot111@gmail.com';
 
 export function dailyEmailHtml(msg: DailyMessage): string {
-  const readingUrl = `${SITE_URL}/reading?utm_source=newsletter&utm_medium=email&utm_campaign=daily&utm_content=${encodeURIComponent(
+  const readingUrl = `https://reading.thedivinetarotonline.com/?utm_source=newsletter&utm_medium=email&utm_campaign=daily&utm_content=${encodeURIComponent(
     msg.id
   )}`;
   const paragraphs = msg.body

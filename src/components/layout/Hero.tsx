@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { shouldBlockContextMenu, shouldBlockDevTools, shouldBlockScreenshots } from '@/lib/securityConfig';
@@ -219,12 +218,12 @@ src="/logo.png"
 
             {/* CTA Button - Red to Yellow gradient, highest visual dominance, pulse animation */}
             <motion.div variants={itemVariants}>
-              <Link
-                href="/reading"
+              <a
+                href="https://reading.thedivinetarotonline.com/"
                 className={cn(buttonVariants({ size: 'xl' }), 'btn-cta-pulse w-full sm:w-auto flex items-center justify-center gap-2')}
               >
                 <span className="relative z-10 text-base sm:text-lg">{isHydrated ? t('home.hero.ctaButton') : 'Know Your Fortune'}</span>
-              </Link>
+              </a>
               {/* Subtext below CTA */}
               <p className="mt-4 text-body-sm text-foreground-muted text-center font-sans px-4">
                 {isHydrated ? t('home.hero.ctaSubtext') : 'Maybe this is the answer you have been waiting for…'}

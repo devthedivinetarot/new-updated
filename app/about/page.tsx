@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 import { useLanguage } from '@/hooks/useLanguage';
 import Button from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
@@ -360,12 +359,12 @@ export default function AboutPage() {
               </h2>
 
               <div className="flex justify-center">
-                <Link href="/reading" className="inline-flex">
+                <a href="https://reading.thedivinetarotonline.com/" className="inline-flex">
                   <Button size="xl" variant="secondary" className="btn-glow-hover">
                     {isHydrated ? t('about.redesigned.cta.button') : 'Start Your Reading'}
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
-                </Link>
+                </a>
               </div>
             </div>
           </div>

@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { Check, Sparkles, Crown } from 'lucide-react';
-import Link from 'next/link';
 import SubscriptionButton from '@/components/subscription/SubscriptionButton';
 import { SUBSCRIPTION_PLANS } from '@/lib/payments/plans';
 
@@ -107,14 +106,14 @@ export default function PremiumPage() {
                 )}
                 
                 {(!isPremium) && (
-                  <Link href="/reading" passHref>
+                  <a href="https://reading.thedivinetarotonline.com/">
                     <button
                       className={`w-full py-3.5 rounded-xl font-semibold transition-all duration-300 ${
                         'bg-white/10 text-[#EAEAF0] hover:bg-white/20'
                       }`}>
                       Current Plan
                     </button>
-                  </Link>
+                  </a>
                 )}
               </motion.div>
               );

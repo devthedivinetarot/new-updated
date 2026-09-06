@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
@@ -71,10 +70,10 @@ export default function FinalCTA() {
             {isHydrated ? t('home.finalCta.subtitle') : 'The cards are ready. Your guidance is ready. Take the first step toward clarity.'}
           </p>
 
-          <Link href="/reading" className={cn(buttonVariants({ size: 'xl' }), 'btn-cta-pulse w-full sm:w-auto flex items-center justify-center gap-2 mx-auto')}>
+          <a href="https://reading.thedivinetarotonline.com/" className={cn(buttonVariants({ size: 'xl' }), 'btn-cta-pulse w-full sm:w-auto flex items-center justify-center gap-2 mx-auto')}>
             <span>{isHydrated ? t('home.finalCta.button') : "Let's Begin"}</span>
             <ArrowRight className="h-6 w-6" />
-          </Link>
+          </a>
 
           <p className="mt-6 text-sm text-[rgb(var(--foreground-muted))]">
             {isHydrated ? t('home.finalCta.subtext') : 'Takes less than 60 seconds • Try it free'}

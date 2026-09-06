@@ -15,6 +15,18 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   },
+  async redirects() {
+    // The reading tool now lives on its own subdomain. Send anyone hitting
+    // the old in-app path (old links, bookmarks, search results) straight
+    // there. Query params (e.g. ?upgrade=1) are passed through automatically.
+    return [
+      {
+        source: '/reading',
+        destination: 'https://reading.thedivinetarotonline.com/',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

@@ -6,7 +6,7 @@ The Divine Tarot blends traditional tarot symbolism with warm, practical, emotio
 
 ## Key Pages
 - [Home](https://thedivinetarotonline.com/): What The Divine Tarot offers and how to begin.
-- [Live Tarot Reading](https://thedivinetarotonline.com/reading): Start an instant, interactive tarot reading and ask the cards about love, career or life.
+- [Live Tarot Reading](https://reading.thedivinetarotonline.com/): Start an instant, interactive tarot reading and ask the cards about love, career or life.
 - [Premium Membership](https://thedivinetarotonline.com/premium): Unlimited premium readings, deeper spreads and priority spiritual guidance.
 - [About](https://thedivinetarotonline.com/about): Our story, philosophy and frequently asked questions about online tarot.
 - [Contact](https://thedivinetarotonline.com/contact): Reach the team for readings, membership and support.
