@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint-and-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: TypeScript check
+        run: npx tsc --noEmit
+        env:
+          RAZORPAY_KEY_ID: ${{ secrets.RAZORPAY_KEY_ID }}
+          RAZORPAY_KEY_SECRET: ${{ secrets.RAZORPAY_KEY_SECRET }}
+          
+      - name: ESLint
+        run: npm run lint
+        
+      - name: Build
+        run: npm run build
+        env:
+          RAZORPAY_KEY_ID: ${{ secrets.RAZORPAY_KEY_ID }}
+          RAZORPAY_KEY_SECRET: ${{ secrets.RAZORPAY_KEY_SECRET }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          
+  design-audit:
+    runs-on: ubuntu-latest
+    needs: lint-and-build
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Run design audit
+        run: |
+          echo "Running design token audit..."
+          grep -r "#[0-9A-Fa-f]\{6\}" --include="*.tsx" src/ || true
+        shell: bash
+        
+      - name: Check for violations
+        run: |
+          VIOLATIONS=$(grep -r "text-\[#" --include="*.tsx" src/ | wc -l)
+          if [ "$VIOLATIONS" -gt "0" ]; then
+            echo "❌ Design token violations found"
+            grep -r "text-\[#" --include="*.tsx" src/
+            exit 1
+          fi
+          echo "✅ No design token violations"
+        shell: bash
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: [lint-and-build, design-audit]
+    if: always()
+    
+    steps:
+      - name: CI Status
+        run: |
+          if [ "${{ needs.lint-and-build.result }}" == "success" ] && [ "${{ needs.design-audit.result }}" == "success" ]; then
+            echo "✅ CI passed"
+          else
+            echo "❌ CI failed"
+            exit 1
+          fi

@@ -1,0 +1,64 @@
+/* Global Animated Scrollbar System */
+/* ================================== */
+/* Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B0B0F;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #6A0DAD 0%, #D4AF37 100%);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  animation: glowScroll 3s ease-in-out infinite alternate;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #D4AF37 0%, #6A0DAD 100%);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
+}
+
+::-webkit-scrollbar-corner {
+  background: #0B0B0F;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #D4AF37 #0B0B0F;
+}
+
+/* Scroll Glow Animation */
+@keyframes glowScroll {
+  0% {
+    box-shadow: 0 0 4px rgba(212, 175, 55, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 12px rgba(106, 13, 173, 0.6);
+  }
+}
+
+/* Smooth scrolling behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for divs with overflow */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #6A0DAD 0%, #D4AF37 100%);
+  border-radius: 8px;
+  border: 2px solid #0B0B0F;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #1A1A2E;
+  border-radius: 8px;
+}

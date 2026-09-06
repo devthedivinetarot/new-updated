@@ -1,0 +1,38 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🔍 Running pre-commit checks..."
+
+# Run TypeScript check first
+echo "Checking TypeScript..."
+npx tsc --noEmit
+if [ $? -ne 0 ]; then
+  echo "❌ TypeScript check failed"
+  exit 1
+fi
+
+# Run i18n audit to detect new hardcoded strings
+echo "Checking i18n compliance..."
+node scripts/verify-i18n.js
+if [ $? -ne 0 ]; then
+  echo "❌ i18n check failed - all UI text must use translation keys"
+  exit 1
+fi
+
+# Run ESLint
+echo "Running ESLint..."
+npm run lint
+if [ $? -ne 0 ]; then
+  echo "❌ Linting failed - fix errors before committing"
+  exit 1
+fi
+
+# Run build to catch any type/build issues
+echo "Building..."
+npm run build
+if [ $? -ne 0 ]; then
+  echo "❌ Build failed"
+  exit 1
+fi
+
+echo "✅ All pre-commit checks passed!"

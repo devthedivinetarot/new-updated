@@ -1,0 +1,628 @@
+{
+  "cards": [
+    {
+      "id": 0,
+      "name": "The Fool",
+      "image": "/card_img/The Fool.png",
+      "upright": "New beginnings, innocence, spontaneity, a free spirit. Fresh starts and the very beginning of the journey.",
+      "reversed": "Recklessness, naive, foolish choices, risk without consideration.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 1,
+      "name": "The Magician",
+      "image": "/card_img/The Magician.png",
+      "upright": "Manifestation, resourcefulness, power, inspired action. Turning ideas into reality through willpower and skill.",
+      "reversed": "Manipulation, poor planning, untapped talents, misuse of skills.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 2,
+      "name": "The High Priestess",
+      "image": "/card_img/The High Priestess.png",
+      "upright": "Intuition, unconscious knowledge, divine feminine, inner voice. Deep wisdom and mystery.",
+      "reversed": "Secrets withheld, repressed intuition, disconnected from inner voice.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 3,
+      "name": "The Empress",
+      "image": "/card_img/The Empress.png",
+      "upright": "Femininity, abundance, nurturing, creativity, nature. Fertility in all forms - creative, physical, emotional.",
+      "reversed": "Creative block, dependence on others, smothering love, neglect of self.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 4,
+      "name": "The Emperor",
+      "image": "/card_img/The Emperor.png",
+      "upright": "Authority, establishment, structure, father figure, discipline. Leadership and control.",
+      "reversed": "Tyranny, rigidity, excessive control, lack of discipline.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 5,
+      "name": "The Hierophant",
+      "image": "/card_img/The Hierophant.png",
+      "upright": "Spiritual wisdom, tradition, conformity, morality, ethics. Sacred teachings and guidance.",
+      "reversed": "Personal beliefs, freedom, new approaches, challenging tradition.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 6,
+      "name": "The Lovers",
+      "image": "/card_img/The Lovers.png",
+      "upright": "Love, harmony, relationships, choices, values alignment. Deep connections and important life choices.",
+      "reversed": "Disharmony, imbalance, misaligned values, relationship issues.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 7,
+      "name": "The Chariot",
+      "image": "/card_img/The Chariot.png",
+      "upright": "Direction, control, willpower, triumph, ambition. Victory through determination and focus.",
+      "reversed": "Lack of direction, aggression, impulsiveness, defeat.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 8,
+      "name": "Strength",
+      "image": "/card_img/Strength.png",
+      "upright": "Courage, patience, inner strength, compassion, resilience. Quiet power and overcoming challenges through gentleness.",
+      "reversed": "Self-doubt, fear, lack of discipline, inner turmoil.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 9,
+      "name": "The Hermit",
+      "image": "/card_img/The Hermit.png",
+      "upright": "Soul searching, introspection, inner guidance, solitude. Deep contemplation and spiritual seeking.",
+      "reversed": "Isolation, loneliness, avoidance, lack of introspection.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 10,
+      "name": "Wheel of Fortune",
+      "image": "/card_img/Wheel of Fortune.png",
+      "upright": "Change, cycles, fate, turning points, good luck. The cyclical nature of life and inevitability of change.",
+      "reversed": "Bad luck, resistance to change, clinging to past, stagnation.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 11,
+      "name": "Justice",
+      "image": "/card_img/Justice.png",
+      "upright": "Fairness, truth, cause and effect, law, balance. Karmic balance and integrity.",
+      "reversed": "Dishonesty, unfairness, imbalance, lack of accountability.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 12,
+      "name": "The Hanged Man",
+      "image": "/card_img/The Hanged Man.png",
+      "upright": "Surrender, letting go, new perspective, sacrifice, patience. Gaining wisdom through surrender.",
+      "reversed": "Stalling, resistance, fear of sacrifice, avoidance.",
+      "yes_no": "No"
+    },
+    {
+      "id": 13,
+      "name": "Death",
+      "image": "/card_img/Death.png",
+      "upright": "Endings, transformation, transition, renewal, change. End of a cycle and beginning of something new.",
+      "reversed": "Resistance to change, fear of endings, stagnation, decay.",
+      "yes_no": "No"
+    },
+    {
+      "id": 14,
+      "name": "Temperance",
+      "image": "/card_img/Temperance.png",
+      "upright": "Balance, moderation, patience, purpose, harmony. Finding the middle path and integration.",
+      "reversed": "Imbalance, excess, impatience, discord, recklessness.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 15,
+      "name": "The Devil",
+      "image": "/card_img/The Devil.png",
+      "upright": "Shadow self, attachment, addiction, materialism, bondage. Being bound by unhealthy patterns.",
+      "reversed": "Release, freedom, breaking bonds, reclaiming power.",
+      "yes_no": "No"
+    },
+    {
+      "id": 16,
+      "name": "The Tower",
+      "image": "/card_img/The Tower.png",
+      "upright": "Sudden change, revelation, awakening, chaos, breakdown. Upheaval that shatters illusions.",
+      "reversed": "Avoidance of disaster, fear of change, resistance to awakening.",
+      "yes_no": "No"
+    },
+    {
+      "id": 17,
+      "name": "The Star",
+      "image": "/card_img/The Star.png",
+      "upright": "Hope, inspiration, serenity, faith, healing, purpose. Renewed hope and spiritual connection.",
+      "reversed": "Disconnection, despair, hopelessness, faithlessness.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 18,
+      "name": "The Moon",
+      "image": "/card_img/The Moon.png",
+      "upright": "Illusion, intuition, dreams, subconscious, mystery, anxiety. Realm of dreams and hidden truths.",
+      "reversed": "Confusion, illusion, anxiety, fear, repressed emotions.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 19,
+      "name": "The Sun",
+      "image": "/card_img/The Sun.png",
+      "upright": "Joy, success, celebration, vitality, positivity, achievement. Success and happiness.",
+      "reversed": "Negativity, sadness, depression, pessimism, delay.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 20,
+      "name": "Judgement",
+      "image": "/card_img/Judgement.png",
+      "upright": "Rebirth, awakening, forgiveness, absolution, inner calling. Self-evaluation and spiritual awakening.",
+      "reversed": "Self-doubt, resistance to growth, ignoring the call, regret.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 21,
+      "name": "The World",
+      "image": "/card_img/The World.png",
+      "upright": "Completion, integration, accomplishment, travel, wholeness. Successful completion of a cycle.",
+      "reversed": "Incompletion, delay, lack of closure, stagnation.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 22,
+      "name": "Ace of Cups",
+      "image": "/card_img/Ace of Cups.png",
+      "upright": "New emotional experiences, love, compassion, creativity, divine love. New opportunities for love and emotional growth.",
+      "reversed": "Blocked emotions, lack of compassion, emotional imbalance, emptiness.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 23,
+      "name": "Two of Cups",
+      "image": "/card_img/Two of Cups.png",
+      "upright": "Partnerships, harmony, relationships, balance, mutual attraction. Harmony, love, and deep emotional bonds.",
+      "reversed": "Imbalance, disharmony, broken relationships, misunderstanding.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 24,
+      "name": "Three of Cups",
+      "image": "/card_img/Three of Cups.png",
+      "upright": "Celebration, friendship, community, creativity, collaboration. Joy, celebration, and social connections.",
+      "reversed": "Isolation, overindulgence, gossip, disconnection.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 25,
+      "name": "Four of Cups",
+      "image": "/card_img/Four of Cups.png",
+      "upright": "Apathy, contemplation, boredom, re-evaluation, withdrawal. Period of introspection and dissatisfaction.",
+      "reversed": "New perspective, engagement, acceptance, opportunity.",
+      "yes_no": "No"
+    },
+    {
+      "id": 26,
+      "name": "Five of Cups",
+      "image": "/card_img/Five of Cups.png",
+      "upright": "Loss, disappointment, regret, focus on negative, grief. Dwelling on past disappointments and losses.",
+      "reversed": "Acceptance, moving on, healing, seeing the positive.",
+      "yes_no": "No"
+    },
+    {
+      "id": 27,
+      "name": "Six of Cups",
+      "image": "/card_img/Six of Cups.png",
+      "upright": "Nostalgia, childhood, memories, innocence, past influences. Revisiting the past and reconnecting.",
+      "reversed": "Stuck in past, inability to move forward, unrealistic nostalgia.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 28,
+      "name": "Seven of Cups",
+      "image": "/card_img/Seven of Cups.png",
+      "upright": "Choices, fantasy, options, illusions, decision-making. Multiple options and possibilities.",
+      "reversed": "Clarity, decision, reality, focus, determination.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 29,
+      "name": "Eight of Cups",
+      "image": "/card_img/Eight of Cups.png",
+      "upright": "Departure, leaving behind, walking away, seeking deeper meaning. Leaving situations that no longer fulfill.",
+      "reversed": "Abandonment, aimless wandering, staying when should leave.",
+      "yes_no": "No"
+    },
+    {
+      "id": 30,
+      "name": "Nine of Cups",
+      "image": "/card_img/Nine of Cups.png",
+      "upright": "Satisfaction, contentment, wish fulfillment, comfort, success. Emotional fulfillment and satisfaction.",
+      "reversed": "Dissatisfaction, greed, materialism, disappointment, complacency.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 31,
+      "name": "Ten of Cups",
+      "image": "/card_img/Ten of Cups.png",
+      "upright": "Harmony, family, happiness, fulfillment, emotional success. Complete emotional fulfillment and harmonious relationships.",
+      "reversed": "Disharmony, broken family, misaligned values, unhappiness.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 32,
+      "name": "Page of Cups",
+      "image": "/card_img/Page of Cups.png",
+      "upright": "Creative ideas, intuition, messages, gentle spirit, new emotional insights.",
+      "reversed": "Neglect, distraction, bad news, lack of emotional maturity.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 33,
+      "name": "Knight of Cups",
+      "image": "/card_img/Knight of Cups.png",
+      "upright": "Romance, charm, creativity, emotional invitations, sensitive approach.",
+      "reversed": "Unrealistic expectations, moodiness, broken promises, emotional immaturity.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 34,
+      "name": "Queen of Cups",
+      "image": "/card_img/Queen of Cups.png",
+      "upright": "Compassion, intuition, empathy, emotional mastery, nurturing spirit.",
+      "reversed": "Emotional insecurity, co-dependency, moodiness, victim mentality.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 35,
+      "name": "King of Cups",
+      "image": "/card_img/King of Cups.png",
+      "upright": "Emotional balance, wisdom, compassion, diplomacy, mastery of emotions.",
+      "reversed": "Emotional manipulation, repressed feelings, volatile moods, passive aggression.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 36,
+      "name": "Ace of Pentacles",
+      "image": "/card_img/Ace of Pentacles.png",
+      "upright": "New opportunities, prosperity, manifestation, abundance, grounding. New beginnings in material and financial matters.",
+      "reversed": "Lost opportunity, lack, delay, impracticality, waste.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 37,
+      "name": "Two of Pentacles",
+      "image": "/card_img/Two of Pentacles.png",
+      "upright": "Balance, adaptability, juggling priorities, flexibility, decisions. Managing multiple responsibilities.",
+      "reversed": "Imbalance, overwhelm, disorganization, poor decisions, rigidity.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 38,
+      "name": "Three of Pentacles",
+      "image": "/card_img/Three of Pentacles.png",
+      "upright": "Teamwork, collaboration, skill, mastery, apprenticeship. Working together toward a common goal.",
+      "reversed": "Lack of teamwork, poor planning, disorganization, mediocrity.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 39,
+      "name": "Four of Pentacles",
+      "image": "/card_img/Four of Pentacles.png",
+      "upright": "Control, security, stability, possessiveness, conservation. Holding on to resources and seeking security.",
+      "reversed": "Greed, lack of control, instability, materialism, fear.",
+      "yes_no": "No"
+    },
+    {
+      "id": 40,
+      "name": "Five of Pentacles",
+      "image": "/card_img/Five of Pentacles.png",
+      "upright": "Hardship, poverty, isolation, lack, struggle, need. Material hardship and feeling left out.",
+      "reversed": "Recovery, improvement, support, moving past hardship.",
+      "yes_no": "No"
+    },
+    {
+      "id": 41,
+      "name": "Six of Pentacles",
+      "image": "/card_img/Six of Pentacles.png",
+      "upright": "Generosity, charity, sharing, balance, giving and receiving. Flow of resources and sharing abundance.",
+      "reversed": "Selfishness, greed, one-sided giving, inequality, exploitation.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 42,
+      "name": "Seven of Pentacles",
+      "image": "/card_img/Seven of Pentacles.png",
+      "upright": "Assessment, patience, growth, perseverance, long-term thinking. Evaluating progress and investing for the future.",
+      "reversed": "Lack of growth, poor investments, impatience, quitting.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 43,
+      "name": "Eight of Pentacles",
+      "image": "/card_img/Eight of Pentacles.png",
+      "upright": "Mastery, dedication, skill development, craftsmanship, detail. Commitment to excellence and continuous improvement.",
+      "reversed": "Lack of quality, poor workmanship, disinterest, haste.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 44,
+      "name": "Nine of Pentacles",
+      "image": "/card_img/Nine of Pentacles.png",
+      "upright": "Independence, luxury, self-sufficiency, success, enjoyment. Enjoying the fruits of your labor in solitude.",
+      "reversed": "Dependence, lack, waste, imbalance, financial concerns.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 45,
+      "name": "Ten of Pentacles",
+      "image": "/card_img/Ten of Pentacles.png",
+      "upright": "Legacy, inheritance, family, tradition, long-term success. Wealth that benefits future generations.",
+      "reversed": "Family conflict, financial failure, lack of tradition, instability.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 46,
+      "name": "Page of Pentacles",
+      "image": "/card_img/Page of Pentacles.png",
+      "upright": "Ambition, studiousness, grounded intuition, manifestation, diligence in study/work.",
+      "reversed": "Lack of progress, distraction, unreliability, poor planning.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 47,
+      "name": "Knight of Pentacles",
+      "image": "/card_img/Knight of Pentacles.png",
+      "upright": "Reliability, routine, productivity, methodical progress, steady effort.",
+      "reversed": "Lack of progress, laziness, carelessness, poor execution, rigidity.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 48,
+      "name": "Queen of Pentacles",
+      "image": "/card_img/Queen of Pentacles.png",
+      "upright": "Practicality, nurturing, abundance, domestic harmony, grounded wisdom.",
+      "reversed": "Imbalance, poor planning, greed, materialism, neglecting self.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 49,
+      "name": "King of Pentacles",
+      "image": "/card_img/King of Pentacles.png",
+      "upright": "Wealth, abundance, security, prosperity, mastery of material world. Generosity.",
+      "reversed": "Materialism, greed, miserly, unbalanced, poor financial decisions.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 50,
+      "name": "Ace of Swords",
+      "image": "/card_img/Ace of Swords.png",
+      "upright": "Breakthrough, clarity, mental power, truth, new ideas. Intellectual clarity and breakthrough moments.",
+      "reversed": "Confusion, lack of clarity, indecision, poor communication.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 51,
+      "name": "Two of Swords",
+      "image": "/card_img/Two of Swords.png",
+      "upright": "Indecision, stalemate, truce, difficult choices, avoidance. Being stuck between two choices.",
+      "reversed": "Releasing stalemate, decision, gaining clarity, choice.",
+      "yes_no": "No"
+    },
+    {
+      "id": 52,
+      "name": "Three of Swords",
+      "image": "/card_img/Three of Swords.png",
+      "upright": "Heartbreak, sorrow, betrayal, separation, grief, pain. Deep emotional pain and heartbreak.",
+      "reversed": "Healing, forgiveness, release, moving on, therapy.",
+      "yes_no": "No"
+    },
+    {
+      "id": 53,
+      "name": "Four of Swords",
+      "image": "/card_img/Four of Swords.png",
+      "upright": "Rest, meditation, recuperation, contemplation, retreat. Need for rest and mental recovery.",
+      "reversed": "Restlessness, burnout, ignoring need for rest, hyperactivity.",
+      "yes_no": "No"
+    },
+    {
+      "id": 54,
+      "name": "Five of Swords",
+      "image": "/card_img/Five of Swords.png",
+      "upright": "Conflict, defeat, betrayal, argument, ego, dishonesty. Conflict and winning at any cost.",
+      "reversed": "Reconciliation, forgiveness, learning, moving past conflict.",
+      "yes_no": "No"
+    },
+    {
+      "id": 55,
+      "name": "Six of Swords",
+      "image": "/card_img/Six of Swords.png",
+      "upright": "Transition, change, rite of passage, journey, healing. Moving from difficult times to calmer waters.",
+      "reversed": "Stagnation, resistance to change, inability to move forward.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 56,
+      "name": "Seven of Swords",
+      "image": "/card_img/Seven of Swords.png",
+      "upright": "Deception, strategy, stealth, cunning, cleverness, lies. Using cunning or avoiding confrontation.",
+      "reversed": "Coming clean, honesty, strategy working, redemption.",
+      "yes_no": "No"
+    },
+    {
+      "id": 57,
+      "name": "Eight of Swords",
+      "image": "/card_img/Eight of Swords.png",
+      "upright": "Restriction, feeling trapped, victim mentality, self-limitation. Feeling trapped by your own beliefs.",
+      "reversed": "Freedom, release, new perspective, empowerment, liberation.",
+      "yes_no": "No"
+    },
+    {
+      "id": 58,
+      "name": "Nine of Swords",
+      "image": "/card_img/Nine of Swords.png",
+      "upright": "Anxiety, worry, nightmares, fear, depression, guilt. Mental anguish and worst-case thinking.",
+      "reversed": "Healing, hope, therapy, release, peace of mind.",
+      "yes_no": "No"
+    },
+    {
+      "id": 59,
+      "name": "Ten of Swords",
+      "image": "/card_img/Ten of Swords.png",
+      "upright": "Endings, betrayal, painful conclusion, rock bottom, crisis. End of a painful cycle.",
+      "reversed": "Recovery, healing, renewal hope, regeneration, avoiding disaster.",
+      "yes_no": "No"
+    },
+    {
+      "id": 60,
+      "name": "Page of Swords",
+      "image": "/card_img/Page of Swords.png",
+      "upright": "Curiosity, mental agility, investigation, truth-seeking, messenger.",
+      "reversed": "Gossip, scattered focus, impulsiveness, careless words.",
+      "yes_no": "No"
+    },
+    {
+      "id": 61,
+      "name": "Knight of Swords",
+      "image": "/card_img/Knight of Swords.png",
+      "upright": "Action, speed, decisiveness, truth-telling, directness, hasty movement.",
+      "reversed": "Rashness, impulsiveness, recklessness, lack of planning, thoughtless words.",
+      "yes_no": "No"
+    },
+    {
+      "id": 62,
+      "name": "Queen of Swords",
+      "image": "/card_img/Queen of Swords.png",
+      "upright": "Intellectual clarity, independence, truth, directness, mental strength, boundaries.",
+      "reversed": "Bitterness, cynicism, cruelty, harsh judgment, isolation.",
+      "yes_no": "No"
+    },
+    {
+      "id": 63,
+      "name": "King of Swords",
+      "image": "/card_img/King of Swords.png",
+      "upright": "Intellectual authority, truth, clarity, decisiveness, justice, objective judgment.",
+      "reversed": "Manipulation, cruelty, harshness, abuse of power, lack of compassion.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 64,
+      "name": "Ace of Wands",
+      "image": "/card_img/Ace of Wands.png",
+      "upright": "Inspiration, new beginnings, potential, creativity, passion, seed. Spark of new ideas and creative potential.",
+      "reversed": "Lack of inspiration, delays, creative block, inaction.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 65,
+      "name": "Two of Wands",
+      "image": "/card_img/Two of Wands.png",
+      "upright": "Planning, decisions, progress, personal goals, discovery, expansion. Planning for the future and expanding horizons.",
+      "reversed": "Fear of unknown, lack of planning, obstacles, delays, stagnation.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 66,
+      "name": "Three of Wands",
+      "image": "/card_img/Three of Wands.png",
+      "upright": "Expansion, exploration, foresight, trade, leadership, vision. Looking toward the future with optimism.",
+      "reversed": "Lack of foresight, delays, obstacles to expansion, pessimism.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 67,
+      "name": "Four of Wands",
+      "image": "/card_img/Four of Wands.png",
+      "upright": "Celebration, harmony, community, home, stability, foundation. Joy, celebration, and harmonious gatherings.",
+      "reversed": "Lack of celebration, tension, instability, disharmony.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 68,
+      "name": "Five of Wands",
+      "image": "/card_img/Five of Wands.png",
+      "upright": "Competition, conflict, disagreement, chaos, tension, struggle. Healthy competition for growth.",
+      "reversed": "Avoidance of conflict, lack of competition, apathy, truce.",
+      "yes_no": "No"
+    },
+    {
+      "id": 69,
+      "name": "Six of Wands",
+      "image": "/card_img/Six of Wands.png",
+      "upright": "Victory, success, recognition, progress, self-confidence. Public recognition and triumph.",
+      "reversed": "Lack of confidence, failure, private defeat, egotism.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 70,
+      "name": "Seven of Wands",
+      "image": "/card_img/Seven of Wands.png",
+      "upright": "Challenge, perseverance, defense, standing ground, courage. Defending your position.",
+      "reversed": "Giving up, overwhelmed, quitting, lack of conviction.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 71,
+      "name": "Eight of Wands",
+      "image": "/card_img/Eight of Wands.png",
+      "upright": "Movement, messages, travel, rapid change, swift action. Swift movement and rapid progress.",
+      "reversed": "Delays, cancellations, slow progress, lack of movement.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 72,
+      "name": "Nine of Wands",
+      "image": "/card_img/Nine of Wands.png",
+      "upright": "Resilience, persistence, defense, last stand, courage. Standing strong despite challenges.",
+      "reversed": "Cowardice, surrender, giving up, exhaustion, doubt.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 73,
+      "name": "Ten of Wands",
+      "image": "/card_img/Ten of Wands.png",
+      "upright": "Burden, responsibility, stress, hard work, overload. Taking on too much responsibility.",
+      "reversed": "Releasing burden, delegation, sharing load, relief.",
+      "yes_no": "No"
+    },
+    {
+      "id": 74,
+      "name": "Page of Wands",
+      "image": "/card_img/Page of Wands.png",
+      "upright": "Exploration, discovery, energetic beginnings, new inspiration, adventurous spirit.",
+      "reversed": "Lack of direction, pessimism, delays, new ideas that fail to launch.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 75,
+      "name": "Knight of Wands",
+      "image": "/card_img/Knight of Wands.png",
+      "upright": "Adventure, energy, passion, impulsiveness, travel, quick action, spontaneity.",
+      "reversed": "Recklessness, rushed decisions, lack of direction, broken promises.",
+      "yes_no": "Maybe"
+    },
+    {
+      "id": 76,
+      "name": "Queen of Wands",
+      "image": "/card_img/Queen of Wands.png",
+      "upright": "Vibrant energy, creativity, enthusiasm, joy, generosity, natural leadership, confidence.",
+      "reversed": "Selfishness, drama, volatility, creative block, exhaustion.",
+      "yes_no": "Yes"
+    },
+    {
+      "id": 77,
+      "name": "King of Wands",
+      "image": "/card_img/King of Wands.png",
+      "upright": "Visionary leadership, big picture thinking, inspiration, wisdom, experience, entrepreneurship.",
+      "reversed": "Impulsiveness, haste, ruthless behavior, tyrannical, burnout.",
+      "yes_no": "Yes"
+    }
+  ]
+}

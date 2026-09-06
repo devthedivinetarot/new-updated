@@ -1,0 +1,35 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "functions": {
+    "app/api/subscription/webhook/route.ts": {
+      "maxDuration": 30
+    },
+    "app/api/youtube/cron/route.ts": {
+      "maxDuration": 60
+    },
+    "app/api/newsletter/daily/route.ts": {
+      "maxDuration": 60
+    },
+    "app/api/kundli-report/webhook/route.ts": {
+      "maxDuration": 30
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/youtube/cron",
+      "schedule": "0 4 * * *"
+    },
+    {
+      "path": "/api/newsletter/daily",
+      "schedule": "0 3 * * *"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    }
+  ]
+}
