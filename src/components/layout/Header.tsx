@@ -15,7 +15,7 @@ const navLinks: { href: string; labelKey: string; isExternal?: boolean }[] = [
   { href: 'https://reading.thedivinetarotonline.com/', labelKey: 'nav.reading' },
   { href: 'https://learn.thedivinetarotonline.com/', labelKey: 'nav.course', isExternal: true },
   { href: 'https://thedivinetarotonline.com/kundli-milan', labelKey: 'nav.kundli' },
-  { href: 'https://booking.thedivinetarotonline.com/', labelKey: 'nav.Personal Reading', isExternal: true },
+  // { href: 'https://booking.thedivinetarotonline.com/', labelKey: 'nav.Personal Reading', isExternal: true },
 ];
 
 const HOME_HREF = 'https://thedivinetarotonline.com/';
