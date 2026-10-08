@@ -43,7 +43,8 @@ const Footer = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateEmail(email)) {
+    const cleanEmail = email.trim();
+    if (!validateEmail(cleanEmail)) {
       setError('Please enter a valid email address');
       return;
     }
@@ -58,14 +59,13 @@ const Footer = () => {
     setError('');
 
     try {
-      const res = await fetch('/api/subscribe', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ email, whatsapp }),
-});
-const data = await res.json();
-if (!res.ok) setError(data.error); else setSuccess(true);
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: cleanEmail, whatsapp: trimmedPhone || undefined }),
       });
+
+      const data = await response.json().catch(() => ({}));
 
       if (response.ok) {
         setIsSuccess(true);
@@ -73,8 +73,7 @@ if (!res.ok) setError(data.error); else setSuccess(true);
         setPhone('');
         setTimeout(() => setIsSuccess(false), 3000);
       } else {
-        const data = await response.json();
-        setError(data.message || 'Something went wrong. Please try again.');
+        setError(data.error || data.message || 'Something went wrong. Please try again.');
       }
     } catch (err) {
       setError('Network error. Please try again.');
