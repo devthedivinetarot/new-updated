@@ -1,144 +1,97 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { pickDailyMessage, istDateString } from '@/lib/newsletter/dailyMessages';
-import { sendDailyEmailBatch } from '@/lib/newsletter/dailyEmail';
-import { sendDailyWhatsAppBatch, isWhatsAppConfigured } from '@/lib/newsletter/whatsapp';
+import { NextResponse } from 'next/server';
+import { buildIssue, istNow, issueDayFor, type IssueDay } from './template';
 
-export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+const FROM = 'The Divine Tarot <hello@news.thedivinetarotonline.com>';
+const REPLY_TO = 'dev.thedivinetarot111@gmail.com';
+
+
+async function resend(path: string, body: unknown) {
+  const res = await fetch(`https://api.resend.com${path}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+    cache: 'no-store',
+  });
+  const data = await res.json().catch(() => ({}));
+  return { ok: res.ok, status: res.status, data };
+}
+
 /**
- * Daily teaser broadcast cron.
+ * Automatic newsletter: Vercel Cron calls this on Mon, Wed and Fri mornings.
  *
- * Runs once a day (see vercel.json). On each run it:
- *   1) Picks the message-of-the-day (deterministic rotation, IST calendar)
- *   2) Checks Supabase state so a retried/duplicate cron never double-sends
- *   3) Emails every `status = 'subscribed'` member via Resend
- *   4) Sends the WhatsApp template to every opted-in number (if configured)
- *   5) Records the send in `daily_newsletter_state`
- *
- * Protected by CRON_SECRET (same pattern as /api/youtube/cron).
- *
- * Query params (manual testing):
- *   ?dryRun=1  — pick the message and count recipients, send nothing
- *   ?force=1   — send even if today's broadcast was already recorded
+ * Manual use (replace SECRET with your CRON_SECRET):
+ *   Preview in browser:    /api/cron/newsletter?key=SECRET&day=mon&preview=1
+ *   Send test to one email: /api/cron/newsletter?key=SECRET&day=wed&test=you@gmail.com
+ *   Force a real send:     /api/cron/newsletter?key=SECRET&day=fri&confirm=send
  */
-export async function GET(req: NextRequest) {
-  // --- Auth ---
-  const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret) {
-    const auth = req.headers.get('authorization');
-    if (auth !== `Bearer ${cronSecret}`) {
-      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
-    }
+export async function GET(req: Request) {
+  const secret = process.env.CRON_SECRET;
+  const url = new URL(req.url);
+  const fromCron = !!secret && req.headers.get('authorization') === `Bearer ${secret}`;
+  const fromKey = !!secret && url.searchParams.get('key') === secret;
+
+  if (!fromCron && !fromKey) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const dryRun = req.nextUrl.searchParams.get('dryRun') === '1';
-  const force = req.nextUrl.searchParams.get('force') === '1';
+  const forcedDay = url.searchParams.get('day') as IssueDay | null;
+  const day: IssueDay | null =
+    forcedDay && ['mon', 'wed', 'fri'].includes(forcedDay) ? forcedDay : issueDayFor(istNow().weekday);
 
-  const today = istDateString();
-  const message = pickDailyMessage();
-
-  // --- Load Supabase ---
-  const { createServerClient, isSupabaseConfigured } = await import('@/lib/supabase/server');
-  if (!isSupabaseConfigured()) {
-    return NextResponse.json(
-      { success: false, message: 'Supabase not configured.' },
-      { status: 500 }
-    );
+  if (!day) {
+    return NextResponse.json({ ok: true, skipped: 'Not a newsletter day (Mon/Wed/Fri IST)' });
   }
-  const supabase = await createServerClient();
 
-  // --- Dedupe: has today's broadcast already gone out? ---
-  const { data: state } = await supabase
-    .from('daily_newsletter_state')
-    .select('last_sent_date')
-    .eq('id', 1)
-    .maybeSingle();
-
-  if (!force && state?.last_sent_date === today) {
-    return NextResponse.json({
-      success: true,
-      skipped: true,
-      message: `Already sent today (${today}).`,
-      messageId: message.id,
+  // 1) Preview: returns the email as a web page, sends nothing
+  if (url.searchParams.get('preview') === '1') {
+    const { subject, body } = buildIssue(day, { unsubscribeUrl: '#' });
+    const bar = `<div style="font-family:Arial,sans-serif;background:#111;color:#fff;padding:10px 16px;font-size:14px">Subject: ${subject.replace(/</g, '&lt;')}</div>`;
+    return new NextResponse(body.replace(/<body([^>]*)>/, `<body$1>${bar}`), {
+      headers: { 'Content-Type': 'text/html; charset=utf-8' },
     });
   }
 
-  // --- Gather email recipients ---
-  const { data: subs, error: subErr } = await supabase
-    .from('newsletter_subscribers')
-    .select('email')
-    .eq('status', 'subscribed');
-
-  if (subErr) {
-    console.error('[daily-newsletter] subscriber query failed', subErr);
-    return NextResponse.json(
-      { success: false, message: 'Subscriber query failed.' },
-      { status: 500 }
-    );
+  if (!process.env.RESEND_API_KEY || !process.env.RESEND_SEGMENT_NEWSLETTER) {
+    console.error('Newsletter: RESEND_API_KEY or RESEND_SEGMENT_NEWSLETTER missing');
+    return NextResponse.json({ error: 'Missing Resend env vars' }, { status: 500 });
   }
 
-  const emails = Array.from(
-    new Set((subs ?? []).map((s: { email: string }) => s.email).filter(Boolean))
-  );
-
-  // --- Gather WhatsApp recipients (table may not exist yet — non-fatal) ---
-  let phones: string[] = [];
-  try {
-    const { data: waSubs, error: waErr } = await supabase
-      .from('whatsapp_subscribers')
-      .select('phone')
-      .eq('status', 'subscribed');
-    if (waErr) {
-      if ((waErr as { code?: string }).code === '42P01') {
-        console.warn(
-          '[daily-newsletter] whatsapp_subscribers table missing — run src/lib/db/daily-newsletter-schema.sql'
-        );
-      } else {
-        console.error('[daily-newsletter] whatsapp subscriber query failed', waErr);
-      }
-    } else {
-      phones = Array.from(
-        new Set((waSubs ?? []).map((s: { phone: string }) => s.phone).filter(Boolean))
-      );
-    }
-  } catch (err) {
-    console.error('[daily-newsletter] whatsapp subscriber step failed', err);
+  // 2) Test: sends one copy to the given address only
+  const testTo = url.searchParams.get('test');
+  if (testTo) {
+    const { subject, body } = buildIssue(day, { unsubscribeUrl: 'https://thedivinetarotonline.com' });
+    const r = await resend('/emails', { from: FROM, to: [testTo], reply_to: REPLY_TO, subject: `[TEST] ${subject}`, html: body });
+    return NextResponse.json({ ok: r.ok, test: true, day, subject, resend: r.data }, { status: r.ok ? 200 : 500 });
   }
 
-  if (dryRun) {
-    return NextResponse.json({
-      success: true,
-      dryRun: true,
-      date: today,
-      message: { id: message.id, theme: message.theme, emailSubject: message.emailSubject },
-      recipients: { email: emails.length, whatsapp: phones.length },
-      whatsappConfigured: isWhatsAppConfigured(),
-    });
+  // 3) Real send to all subscribers. Manual calls must add confirm=send so nobody blasts the list by accident.
+  if (!fromCron && url.searchParams.get('confirm') !== 'send') {
+    return NextResponse.json({ error: 'Add &confirm=send to send to everyone, or use &preview=1 / &test=email' }, { status: 400 });
   }
 
-  // --- Send ---
-  const emailResult = await sendDailyEmailBatch(emails, message);
-  const whatsappResult = await sendDailyWhatsAppBatch(phones, message.whatsapp);
-
-  // --- Record the send so we never double-send today ---
-  const { error: stateErr } = await supabase.from('daily_newsletter_state').upsert({
-    id: 1,
-    last_sent_date: today,
-    last_message_id: message.id,
-    last_email_sent: emailResult.sent,
-    last_whatsapp_sent: whatsappResult.sent,
-    updated_at: new Date().toISOString(),
+  const { subject, body } = buildIssue(day);
+  const topicId = process.env.RESEND_TOPIC_DAILY;
+  const r = await resend('/broadcasts', {
+    name: `Auto ${day.toUpperCase()} ${istNow().ymd}`,
+    segment_id: process.env.RESEND_SEGMENT_NEWSLETTER,
+    ...(topicId ? { topic_id: topicId } : {}),
+    from: FROM,
+    reply_to: REPLY_TO,
+    subject,
+    html: body,
+    send: true,
   });
-  if (stateErr) {
-    console.error('[daily-newsletter] state upsert failed', stateErr);
+
+  if (!r.ok) {
+    console.error('Newsletter broadcast error', r.status, r.data);
+    return NextResponse.json({ error: 'Broadcast failed', resend: r.data }, { status: 500 });
   }
 
-  return NextResponse.json({
-    success: true,
-    date: today,
-    messageId: message.id,
-    email: emailResult,
-    whatsapp: whatsappResult,
-  });
+  console.log('Newsletter sent', day, subject, r.data);
+  return NextResponse.json({ ok: true, day, subject, broadcast: r.data });
 }
