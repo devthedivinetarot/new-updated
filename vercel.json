@@ -14,9 +14,6 @@
     },
     "app/api/kundli-report/webhook/route.ts": {
       "maxDuration": 30
-    },
-    "app/api/cron/newsletter/route.ts": {
-      "maxDuration": 60
     }
   },
   "crons": [
@@ -27,10 +24,6 @@
     {
       "path": "/api/newsletter/daily",
       "schedule": "0 3 * * *"
-    },
-    {
-      "path": "/api/cron/newsletter",
-      "schedule": "30 1 * * 1,3,5"
     }
   ],
   "routes": [
