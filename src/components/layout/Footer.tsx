@@ -58,10 +58,13 @@ const Footer = () => {
     setError('');
 
     try {
-      const response = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, phone: trimmedPhone || undefined, source: 'footer' }),
+      const res = await fetch('/api/subscribe', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ email, whatsapp }),
+});
+const data = await res.json();
+if (!res.ok) setError(data.error); else setSuccess(true);
       });
 
       if (response.ok) {
