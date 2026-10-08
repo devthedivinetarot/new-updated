@@ -1,152 +1,48 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { sendWelcomeEmail } from '@/lib/newsletter/welcomeEmail';
-import { appendToSheet } from '@/lib/newsletter/googleSheet';
+import { NextResponse } from 'next/server';
+import { Resend } from 'resend';
 
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-/**
- * Newsletter subscription pipeline.
- * Footer form -> POST /api/subscribe { email }
- *   1) store in Supabase (deduped)
- *   2) append to Google Sheet (Apps Script webhook)
- *   3) send a Resend welcome email to brand-new subscribers
- * Storage steps are independent; the request succeeds if the email is saved
- * to at least one destination. Email delivery is non-fatal.
- */
-export async function POST(req: NextRequest) {
-  let body: any;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ success: false, message: 'Invalid request.' }, { status: 400 });
-  }
-
-  const email = String(body?.email ?? '').trim().toLowerCase();
-  const source = typeof body?.source === 'string' ? body.source.slice(0, 60) : 'website';
-  const locale = typeof body?.locale === 'string' ? body.locale.slice(0, 20) : undefined;
-
-  // Optional WhatsApp opt-in. Keep digits only (E.164 without '+').
-  const rawPhone = String(body?.phone ?? '').replace(/[^\d]/g, '');
-  const phone = rawPhone.length >= 10 && rawPhone.length <= 15 ? rawPhone : '';
-
-  if (!EMAIL_RE.test(email) || email.length > 254) {
-    return NextResponse.json(
-      { success: false, message: 'Please enter a valid email address.' },
-      { status: 400 }
-    );
-  }
-
-  let supabaseStored = false;
-  let alreadySubscribed = false;
-
-  // 1) Supabase (deduped)
-  try {
-    const { createServerClient, isSupabaseConfigured } = await import('@/lib/supabase/server');
-    if (isSupabaseConfigured()) {
-      const supabase = await createServerClient();
-      const { data: existing } = await supabase
-        .from('newsletter_subscribers')
-        .select('id')
-        .eq('email', email)
-        .maybeSingle();
-
-      if (existing) {
-        alreadySubscribed = true;
-        supabaseStored = true;
-      } else {
-        const { error } = await supabase
-          .from('newsletter_subscribers')
-          .insert({ email, source, locale, status: 'subscribed' });
-        if (!error) {
-          supabaseStored = true;
-        } else if ((error as any).code === '23505') {
-          alreadySubscribed = true;
-          supabaseStored = true;
-        } else {
-          const code = (error as any)?.code;
-          if (code === '42P01') {
-            console.error(
-              '[newsletter] Table public.newsletter_subscribers is missing. Run src/lib/supabase/schema.sql in the Supabase SQL editor.'
-            );
-          } else if (code === '42501') {
-            console.error(
-              '[newsletter] Insert blocked by RLS. Set SUPABASE_SERVICE_ROLE_KEY in the deployment env (service role bypasses RLS).'
-            );
-          } else {
-            console.error('[newsletter] supabase insert error', error);
-          }
-        }
-      }
-    } else {
-      console.warn(
-        '[newsletter] Supabase not configured (need NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY).'
-      );
-    }
-  } catch (err) {
-    console.error('[newsletter] supabase step failed', err);
-  }
-
-  // 1b) WhatsApp opt-in (best-effort, non-fatal) — only when a number is given.
-  if (phone) {
-    try {
-      const { createServerClient, isSupabaseConfigured } = await import('@/lib/supabase/server');
-      if (isSupabaseConfigured()) {
-        const supabase = await createServerClient();
-        const { data: existingPhone } = await supabase
-          .from('whatsapp_subscribers')
-          .select('id')
-          .eq('phone', phone)
-          .maybeSingle();
-        if (!existingPhone) {
-          const { error } = await supabase
-            .from('whatsapp_subscribers')
-            .insert({ phone, source, locale, status: 'subscribed' });
-          if (error) {
-            const code = (error as any)?.code;
-            if (code === '42P01') {
-              console.warn(
-                '[newsletter] whatsapp_subscribers table missing — run src/lib/db/daily-newsletter-schema.sql'
-              );
-            } else if (code !== '23505') {
-              console.error('[newsletter] whatsapp insert error', error);
-            }
-          }
-        }
-      }
-    } catch (err) {
-      console.error('[newsletter] whatsapp step failed', err);
-    }
-  }
-
-  // 2) Google Sheet (best-effort)
-  const sheetStored = await appendToSheet(email, { source, locale, phone });
-
-  // Fail only if the email could not be saved anywhere.
-  if (!supabaseStored && !sheetStored) {
-    console.error(
-      '[newsletter] No storage available — configure Supabase (run schema.sql + service role key) and/or GOOGLE_SHEET_WEBHOOK_URL.'
-    );
-    return NextResponse.json(
-      { success: false, message: 'We could not save your email right now. Please try again.' },
-      { status: 500 }
-    );
-  }
-
-  // 3) Welcome email for new subscribers only (non-fatal)
-  if (!alreadySubscribed) {
-    await sendWelcomeEmail(email);
-  }
-
-  return NextResponse.json({
-    success: true,
-    alreadySubscribed,
-    message: alreadySubscribed ? "You're already subscribed 🌙" : 'Subscribed! Check your inbox ✨',
-  });
-}
+const resend = new Resend(process.env.RESEND_API_KEY);
+const FROM = 'The Divine Tarot <hello@news.thedivinetarotonline.com>';
 
 export async function GET() {
   return NextResponse.json({ ok: true, endpoint: 'newsletter subscribe' });
+}
+
+export async function POST(req: Request) {
+  const { email, whatsapp } = await req.json().catch(() => ({}));
+  const clean = String(email || '').toLowerCase().trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean)) {
+    return NextResponse.json({ error: 'Sahi email daalo' }, { status: 400 });
+  }
+
+  const { error } = await resend.contacts.create({
+    email: clean,
+    unsubscribed: false,
+    segments: [{ id: process.env.RESEND_SEGMENT_NEWSLETTER! }],
+    topics: [
+      { id: process.env.RESEND_TOPIC_DAILY!, subscription: 'opt_in' },
+      { id: process.env.RESEND_TOPIC_COURSES!, subscription: 'opt_in' },
+      { id: process.env.RESEND_TOPIC_OFFERS!, subscription: 'opt_in' },
+    ],
+    ...(whatsapp ? { properties: { whatsapp: String(whatsapp) } } : {}),
+  });
+
+  // An already-subscribed email counts as success; any other error is a real failure
+  if (error && !/exist/i.test(error.message)) {
+    console.error('Resend contact error', error);
+    return NextResponse.json({ error: 'Kuch gadbad hui, dobara try karo' }, { status: 500 });
+  }
+
+  if (!error) {
+    await resend.emails.send({
+      from: FROM,
+      to: clean,
+      replyTo: 'dev.thedivinetarot111@gmail.com',
+      subject: 'Welcome to The Divine Tarot ✨',
+      html: `<p>Namaste 🙏</p><p>Ab aapko roz ka Divine Insight milega...</p>
+             <p><a href="https://reading.thedivinetarotonline.com/">Aaj ki free reading lo →</a></p>`,
+    });
+  }
+
+  return NextResponse.json({ ok: true });
 }
