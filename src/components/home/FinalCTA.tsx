@@ -10,25 +10,17 @@ export default function FinalCTA() {
   const { t, isHydrated } = useLanguage();
   return (
     <section className="relative py-14 md:py-20 bg-gradient-to-br from-[rgb(var(--background))] via-[rgb(var(--surface))] to-[rgb(var(--background))] overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <motion.div
-          className="absolute top-1/4 left-1/4 h-64 w-64 rounded-full bg-[rgb(var(--gold))]/10 blur-3xl"
-          animate={{ 
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{ duration: 4, repeat: Infinity }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 right-1/4 h-64 w-64 rounded-full bg-[rgb(var(--secondary))]/10 blur-3xl"
-          animate={{ 
-            scale: [1.2, 1, 1.2],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{ duration: 5, repeat: Infinity, delay: 1 }}
-        />
-      </div>
+      {/* Background glow — static gradients. The old version animated two
+          blur-3xl blobs forever; on iPhones that constant blur repaint made
+          the bottom of the page flash black while scrolling. */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(circle at 25% 30%, rgb(var(--gold) / 0.10) 0%, transparent 45%), radial-gradient(circle at 75% 70%, rgb(var(--secondary) / 0.08) 0%, transparent 45%)',
+        }}
+      />
 
       <div className="relative mx-auto w-full max-w-3xl px-4 sm:px-6 text-center">
         <motion.div
@@ -37,31 +29,16 @@ export default function FinalCTA() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          {/* Sparkle Icon with Pulse */}
-          <motion.div
-            className="relative inline-block mb-8"
-            whileHover={{ scale: 1.05 }}
-          >
-            <Sparkles className="h-12 w-12 text-[rgb(var(--gold))]" />
+          {/* Sparkle Icon with a light opacity pulse (no animated blur) */}
+          <div className="relative inline-block mb-8">
+            <div aria-hidden className="absolute inset-0 rounded-full" style={{ background: 'radial-gradient(circle, rgb(var(--gold) / 0.25) 0%, transparent 70%)', transform: 'scale(1.8)' }} />
             <motion.div
-              className="absolute inset-0"
-              animate={{ 
-                scale: [1, 1.5, 1.5, 1],
-                opacity: [0.5, 0, 0.5, 0],
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
+              animate={{ opacity: [1, 0.65, 1] }}
+              transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
             >
-              <Sparkles className="h-12 w-12 text-[rgb(var(--gold-light))]" />
+              <Sparkles className="relative h-12 w-12 text-[rgb(var(--gold))]" />
             </motion.div>
-            <motion.div
-              className="absolute inset-0 rounded-full bg-[rgb(var(--gold))]/20 blur-xl"
-              animate={{ 
-                scale: [1, 1.5, 1],
-                opacity: [0.3, 0.5, 0.3],
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-          </motion.div>
+          </div>
 
           <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl text-[rgb(var(--foreground))] mb-6 leading-tight">
             {isHydrated ? t('home.finalCta.title') : 'Your answers are waiting…'}
