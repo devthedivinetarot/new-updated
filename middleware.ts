@@ -124,13 +124,15 @@ export async function middleware(request: NextRequest) {
     ].join(' ');
 
     const scriptSrc = isDev
-      ? "'self' 'unsafe-inline'"
+      ? "'self' 'unsafe-inline' 'unsafe-eval'"
       : `'nonce-${nonce}' 'unsafe-inline'`;
 
     const csp = [
       `default-src 'self'`,
       `script-src ${scriptSrc}`,
-      `script-src-elem ${scriptSrcElem} 'nonce-${nonce}'`,
+      // In dev, inline Next.js scripts carry no nonce; a nonce here would make the
+      // browser ignore 'unsafe-inline' and block hydration.
+      `script-src-elem ${scriptSrcElem}${isDev ? '' : ` 'nonce-${nonce}'`}`,
       `style-src ${styleSrc}`,
       `font-src 'self' https://fonts.gstatic.com`,
       `img-src 'self' data: https:`,

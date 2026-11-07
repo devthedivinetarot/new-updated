@@ -101,9 +101,9 @@ const Footer = () => {
   ];
 
   const trustItems = [
-    { icon: Lock, text: 'Secure & Private Readings' },
-    { icon: Heart, text: 'Trusted by 7L+ Seekers' },
-    { icon: Sparkles, text: 'Authentic Spiritual Guidance' },
+    { icon: Lock, text: t('footer.trust.secure') },
+    { icon: Heart, text: t('footer.trust.seekers') },
+    { icon: Sparkles, text: t('footer.trust.authentic') },
   ];
 
   return (
@@ -116,7 +116,7 @@ const Footer = () => {
             </div>
             <div>
               <h3 className="font-serif text-lg font-bold text-[#EAEAF0]">The Divine Tarot</h3>
-              <p className="text-amber-500/70 text-xs uppercase tracking-wider">Premium Tarot Guidance</p>
+              <p className="text-amber-500/70 text-xs uppercase tracking-wider">{t('brand.tagline')}</p>
             </div>
           </div>
           <p className="text-[#A1A1AA] text-sm leading-relaxed">
@@ -144,7 +144,7 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col gap-3">
-          <h4 className="font-serif text-sm uppercase tracking-wider text-[#A1A1AA] mb-2">Connect With Us</h4>
+          <h4 className="font-serif text-sm uppercase tracking-wider text-[#A1A1AA] mb-2">{t('footer.connect.title')}</h4>
           <div className="flex gap-4 flex-wrap">
             {socialLinks.map((item) => (
               <a
@@ -165,7 +165,7 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col gap-3">
-          <h4 className="font-serif text-sm uppercase tracking-wider text-[#A1A1AA]">Get Daily Divine Insights</h4>
+          <h4 className="font-serif text-sm uppercase tracking-wider text-[#A1A1AA]">{t('footer.cta.title')}</h4>
           <form onSubmit={handleSubmit} className="space-y-3">
             <input
               type="email"
@@ -174,7 +174,7 @@ const Footer = () => {
                 setEmail(e.target.value);
                 setError('');
               }}
-              placeholder="Your email"
+              placeholder={t('footer.form.email')}
               className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-[#EAEAF0] placeholder-[#A1A1AA] focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all text-sm"
               disabled={isSubmitting || isSuccess}
               aria-label="Email for daily insights"
@@ -186,7 +186,7 @@ const Footer = () => {
                 setPhone(e.target.value);
                 setError('');
               }}
-              placeholder="WhatsApp number (optional)"
+              placeholder={t('footer.form.whatsapp')}
               className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-[#EAEAF0] placeholder-[#A1A1AA] focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all text-sm"
               disabled={isSubmitting || isSuccess}
               aria-label="WhatsApp number for daily insights (optional)"
@@ -202,7 +202,7 @@ const Footer = () => {
                   : 'bg-amber-500 text-black hover:bg-amber-400 hover:shadow-lg hover:shadow-amber-500/20'
               }`}
             >
-              {isSuccess ? 'Subscribed!' : isSubmitting ? 'Subscribing...' : 'Subscribe'}
+              {isSuccess ? t('footer.form.subscribed') : isSubmitting ? t('footer.form.subscribing') : t('footer.form.subscribe')}
             </button>
           </form>
           {error && <p className="text-red-400 text-xs" role="alert">{error}</p>}
@@ -222,7 +222,7 @@ const Footer = () => {
 
       <div className="border-t border-white/10 mt-4 pt-6 flex flex-col md:flex-row justify-between text-sm text-gray-400 px-6">
         <div>
-          Designed by{' '}
+          {t('footer.designedBy')}{' '}
           <a
             href="https://sitelytc.com/"
             target="_blank"
@@ -237,7 +237,7 @@ const Footer = () => {
             {isHydrated ? t('footer.privacy') : 'Privacy'}
           </Link>
           <span className="w-px h-3 bg-white/10" />
-          <span id="footer-year">&copy; {new Date().getFullYear()} The Divine Tarot. All rights reserved.</span>
+          <span>&copy; {new Date().getFullYear()} {t('footer.rights')}</span>
         </div>
       </div>
     </footer>

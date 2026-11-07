@@ -21,9 +21,8 @@ const WatermarkCell = memo(function WatermarkCell({ text, fontSize, opacity, red
     whiteSpace: 'nowrap' as const,
     userSelect: 'none' as const,
     transform: 'rotate(-25deg)',
-    willChange: reducedMotion ? 'auto' : 'transform',
     ...customStyle,
-  }), [fontSize, opacity, reducedMotion, customStyle]);
+  }), [fontSize, opacity, customStyle]);
 
   return (
     <div

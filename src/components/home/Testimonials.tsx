@@ -77,7 +77,7 @@ export default function Testimonials() {
                 ))}
               </div>
               <p className="text-foreground-secondary italic mb-6 leading-relaxed text-sm flex-grow">
-                &ldquo;{testimonial.text}&rdquo;
+                &ldquo;{t(`testimonials.items.${index}`)}&rdquo;
               </p>
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-full bg-gradient-to-br from-gold-10 to-secondary-10 flex items-center justify-center border border-gold-20">

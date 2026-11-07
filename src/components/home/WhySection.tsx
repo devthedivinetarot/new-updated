@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Brain, Sparkles, Zap, Heart } from 'lucide-react';
+import { Brain, Sparkles, Zap, Heart, Star } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 
 const featuresData = [
@@ -31,18 +31,16 @@ export default function WhySection() {
               {isHydrated ? t('whySection.description') : 'We combine ancient tarot wisdom with cutting-edge technology to create something truly unique.'}
             </p>
             <p className="text-body text-foreground-secondary leading-relaxed mb-block">
-              Unlike generic fortune tellers, we understand context, recognize
-              emotional patterns, and provide guidance that resonates with your
-              specific journey.
+              {t('whySection.extra')}
             </p>
 
             <div className="flex flex-wrap gap-element">
               <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gold-10 text-gold text-sm font-medium border border-gold-20">
                 <Sparkles className="h-4 w-4" />
-                <span>10,000+ readings</span>
+                <span>{t('whySection.readings')}</span>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-secondary-10 text-secondary text-sm font-medium border border-secondary-20">
-                <Heart className="h-4 w-4" />
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gold-10 text-gold text-sm font-medium border border-gold-20">
+                <Star className="h-4 w-4 fill-current" />
                 <span>{isHydrated ? t('whySection.rating') : '4.9 rating'}</span>
               </div>
               <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gold-10 text-gold text-sm font-medium border border-gold-20">
@@ -80,9 +78,7 @@ export default function WhySection() {
                 </motion.div>
                 <div>
                   <h3 className="font-heading text-lg font-semibold text-foreground mb-element">
-                    {feature.key === 'personalized' ? 'Reading That Feels You' :
-                      feature.key === 'ai' ? 'Personalized Insights' :
-                      feature.key === 'privacy' ? 'Instant Clarity' : 'Deep Emotional Connection'}
+                    {t(`whySection.featureTitles.${feature.key}`)}
                   </h3>
                   <p className="text-body-sm text-foreground-muted leading-relaxed">
                     {isHydrated ? t(`whySection.features.${feature.key}`) : ''}
