@@ -2,6 +2,7 @@ import type { Language } from './config';
 import { langMap } from './config';
 import { TRANSLATIONS } from './translations';
 import { translations as flatTranslations } from '@/translations';
+import { getSiteCopy } from '@/i18n/siteCopy';
 
 // In-memory cache for API-fetched translations
 let translationCache: {
@@ -572,22 +573,40 @@ function getFlatTranslation(key: string, lang: Language): string | undefined {
  * Merges nested and flat translation sources
  */
 export function getTranslationSync(key: string, lang: Language): string {
-  // 1. Try nested structure first (existing translations)
+  // 0. Site copy (src/i18n/siteCopy.ts) — newest, hand-checked strings win.
+  const site = getSiteCopy(key, lang)
+  if (site) return site
+
+  // 1. Nested translation files. hi.ts / hinglish.ts start from `...en`, so a
+  //    value identical to English usually means "never translated" — in that
+  //    case prefer a real translation from the fallback table if one exists.
   const nested = getNestedTranslation(key, lang)
-  // If nested returned something different from key, it's a valid translation
-  if (nested !== key) return nested
+  if (nested !== key) {
+    if (lang !== 'en' && FALLBACK[lang]?.[key] && nested === getNestedTranslation(key, 'en')) {
+      return FALLBACK[lang][key]
+    }
+    return nested
+  }
 
-  // 2. Try flat store (CMS-managed)
-  const flat = getFlatTranslation(key, lang)
-  if (flat) return flat
-
-  // 3. Try emergency fallback
+  // 2. Fallback table in the requested language (checked before the flat
+  //    store, whose own English fallback used to hide these Hindi strings).
   const fallbackValue = FALLBACK[lang]?.[key]
   if (fallbackValue) {
     return fallbackValue
   }
 
-  // 4. Return human-readable fallback - extract last part of key
+  // 3. Flat store (CMS-managed; falls back to English internally)
+  const flat = getFlatTranslation(key, lang)
+  if (flat) return flat
+
+  // 4. English from any source before giving up
+  const enSite = getSiteCopy(key, 'en')
+  if (enSite) return enSite
+  const enNested = getNestedTranslation(key, 'en')
+  if (enNested !== key) return enNested
+  if (FALLBACK.en?.[key]) return FALLBACK.en[key]
+
+  // 5. Return human-readable fallback - extract last part of key
   const parts = key.split('.')
   const readable = parts[parts.length - 1]
   if (readable && readable.length > 0) {
