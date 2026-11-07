@@ -114,17 +114,9 @@ export default function Hero() {
           }}
         />
         {/* Center subtle glow */}
-        <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full glow-orb-center"
-          animate={{
-            rotate: [0, 360],
-          }}
-          transition={{
-            duration: 30,
-            repeat: Infinity,
-            ease: 'linear',
-          }}
-        />
+        {/* (Was rotated forever — a round radial gradient looks identical at
+            every angle, so that only cost GPU time on phones.) */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full glow-orb-center" />
         {/* Soft gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/30 to-transparent pointer-events-none" />
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -15,7 +15,8 @@ const navLinks: { href: string; labelKey: string; isExternal?: boolean }[] = [
   { href: 'https://reading.thedivinetarotonline.com/', labelKey: 'nav.reading' },
   { href: 'https://learn.thedivinetarotonline.com/', labelKey: 'nav.course', isExternal: true },
   { href: 'https://thedivinetarotonline.com/kundli-milan', labelKey: 'nav.kundli' },
-  { href: 'https://booking.thedivinetarotonline.com/', labelKey: 'nav.Personal Reading', isExternal: true },
+  { href: 'https://thedivinetarotonline.com/reports', labelKey: 'nav.reports' },
+  { href: 'https://booking.thedivinetarotonline.com/', labelKey: 'nav.personalReading', isExternal: true },
 ];
 
 const HOME_HREF = 'https://thedivinetarotonline.com/';
@@ -26,30 +27,48 @@ export default function Header() {
   const { isHydrated, t } = useLanguage();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollY = useRef(0);
+  // Active-link state depends on window.location, so only compute it after
+  // mount; otherwise server and client HTML differ and hydration fails.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
+  // Hide-on-scroll-down / show-on-scroll-up. Uses a ref + one rAF per frame
+  // instead of setState on every scroll event, which re-rendered the whole
+  // header dozens of times a second while scrolling on phones.
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const handleScroll = () => {
-        const currentScrollY = window.scrollY;
-        if (currentScrollY > lastScrollY && currentScrollY > 100) {
-          setIsHidden(true);
-        } else {
-          setIsHidden(false);
-        }
-        setLastScrollY(currentScrollY);
-      };
-
-      window.addEventListener('scroll', handleScroll);
-      return () => window.removeEventListener('scroll', handleScroll);
-    }
-  }, [lastScrollY]);
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const y = window.scrollY;
+      const nearBottom = window.innerHeight + y >= document.documentElement.scrollHeight - 4;
+      const goingDown = y > lastScrollY.current + 2;
+      const goingUp = y < lastScrollY.current - 2;
+      // iOS rubber-band bounce at the bottom of the page fires fake
+      // "up" scrolls; ignore direction changes there so the header
+      // doesn't flicker in and out at the footer.
+      if (!nearBottom) {
+        if (goingDown && y > 100) setIsHidden(true);
+        else if (goingUp || y <= 100) setIsHidden(false);
+      }
+      lastScrollY.current = Math.max(0, y);
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const getNavLabel = (labelKey: string): string => {
     return t(labelKey);
   };
 
   const isLinkActive = (href: string): boolean => {
+    if (!mounted) return false;
     try {
       const url = new URL(href);
       if (typeof window !== 'undefined' && window.location.hostname !== url.hostname) {
@@ -85,7 +104,7 @@ export default function Header() {
                 The Divine Tarot
               </span>
               <span className="text-[10px] sm:text-[11px] font-medium tracking-[0.15em] text-[#FFD700]/80 uppercase whitespace-nowrap">
-                Premium Tarot Guidance
+                {t('brand.tagline')}
               </span>
             </span>
           </a>
@@ -169,7 +188,7 @@ export default function Header() {
               aria-label="Mobile navigation menu"
             >
               <div className="flex h-16 items-center justify-between px-6">
-                <span className="font-heading text-lg font-semibold text-white">Menu</span>
+                <span className="font-heading text-lg font-semibold text-white">{t('nav.menu')}</span>
                 <button
                   onClick={() => setIsMobileOpen(false)}
                   className="p-2 text-white min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors"
