@@ -14,6 +14,7 @@ import { moonSiderealPosition, toUtcInstant } from '@/lib/astrology/moon';
 import { loadRazorpayScript, openRazorpayCheckout } from '@/lib/razorpay/client';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/hooks/useLanguage';
 
 const TIMEZONES = [
   { label: 'India (IST +5:30)', value: 330 },
@@ -27,7 +28,7 @@ const TIMEZONES = [
 ];
 
 const FIELD =
-  'w-full bg-[#0B0F1A] border border-[#2A2F3A] rounded-xl py-3 pl-10 pr-4 text-white text-base ' +
+  'kundli-field block w-full min-w-0 max-w-full bg-[#0B0F1A] border border-[#2A2F3A] rounded-xl py-3 pl-10 pr-4 text-white text-base ' +
   'focus:outline-none focus:border-[#D4AF37] focus:shadow-[0_0_10px_rgba(212,175,55,0.3)] transition-all duration-300 [color-scheme:dark]';
 
 interface FormState {
@@ -47,6 +48,7 @@ function derivePerson(f: FormState): Person | null {
 }
 
 export default function KundliMilanPage() {
+  const { t } = useLanguage();
   const [p1, setP1] = useState<FormState>({ ...emptyPerson });
   const [p2, setP2] = useState<FormState>({ ...emptyPerson });
   const [persons, setPersons] = useState<{ a: Person; b: Person } | null>(null);
@@ -150,20 +152,19 @@ export default function KundliMilanPage() {
         {/* Hero */}
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 text-gold text-xs uppercase tracking-[0.2em] mb-3">
-            <Sparkles className="h-4 w-4" /> Vedic Match Engine
+            <Sparkles className="h-4 w-4" /> {t('kundli.eyebrow')}
           </div>
-          <h1 className="font-heading text-3xl md:text-5xl leading-tight mb-3 text-glow">Kundli Milan</h1>
+          <h1 className="font-heading text-3xl md:text-5xl leading-tight mb-3 text-glow">{t('kundli.title')}</h1>
           <p className="text-foreground-secondary max-w-xl mx-auto">
-            Two birth charts, one verdict. Get your Ashtakoota Guna Milan score out of 36 — and see
-            exactly how each factor shapes your life together.
+            {t('kundli.subtitle')}
           </p>
           <div className="mx-auto mt-5 h-px w-24 bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
         </div>
 
         {/* Input cards */}
         <div className="grid gap-5 md:grid-cols-2">
-          <PersonCard title="Person 1" subtitle="groom / self" state={p1} onChange={setP1} accent="rgb(var(--gold))" />
-          <PersonCard title="Person 2" subtitle="bride / partner" state={p2} onChange={setP2} accent="rgb(var(--secondary))" />
+          <PersonCard title={t('kundli.person1')} subtitle={t('kundli.person1Sub')} state={p1} onChange={setP1} accent="rgb(var(--gold))" />
+          <PersonCard title={t('kundli.person2')} subtitle={t('kundli.person2Sub')} state={p2} onChange={setP2} accent="rgb(var(--secondary))" />
         </div>
 
         <div className="mt-8 flex flex-col items-center gap-3">
@@ -175,11 +176,11 @@ export default function KundliMilanPage() {
               'btn-cta-pulse w-full sm:w-auto disabled:opacity-40 disabled:pointer-events-none'
             )}
           >
-            <Heart className="h-5 w-5" /> Calculate Match
+            <Heart className="h-5 w-5" /> {t('kundli.calculate')}
           </button>
           {error && <p className="text-[rgb(var(--secondary))] text-sm">{error}</p>}
           <p className="text-xs text-foreground-muted max-w-md text-center italic">
-            If exact birth time is unknown, keep 12:00 — the Moon sign is correct on most days but may shift near a transition.
+            {t('kundli.timeNote')}
           </p>
         </div>
 
@@ -201,10 +202,9 @@ export default function KundliMilanPage() {
                     {delivered ? (
                       <div className="text-center py-4">
                         <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-400 mb-3" />
-                        <h3 className="font-heading text-xl mb-1">Your report is on its way ✨</h3>
+                        <h3 className="font-heading text-xl mb-1">{t('kundli.sentTitle')}</h3>
                         <p className="text-foreground-secondary text-sm">
-                          We&apos;ve emailed your detailed Kundli Milan report to <span className="text-foreground">{email}</span>.
-                          Check your inbox (and spam) in a minute.
+                          {t('kundli.sentText', { email })}
                         </p>
                       </div>
                     ) : (
@@ -227,18 +227,17 @@ export default function KundliMilanPage() {
                   <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gold/15 border border-gold/30">
                     <Lock className="h-8 w-8 text-gold" />
                   </div>
-                  <h2 className="font-heading text-2xl md:text-3xl mb-2 text-glow">Your Kundli Milan is ready</h2>
+                  <h2 className="font-heading text-2xl md:text-3xl mb-2 text-glow">{t('kundli.readyTitle')}</h2>
                   <p className="text-foreground-secondary max-w-md mx-auto mb-6">
-                    Unlock your full compatibility result for just ₹99 — the score out of 36, the
-                    8-koota breakdown, dosha analysis and a detailed report emailed to you.
+                    {t('kundli.readyText')}
                   </p>
 
                   <ul className="mx-auto mb-7 max-w-sm space-y-2 text-left text-sm text-foreground-secondary">
                     {[
-                      'Full 36-guna Ashtakoota compatibility score',
-                      'All 8 kootas — and what they mean for your life together',
-                      'Nadi & Bhakoot dosha analysis with remedies',
-                      'Detailed report emailed to your inbox',
+                      t('kundli.f1'),
+                      t('kundli.f2'),
+                      t('kundli.f3'),
+                      t('kundli.f4'),
                     ].map((f) => (
                       <li key={f} className="flex items-start gap-2">
                         <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
@@ -260,11 +259,11 @@ export default function KundliMilanPage() {
                       disabled={buying}
                       className={cn(buttonVariants({ variant: 'primary', size: 'md' }), 'whitespace-nowrap disabled:opacity-60')}
                     >
-                      {buying ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Pay ₹99 &amp; Reveal Result</>}
+                      {buying ? <Loader2 className="h-4 w-4 animate-spin" /> : <>{t('kundli.pay')}</>}
                     </button>
                   </div>
                   {buyError && <p className="text-[rgb(var(--secondary))] text-xs mt-3">{buyError}</p>}
-                  <p className="mt-4 text-xs text-foreground-muted">Secure payment via Razorpay · Instant delivery</p>
+                  <p className="mt-4 text-xs text-foreground-muted">{t('kundli.secure')}</p>
                 </div>
               )}
             </motion.div>
@@ -272,8 +271,7 @@ export default function KundliMilanPage() {
         </AnimatePresence>
 
         <p className="mt-14 text-center text-xs text-foreground-muted max-w-lg mx-auto">
-          Ashtakoota computed from approximate Moon positions (Lahiri ayanamsa). A guide to reflect clearly —
-          not a substitute for a professional jyotishi or your own judgement.
+          {t('kundli.disclaimer')}
         </p>
       </div>
     </div>
@@ -286,9 +284,10 @@ function PersonCard({
   title: string; subtitle: string; state: FormState;
   onChange: (s: FormState) => void; accent: string;
 }) {
+  const { t } = useLanguage();
   const set = (patch: Partial<FormState>) => onChange({ ...state, ...patch });
   return (
-    <div className="rounded-2xl border border-gold/10 bg-card/40 backdrop-blur-sm p-5 md:p-6">
+    <div className="min-w-0 overflow-hidden rounded-2xl border border-gold/10 bg-card/40 backdrop-blur-sm p-5 md:p-6">
       <div className="flex items-baseline gap-2 mb-5 pb-4 border-b border-white/5">
         <span className="h-2 w-2 rounded-full" style={{ background: accent }} />
         <h3 className="font-heading text-lg">{title}</h3>
@@ -296,24 +295,24 @@ function PersonCard({
       </div>
 
       <div className="space-y-4">
-        <Field label="Name" icon={<User className="h-5 w-5" />} helper="So we can personalise your report">
+        <Field label={t('kundli.name')} icon={<User className="h-5 w-5" />} helper={t('kundli.nameHelper')}>
           <input
             type="text" value={state.name}
             onChange={(e) => set({ name: e.target.value })}
-            placeholder="Full name"
+            placeholder={t('kundli.namePlaceholder')}
             className={FIELD}
           />
         </Field>
 
-        <div className="grid grid-cols-2 gap-3">
-          <Field label="Date of birth" icon={<Calendar className="h-5 w-5" />}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-3">
+          <Field label={t('kundli.dob')} icon={<Calendar className="h-5 w-5" />}>
             <input
               type="date" value={state.date}
               onChange={(e) => set({ date: e.target.value })}
               className={FIELD}
             />
           </Field>
-          <Field label="Time" icon={<Clock className="h-5 w-5" />} helper="12:00 if unknown">
+          <Field label={t('kundli.time')} icon={<Clock className="h-5 w-5" />} helper={t('kundli.timeHelper')}>
             <input
               type="time" value={state.time}
               onChange={(e) => set({ time: e.target.value })}
@@ -322,7 +321,7 @@ function PersonCard({
           </Field>
         </div>
 
-        <Field label="Birth timezone" icon={<Globe2 className="h-5 w-5" />}>
+        <Field label={t('kundli.tz')} icon={<Globe2 className="h-5 w-5" />}>
           <select
             value={state.tz}
             onChange={(e) => set({ tz: Number(e.target.value) })}
@@ -344,11 +343,11 @@ function Field({
   label: string; icon?: React.ReactNode; helper?: string; children: React.ReactNode;
 }) {
   return (
-    <div className="w-full">
+    <div className="w-full min-w-0">
       <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-gold/90">
         {label}
       </label>
-      <div className="relative">
+      <div className="relative min-w-0">
         {icon && (
           <div className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted pointer-events-none z-10">
             {icon}
