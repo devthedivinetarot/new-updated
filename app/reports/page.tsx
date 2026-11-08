@@ -2,13 +2,13 @@ import type { Metadata } from 'next';
 import TarotReports from '@/components/reports/TarotReports';
 
 export const metadata: Metadata = {
-  title: 'Tarot Reports — Yearly, Love, Marriage, Career, Health & Education',
+  title: 'Personal 12-Month Tarot Report — PDF by Email',
   description:
-    'Personal 12-month tarot reports: Yearly, No Contact, Love Life, Marriage, Career & Business, Health and Education — each with 12 cards drawn from the full deck.',
+    'Personal 12-month tarot report as a PDF: your overall year, or his feelings & actions in no contact, affair, crush or marriage separation. In Hindi, English or Hinglish.',
   alternates: { canonical: '/reports' },
   openGraph: {
     title: 'Tarot Reports — The Divine Tarot',
-    description: 'Personal 12-month tarot reports with monthly cards, guidance and lucky colours & numbers.',
+    description: '12 tarot cards for your year with monthly guidance, delivered as a PDF to your email.',
     url: '/reports',
   },
 };
