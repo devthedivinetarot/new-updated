@@ -237,6 +237,10 @@ const Footer = () => {
             {isHydrated ? t('footer.privacy') : 'Privacy'}
           </Link>
           <span className="w-px h-3 bg-white/10" />
+          <Link href="/refund-policy" className="text-gray-400 hover:text-amber-400 transition-colors duration-200">
+            Refunds
+          </Link>
+          <span className="w-px h-3 bg-white/10" />
           <span>&copy; {new Date().getFullYear()} {t('footer.rights')}</span>
         </div>
       </div>
