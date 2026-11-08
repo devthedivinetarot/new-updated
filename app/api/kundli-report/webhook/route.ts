@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyWebhookSignature } from '@/lib/razorpay/server';
 import { deliverForOrder } from '@/lib/astrology/orders';
+import { confirmTarotPayment } from '@/lib/reports/confirm';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -41,6 +42,17 @@ export async function POST(req: NextRequest) {
     const payment = event?.payload?.payment?.entity;
     const orderId: string | undefined = payment?.order_id;
     const paymentId: string | undefined = payment?.id;
+
+    // Tarot report orders (Reports page) live in the Google Sheet, not Supabase.
+    if (orderId && paymentId) {
+      try {
+        const tarot = await confirmTarotPayment(orderId, paymentId);
+        if (tarot) return NextResponse.json({ ok: true, tarot: true });
+      } catch (e) {
+        console.error('[Webhook] tarot confirm failed', e);
+        return NextResponse.json({ ok: false, reason: 'tarot-sheet' }, { status: 500 });
+      }
+    }
 
     if (orderId) {
       const d = await deliverForOrder(orderId, paymentId);
