@@ -33,7 +33,7 @@ export default function PrivacyPolicyPage() {
           <Section title="Information we collect">
             <ul className="list-disc pl-5 space-y-2">
               <li><strong className="text-foreground">Contact details</strong> — such as your email address (and, if you opt in, your WhatsApp number) when you subscribe or request a reading or report.</li>
-              <li><strong className="text-foreground">Reading &amp; compatibility inputs</strong> — details you enter for a reading or a Kundli Milan report, such as names, dates, times, and places of birth.</li>
+              <li><strong className="text-foreground">Reading &amp; compatibility inputs</strong> — details you enter for a reading, a tarot report or a Kundli Milan report, such as names (including the name of the person a reading is about), dates, times, and places of birth.</li>
               <li><strong className="text-foreground">Payment information</strong> — processed securely by our payment provider. We do not store your card details on our servers.</li>
               <li><strong className="text-foreground">Usage data</strong> — basic analytics such as pages visited and device/browser information, used to improve the site.</li>
             </ul>
