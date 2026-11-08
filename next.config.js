@@ -11,6 +11,11 @@ const nextConfig = {
   },
   experimental: {
     forceSwcTransforms: true,
+    // Headless Chromium for the tarot report PDFs must not be bundled.
+    serverComponentsExternalPackages: ['@sparticuz/chromium', 'puppeteer-core'],
+    outputFileTracingIncludes: {
+      '/api/tarot-report/**': ['./node_modules/@sparticuz/chromium/bin/**'],
+    },
   },
   env: {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
