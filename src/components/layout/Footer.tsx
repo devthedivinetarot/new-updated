@@ -4,7 +4,10 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useLanguage } from '@/hooks/useLanguage';
-import { Mail, Lock, Heart, Sparkles } from 'lucide-react';
+import { Mail, Lock, Heart, Sparkles, Download } from 'lucide-react';
+
+/** The Android app (APK), kept as a GitHub release asset — a tap starts the download. To ship a new version, replace the file in the `android-app` release. */
+const ANDROID_APK_URL = 'https://github.com/devthedivinetarot/new-updated/releases/download/android-app/The-Divine-Tarot.apk';
 
 const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -97,6 +100,7 @@ const Footer = () => {
   const quickLinks = [
     { nameKey: 'footer.quickLinks.about', name: 'About', href: 'https://thedivinetarotonline.com/about' },
     { nameKey: 'footer.quickLinks.support', name: 'Support', href: 'https://support.thedivinetarotonline.com/' },
+    { nameKey: 'footer.quickLinks.app', name: 'Download Android App', href: ANDROID_APK_URL },
     // { nameKey: 'footer.quickLinks.premium', name: 'Premium', href: 'https://reading.thedivinetarotonline.com/?upgrade=1' },
   ];
 
@@ -122,6 +126,14 @@ const Footer = () => {
           <p className="text-[#A1A1AA] text-sm leading-relaxed">
             {isHydrated ? t('footer.description') : 'Guiding your path with clarity, intuition, and spiritual insight.'}
           </p>
+          <a
+            href={ANDROID_APK_URL}
+            download="The-Divine-Tarot.apk"
+            className="mt-1 inline-flex w-fit items-center gap-2 rounded-full bg-amber-500 px-5 py-2.5 text-sm font-semibold text-black transition-all duration-200 hover:bg-amber-400 hover:shadow-lg hover:shadow-amber-500/20"
+          >
+            <Download className="h-4 w-4" aria-hidden />
+            {isHydrated ? t('footer.quickLinks.app') : 'Download Android App'}
+          </a>
         </div>
 
         <div className="flex flex-col gap-3">
