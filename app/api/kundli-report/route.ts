@@ -2,16 +2,22 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createOrder } from '@/lib/razorpay/server';
 import { sanitizePerson } from '@/lib/astrology/deliver';
 import { saveKundliOrder } from '@/lib/astrology/orders';
+import { getAppControl } from '@/lib/appControl';
 
 export const runtime = 'nodejs';
 
 // Downloadable Kundli Milan report — one-time purchase, no login required.
-const KUNDLI_AMOUNT = 9900; // ₹99.00 in paise
+// Price and on/off: booking admin → App Control (default ₹99), shared with the mobile app.
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json().catch(() => ({}));
     const email: string = (body?.email || '').trim();
+    const ctl = (await getAppControl()).kundli;
+    if (!ctl.enabled) {
+      return NextResponse.json({ error: 'Kundli Milan is not available right now. Please try again later.' }, { status: 409 });
+    }
+    const KUNDLI_AMOUNT = ctl.price * 100;
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json({ error: 'A valid email is required' }, { status: 400 });
