@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useLanguage } from '@/hooks/useLanguage';
-import { Mail, Lock, Heart, Sparkles } from 'lucide-react';
+import { Mail, Lock, Heart, Sparkles, Smartphone } from 'lucide-react';
 
 const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -97,6 +97,7 @@ const Footer = () => {
   const quickLinks = [
     { nameKey: 'footer.quickLinks.about', name: 'About', href: 'https://thedivinetarotonline.com/about' },
     { nameKey: 'footer.quickLinks.support', name: 'Support', href: 'https://support.thedivinetarotonline.com/' },
+    { nameKey: 'footer.quickLinks.app', name: 'Download the App', href: '/download-app' },
     // { nameKey: 'footer.quickLinks.premium', name: 'Premium', href: 'https://reading.thedivinetarotonline.com/?upgrade=1' },
   ];
 
@@ -122,6 +123,14 @@ const Footer = () => {
           <p className="text-[#A1A1AA] text-sm leading-relaxed">
             {isHydrated ? t('footer.description') : 'Guiding your path with clarity, intuition, and spiritual insight.'}
           </p>
+          {/* The Android app — the page has the install button and the install steps */}
+          <Link
+            href="/download-app"
+            className="mt-1 inline-flex w-fit items-center gap-2 rounded-full bg-amber-500 px-5 py-2.5 text-sm font-semibold text-black transition-all duration-200 hover:bg-amber-400 hover:shadow-lg hover:shadow-amber-500/20"
+          >
+            <Smartphone className="h-4 w-4" aria-hidden />
+            {isHydrated ? t('footer.quickLinks.app') : 'Download the App'}
+          </Link>
         </div>
 
         <div className="flex flex-col gap-3">
