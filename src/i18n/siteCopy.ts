@@ -268,6 +268,7 @@ export const siteCopy: Record<string, Copy> = {
   'contact.submit': { hi: 'संदेश भेजें' },
   'contact.success.title': { hi: 'संदेश भेज दिया गया' },
   'contact.success.message': { hi: 'हम जल्द ही आपसे संपर्क करेंगे।' },
+  'footer.quickLinks.app': { en: 'Download Android App', hi: 'Android ऐप डाउनलोड करें', hinglish: 'Android App Download Karo' },
 };
 
 export function getSiteCopy(key: string, lang: string): string | undefined {
