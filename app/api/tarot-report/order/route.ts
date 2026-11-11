@@ -5,6 +5,7 @@ import { createOrder } from '@/lib/razorpay/server';
 import { PLANS, drawCardIds, isTopic, isLang, topicNeedsPartner, type PlanId } from '@/lib/reports/generate';
 import { saveOrder, markSent, markFailed, istDate, type ReportOrder } from '@/lib/reports/orders';
 import { deliverReport, sendOrderEmails } from '@/lib/reports/deliver';
+import { getAppControl } from '@/lib/appControl';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -51,7 +52,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Please enter his name." }, { status: 400 });
   }
 
-  const plan = PLANS[b.plan as PlanId];
+  // On/off, price and delivery days come from the booking admin → App Control (shared with the mobile app)
+  const ctl = (await getAppControl()).reports;
+  const pc = ctl.plans[b.plan as PlanId];
+  if (!ctl.enabled || !pc.enabled || ctl.topics[topic] === false) {
+    return NextResponse.json({ error: 'This report is not available right now. Please try again later.' }, { status: 409 });
+  }
+  const plan = { ...PLANS[b.plan as PlanId], rupees: pc.rupees, amount: pc.rupees * 100, days: pc.days };
   const base: Omit<ReportOrder, 'orderId'> = {
     plan: plan.id, amount: plan.rupees, topic, lang: b.lang as ReportOrder['lang'], year: b.year,
     name: b.name, partner: topicNeedsPartner(topic) ? b.partner : '', email: b.email,
