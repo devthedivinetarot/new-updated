@@ -268,6 +268,49 @@ export const siteCopy: Record<string, Copy> = {
   'contact.submit': { hi: 'संदेश भेजें' },
   'contact.success.title': { hi: 'संदेश भेज दिया गया' },
   'contact.success.message': { hi: 'हम जल्द ही आपसे संपर्क करेंगे।' },
+
+  // ── Download the app (/download-app, footer link) ─────────────
+  'footer.quickLinks.app': { en: 'Download the App', hi: 'ऐप डाउनलोड करें', hinglish: 'App Download Karo' },
+  'app.eyebrow': { en: 'The Divine Tarot App', hi: 'The Divine Tarot ऐप', hinglish: 'The Divine Tarot App' },
+  'app.title': { en: 'Bharti Singh’s tarot, now on your phone', hi: 'भारती सिंह का टैरो, अब आपके फ़ोन में', hinglish: 'Bharti Singh ka tarot, ab aapke phone mein' },
+  'app.subtitle': {
+    en: 'Ask Ginni anything, see your Card of the Day, daily horoscope, Kundli and Panchang — in Hindi, Hinglish or English.',
+    hi: 'गिन्नी से कुछ भी पूछें, आज का कार्ड, रोज़ का राशिफल, कुंडली और पंचांग देखें — हिंदी, हिंग्लिश या अंग्रेज़ी में।',
+    hinglish: 'Ginni se kuch bhi poocho, aaj ka card, roz ka rashifal, Kundli aur Panchang dekho — Hindi, Hinglish ya English mein.',
+  },
+  'app.download': { en: 'Download for Android', hi: 'Android के लिए डाउनलोड करें', hinglish: 'Android ke liye download karo' },
+  'app.fileInfo': { en: 'Free · Android 7 or newer · about {size}', hi: 'मुफ़्त · Android 7 या नया · लगभग {size}', hinglish: 'Free · Android 7 ya naya · lagbhag {size}' },
+  'app.iphone': {
+    en: 'The iPhone app is coming soon. Till then, ask Ginni on reading.thedivinetarotonline.com — the same account will work in the app.',
+    hi: 'iPhone ऐप जल्द आ रहा है। तब तक reading.thedivinetarotonline.com पर गिन्नी से पूछें — वही अकाउंट ऐप में भी चलेगा।',
+    hinglish: 'iPhone app jald aa raha hai. Tab tak reading.thedivinetarotonline.com par Ginni se poocho — wahi account app mein bhi chalega.',
+  },
+  'app.desktop': {
+    en: 'Open this page on your Android phone to install: thedivinetarotonline.com/download-app',
+    hi: 'इंस्टॉल करने के लिए यह पेज अपने Android फ़ोन पर खोलें: thedivinetarotonline.com/download-app',
+    hinglish: 'Install karne ke liye yeh page apne Android phone pe kholo: thedivinetarotonline.com/download-app',
+  },
+  'app.featuresTitle': { en: 'What’s inside', hi: 'ऐप में क्या है', hinglish: 'App mein kya hai' },
+  'app.f.ginni': { en: 'Ginni — tarot answers to your questions, any time', hi: 'गिन्नी — आपके सवालों के टैरो जवाब, कभी भी', hinglish: 'Ginni — aapke sawaalon ke tarot jawab, kabhi bhi' },
+  'app.f.cotd': { en: 'Card of the Day and a daily reminder', hi: 'आज का कार्ड और रोज़ का रिमाइंडर', hinglish: 'Aaj ka card aur roz ka reminder' },
+  'app.f.horoscope': { en: 'Daily horoscope, weekly rashifal and numerology', hi: 'रोज़ का राशिफल, साप्ताहिक राशिफल और अंक ज्योतिष', hinglish: 'Roz ka rashifal, weekly rashifal aur numerology' },
+  'app.f.kundli': { en: 'Kundli, Kundli Milan, Panchang and festivals', hi: 'कुंडली, कुंडली मिलान, पंचांग और त्योहार', hinglish: 'Kundli, Kundli Milan, Panchang aur tyohaar' },
+  'app.f.account': { en: 'Same login as Ginni on reading.thedivinetarotonline.com — your Ginni Premium works in the app too', hi: 'reading.thedivinetarotonline.com पर गिन्नी वाला ही लॉगिन — आपका गिन्नी प्रीमियम ऐप में भी चलेगा', hinglish: 'reading.thedivinetarotonline.com par Ginni wala hi login — aapka Ginni Premium app mein bhi chalega' },
+  'app.howTitle': { en: 'How to install', hi: 'इंस्टॉल कैसे करें', hinglish: 'Install kaise karein' },
+  'app.step1': { en: 'Tap “Download for Android” and let the file finish downloading.', hi: '“Android के लिए डाउनलोड करें” दबाएँ और फ़ाइल पूरी डाउनलोड होने दें।', hinglish: '“Android ke liye download karo” dabao aur file poori download hone do.' },
+  'app.step2': { en: 'Open the downloaded file (from the notification or the Downloads folder).', hi: 'डाउनलोड हुई फ़ाइल खोलें (नोटिफ़िकेशन या Downloads फ़ोल्डर से)।', hinglish: 'Download hui file kholo (notification ya Downloads folder se).' },
+  'app.step3': { en: 'If the phone asks, allow “Install unknown apps” for your browser, then go back.', hi: 'अगर फ़ोन पूछे, तो अपने ब्राउज़र के लिए “Install unknown apps” की अनुमति दें और वापस आएँ।', hinglish: 'Agar phone pooche, toh browser ke liye “Install unknown apps” allow karo aur wapas aao.' },
+  'app.step4': { en: 'Tap Install and open the app. Log in with your Ginni (reading.thedivinetarotonline.com) email and password, or create a new account.', hi: 'इंस्टॉल दबाएँ और ऐप खोलें। गिन्नी (reading.thedivinetarotonline.com) वाले ईमेल-पासवर्ड से लॉगिन करें, या नया अकाउंट बनाएँ।', hinglish: 'Install dabao aur app kholo. Ginni (reading.thedivinetarotonline.com) wale email-password se login karo, ya naya account banao.' },
+  'app.safe': {
+    en: 'This is our official app, shared directly by The Divine Tarot (not through the Play Store), so Android may show a warning about unknown apps. Download it only from this page.',
+    hi: 'यह हमारा आधिकारिक ऐप है, जो The Divine Tarot सीधे दे रहा है (Play Store के बिना), इसलिए Android अनजान ऐप की चेतावनी दिखा सकता है। इसे सिर्फ़ इसी पेज से डाउनलोड करें।',
+    hinglish: 'Yeh hamara official app hai, jo The Divine Tarot seedha de raha hai (Play Store ke bina), isliye Android unknown app ki warning dikha sakta hai. Ise sirf isi page se download karein.',
+  },
+  'app.oldVersion': {
+    en: 'Have an older test version installed and installation fails? Uninstall it first, then install again — your account stays safe.',
+    hi: 'पुराना टेस्ट वर्ज़न इंस्टॉल है और इंस्टॉल नहीं हो रहा? पहले उसे अनइंस्टॉल करें, फिर दोबारा इंस्टॉल करें — आपका अकाउंट सुरक्षित रहेगा।',
+    hinglish: 'Purana test version install hai aur install nahi ho raha? Pehle use uninstall karo, phir dobara install karo — aapka account safe rahega.',
+  },
 };
 
 export function getSiteCopy(key: string, lang: string): string | undefined {
