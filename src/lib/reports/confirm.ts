@@ -1,6 +1,7 @@
 import { PLANS } from './generate';
 import { getOrder, markPaid, dueDateFor, isSheetConfigured } from './orders';
 import { sendOrderEmails } from './deliver';
+import { getAppControl } from '@/lib/appControl';
 
 /**
  * Mark a tarot-report order as paid (idempotent) and send the confirmation
@@ -11,7 +12,9 @@ export async function confirmTarotPayment(orderId: string, paymentId: string) {
   if (!isSheetConfigured()) return null;
   const existing = await getOrder(orderId);
   if (!existing) return null;
-  const plan = PLANS[existing.plan as keyof typeof PLANS] || PLANS.standard;
+  const id = (existing.plan in PLANS ? existing.plan : 'standard') as keyof typeof PLANS;
+  // delivery days from the booking admin → App Control (falls back to the built-in plan)
+  const plan = { ...PLANS[id], days: (await getAppControl()).reports.plans[id]?.days || PLANS[id].days };
   const res = await markPaid(orderId, paymentId, dueDateFor(plan.days));
   const order = res.order || existing;
   if (res.transitioned) await sendOrderEmails(order);
