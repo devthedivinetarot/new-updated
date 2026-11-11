@@ -12,12 +12,16 @@ import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { loadRazorpayScript, openRazorpayCheckout } from '@/lib/razorpay/client';
 import { TOPICS, LANGS, type Lang, type Topic } from '@/lib/reports/topics';
+import { DEFAULT_APP_CONTROL, normalizeAppControl, type AppControl } from '@/lib/appControl';
 
-const PLANS = [
-  { id: 'standard', rupees: 999, days: 7, label: 'Standard', note: 'PDF emailed on the 7th day' },
-  { id: 'express', rupees: 1299, days: 3, label: 'Express', note: 'PDF emailed on the 3rd day' },
-] as const;
-type PlanId = (typeof PLANS)[number]['id'];
+type PlanId = 'standard' | 'express';
+const PLAN_LABEL: Record<PlanId, string> = { standard: 'Standard', express: 'Express' };
+const nth = (n: number) => `${n}${n % 10 === 1 && n % 100 !== 11 ? 'st' : n % 10 === 2 && n % 100 !== 12 ? 'nd' : n % 10 === 3 && n % 100 !== 13 ? 'rd' : 'th'}`;
+/** Plans on sale: prices, delivery days and on/off come from the booking admin → App Control. */
+const plansFrom = (c: AppControl) =>
+  (['standard', 'express'] as const)
+    .filter((id) => c.reports.plans[id].enabled)
+    .map((id) => ({ id, rupees: c.reports.plans[id].rupees, days: c.reports.plans[id].days, label: PLAN_LABEL[id], note: `PDF emailed on the ${nth(c.reports.plans[id].days)} day` }));
 
 const ICONS: Record<Topic, React.ComponentType<{ className?: string }>> = {
   yearly: CalendarDays, 'no-contact': HeartCrack, affair: Flame, crush: Heart, separation: Unlink,
@@ -57,8 +61,20 @@ export default function TarotReports() {
   const [error, setError] = useState('');
   const [done, setDone] = useState<null | { free: boolean; delivered?: boolean; due?: string }>(null);
 
+  const [ctl, setCtl] = useState<AppControl>(DEFAULT_APP_CONTROL);
+  useEffect(() => {
+    fetch('/api/app-control').then((r) => (r.ok ? r.json() : null)).then((j) => j && setCtl(normalizeAppControl(j))).catch(() => {});
+  }, []);
+  const PLANS = plansFrom(ctl);
+  const topics = TOPICS.filter((t) => ctl.reports.topics[t.id] !== false);
+  const open = ctl.reports.enabled && PLANS.length > 0 && topics.length > 0;
+  useEffect(() => {
+    // a topic / plan switched off in the admin → the first one still on
+    if (topics.length && !topics.some((t) => t.id === topic)) setTopic(topics[0].id);
+    if (PLANS.length && !PLANS.some((p) => p.id === plan)) setPlan(PLANS[0].id);
+  }, [ctl]); // eslint-disable-line react-hooks/exhaustive-deps
   const cfg = TOPICS.find((t) => t.id === topic)!;
-  const chosenPlan = PLANS.find((p) => p.id === plan)!;
+  const chosenPlan = PLANS.find((p) => p.id === plan) || PLANS[0] || { id: plan, rupees: 0, days: 0, label: '', note: '' };
   const useCode = showCode && coupon.trim().length > 0;
 
   useEffect(() => {
@@ -161,7 +177,12 @@ export default function TarotReports() {
           </div>
         </div>
 
-        {done ? (
+        {!open && !done ? (
+          <div className="rounded-2xl border border-gold/30 bg-card/50 p-8 text-center">
+            <h2 className="font-heading text-2xl mb-2">Reports are paused right now</h2>
+            <p className="text-foreground-secondary">Please check back soon.</p>
+          </div>
+        ) : done ? (
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -199,7 +220,7 @@ export default function TarotReports() {
             {/* 1. Topic */}
             <Step n={1} title="Choose your topic">
               <div className="grid gap-3 sm:grid-cols-2">
-                {TOPICS.map((t) => {
+                {topics.map((t) => {
                   const Icon = ICONS[t.id];
                   const active = t.id === topic;
                   return (

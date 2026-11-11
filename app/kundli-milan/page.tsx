@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -15,6 +15,7 @@ import { loadRazorpayScript, openRazorpayCheckout } from '@/lib/razorpay/client'
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
+import { DEFAULT_APP_CONTROL, normalizeAppControl } from '@/lib/appControl';
 
 const TIMEZONES = [
   { label: 'India (IST +5:30)', value: 330 },
@@ -48,7 +49,13 @@ function derivePerson(f: FormState): Person | null {
 }
 
 export default function KundliMilanPage() {
-  const { t } = useLanguage();
+  const { t: tr } = useLanguage();
+  // Price and on/off: booking admin → App Control (shared with the mobile app)
+  const [ctl, setCtl] = useState(DEFAULT_APP_CONTROL.kundli);
+  useEffect(() => {
+    fetch('/api/app-control').then((r) => (r.ok ? r.json() : null)).then((j) => j && setCtl(normalizeAppControl(j).kundli)).catch(() => {});
+  }, []);
+  const t: typeof tr = (k, v) => String(tr(k, v)).replace(/₹99\b/g, `₹${ctl.price}`);
   const [p1, setP1] = useState<FormState>({ ...emptyPerson });
   const [p2, setP2] = useState<FormState>({ ...emptyPerson });
   const [persons, setPersons] = useState<{ a: Person; b: Person } | null>(null);
@@ -170,7 +177,7 @@ export default function KundliMilanPage() {
         <div className="mt-8 flex flex-col items-center gap-3">
           <button
             onClick={handleCalculate}
-            disabled={!canCalculate}
+            disabled={!canCalculate || !ctl.enabled}
             className={cn(
               buttonVariants({ variant: 'primary', size: 'lg' }),
               'btn-cta-pulse w-full sm:w-auto disabled:opacity-40 disabled:pointer-events-none'
@@ -179,6 +186,7 @@ export default function KundliMilanPage() {
             <Heart className="h-5 w-5" /> {t('kundli.calculate')}
           </button>
           {error && <p className="text-[rgb(var(--secondary))] text-sm">{error}</p>}
+          {!ctl.enabled && <p className="text-[rgb(var(--secondary))] text-sm">Kundli Milan is paused right now — please check back soon.</p>}
           <p className="text-xs text-foreground-muted max-w-md text-center italic">
             {t('kundli.timeNote')}
           </p>
